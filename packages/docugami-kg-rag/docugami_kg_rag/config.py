@@ -20,14 +20,10 @@ if not DOCUGAMI_API_KEY:
 CHROMA_DIRECTORY = "/tmp/chroma_db"
 os.makedirs(Path(CHROMA_DIRECTORY).parent, exist_ok=True)
 
-INDEXING_LOCAL_STATE_PATH = os.environ.get(
-    "INDEXING_LOCAL_STATE_PATH", "/tmp/indexing_local_state.pkl"
-)
+INDEXING_LOCAL_STATE_PATH = os.environ.get("INDEXING_LOCAL_STATE_PATH", "/tmp/indexing_local_state.pkl")
 os.makedirs(Path(INDEXING_LOCAL_STATE_PATH).parent, exist_ok=True)
 
-INDEXING_LOCAL_REPORT_DBS_ROOT = os.environ.get(
-    "INDEXING_LOCAL_REPORT_DBS_ROOT", "/tmp/report_dbs"
-)
+INDEXING_LOCAL_REPORT_DBS_ROOT = os.environ.get("INDEXING_LOCAL_REPORT_DBS_ROOT", "/tmp/report_dbs")
 os.makedirs(Path(INDEXING_LOCAL_REPORT_DBS_ROOT).parent, exist_ok=True)
 
 LOCAL_LLM_CACHE_DB_FILE = os.environ.get("LOCAL_LLM_CACHE", "/tmp/.langchain.db")
@@ -57,11 +53,11 @@ class ReportDetails:
 
 @dataclass
 class LocalIndexState:
-    parents_by_id: InMemoryStore
-    """Mapping of ID to parent chunks."""
+    full_doc_summaries_by_id: InMemoryStore
+    """Mapping of ID to full document summaries."""
 
-    doc_summaries_by_id: InMemoryStore
-    """Mapping of ID to document summaries."""
+    chunk_summaries_by_id: InMemoryStore
+    """Mapping of ID to chunk summaries."""
 
     retrieval_tool_function_name: str
     """Function name for retrieval tool e.g. "search_earnings_calls."""
@@ -80,7 +76,7 @@ MIN_CHUNK_TEXT_LENGTH = 256
 SUB_CHUNK_TABLES = False
 INCLUDE_XML_TAGS = True
 PARENT_HIERARCHY_LEVELS = 1000
-RETRIEVER_K = 10
+RETRIEVER_K = 20
 
 SMALL_FRAGMENT_MAX_TEXT_LENGTH = 1024 * 4
 LARGE_FRAGMENT_MAX_TEXT_LENGTH = 1024 * 20

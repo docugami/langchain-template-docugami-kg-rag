@@ -1,9 +1,9 @@
+from tqdm import tqdm
 from typing import Dict
 
 from langchain.prompts import ChatPromptTemplate
 from langchain.schema import StrOutputParser
 from langchain_core.documents import Document
-from tqdm import tqdm
 
 from docugami_kg_rag.config import (
     BATCH_SIZE,
@@ -14,18 +14,16 @@ from docugami_kg_rag.config import (
 from docugami_kg_rag.helpers.prompts import (
     ASSISTANT_SYSTEM_MESSAGE,
     CREATE_FULL_DOCUMENT_SUMMARY_PROMPT,
+    CREATE_CHUNK_SUMMARY_PROMPT,
 )
 
 
-def build_summary_mappings(docs_by_id: Dict[str, Document]) -> Dict[str, str]:
-    # build summaries for all the given documents
-
+def _build_summary_mappings(docs_by_id: Dict[str, Document], prompt_template: str) -> Dict[str, str]:
+    """
+    Build summaries for all the given documents.
+    """
     summaries: Dict[str, str] = {}
-    format = (
-        "text"
-        if not INCLUDE_XML_TAGS
-        else "semantic XML without any namespaces or attributes"
-    )
+    format = "text" if not INCLUDE_XML_TAGS else "semantic XML without any namespaces or attributes"
 
     # Splitting the documents into batches
     doc_items = list(docs_by_id.items())
@@ -39,7 +37,7 @@ def build_summary_mappings(docs_by_id: Dict[str, Document]) -> Dict[str, str]:
         batch_input = [
             {
                 "format": format,
-                "doc_fragment": doc.page_content[:LARGE_FRAGMENT_MAX_TEXT_LENGTH],
+                "document": doc.page_content[:LARGE_FRAGMENT_MAX_TEXT_LENGTH],
             }
             for _, doc in batch
         ]
@@ -49,7 +47,7 @@ def build_summary_mappings(docs_by_id: Dict[str, Document]) -> Dict[str, str]:
             ChatPromptTemplate.from_messages(
                 [
                     ("system", ASSISTANT_SYSTEM_MESSAGE),
-                    ("human", CREATE_FULL_DOCUMENT_SUMMARY_PROMPT),
+                    ("human", prompt_template),
                 ]
             )
             | LLM
@@ -62,3 +60,25 @@ def build_summary_mappings(docs_by_id: Dict[str, Document]) -> Dict[str, str]:
             summaries[id] = summary
 
     return summaries
+
+
+def build_full_doc_summary_mappings(docs_by_id: Dict[str, Document]) -> Dict[str, str]:
+    """
+    Build summaries for all the given full documents.
+    """
+
+    return _build_summary_mappings(
+        docs_by_id=docs_by_id,
+        prompt_template=CREATE_FULL_DOCUMENT_SUMMARY_PROMPT,
+    )
+
+
+def build_chunk_summary_mappings(docs_by_id: Dict[str, Document]) -> Dict[str, str]:
+    """
+    Build summaries for all the given chunks.
+    """
+
+    return _build_summary_mappings(
+        docs_by_id=docs_by_id,
+        prompt_template=CREATE_CHUNK_SUMMARY_PROMPT,
+    )

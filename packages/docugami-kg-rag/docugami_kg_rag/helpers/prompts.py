@@ -21,7 +21,7 @@ All your answers must contain citations to help the user understand how you crea
 
 CREATE_DIRECT_RETRIEVAL_TOOL_DESCRIPTION_PROMPT = """Here is a snippet from a sample document of type {docset_name}:
 
-{doc_fragment}
+{document}
 
 Please write a short general description of the given document type, using the given sample as a guide.
 This description will be used to describe this type of document in general in a product. When users ask
@@ -42,7 +42,7 @@ before or after.
 
 CREATE_FULL_DOCUMENT_SUMMARY_PROMPT = """Here is a document, in {format} format:
 
-{doc_fragment}
+{document}
 
 Please write a detailed summary of the given document.
 
@@ -56,10 +56,12 @@ Keep in mind the following rules:
 Respond only with the detailed summary and no other language before or after.
 """
 
-QUERY_EXPANSION_PROMPT = """Generate four (4) different versions of the given user question to retrieve
-relevant documents from a vector database. By generating multiple perspectives on the user question, your
-goal is to help the user overcome some of the limitations of distance-based similarity search. Provide these
-alternative questions separated by newlines.
+CREATE_CHUNK_SUMMARY_PROMPT = """Here is a chunk from a document, in {format} format:
 
-Original question: {question}
+{document}
+
+I need your help to summarize the document, including any tables or text, for retrieval.
+This summary will be embedded and used to retrieve the raw text or table elements from a vector database.
+Respond only with the requested summary well optimized for retrieval and no other language
+before or after.
 """
