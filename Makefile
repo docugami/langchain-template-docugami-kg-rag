@@ -1,0 +1,7 @@
+format:
+	poetry run black .
+
+lint:
+	poetry run ruff check .
+	poetry run black --check .
+	poetry run npx pyright .

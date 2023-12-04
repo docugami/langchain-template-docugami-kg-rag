@@ -48,9 +48,7 @@ def update_local_index(docset_id: str, name: str, parents_by_id: Dict[str, Docum
     doc_summaries_by_id_store.mset(list(doc_summaries.items()))
 
     direct_tool_function_name = docset_name_to_direct_retriever_tool_function_name(name)
-    direct_tool_description = chunks_to_direct_retriever_tool_description(
-        name, list(parents_by_id.values())
-    )
+    direct_tool_description = chunks_to_direct_retriever_tool_description(name, list(parents_by_id.values()))
     report_details = build_report_details(docset_id)
 
     doc_index_state = LocalIndexState(
@@ -74,9 +72,7 @@ def populate_chroma_index(docset_id: str, chunks: List[Document]):
     print(f"Creating index for {docset_id}...")
 
     # Reset the collection
-    chroma = Chroma.from_documents(
-        chunks, EMBEDDINGS, persist_directory=CHROMA_DIRECTORY
-    )
+    chroma = Chroma.from_documents(chunks, EMBEDDINGS, persist_directory=CHROMA_DIRECTORY)
     chroma.persist()
 
     print(f"Done embedding documents to chroma collection {docset_id}!")
@@ -105,7 +101,7 @@ def index_docset(docset_id: str, name: str):
     parents_by_id: Dict[str, Document] = {}
     children_by_id: Dict[str, Document] = {}
     for chunk in chunks:
-        chunk_id = chunk.metadata.get("id")
+        chunk_id = str(chunk.metadata.get("id"))
         parent_chunk_id = chunk.metadata.get(loader.parent_id_key)
         if not parent_chunk_id:
             # parent chunk

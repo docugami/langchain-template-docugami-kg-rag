@@ -21,11 +21,7 @@ def build_summary_mappings(docs_by_id: Dict[str, Document]) -> Dict[str, str]:
     # build summaries for all the given documents
 
     summaries: Dict[str, str] = {}
-    format = (
-        "text"
-        if not INCLUDE_XML_TAGS
-        else "semantic XML without any namespaces or attributes"
-    )
+    format = "text" if not INCLUDE_XML_TAGS else "semantic XML without any namespaces or attributes"
 
     # Splitting the documents into batches
     doc_items = list(docs_by_id.items())

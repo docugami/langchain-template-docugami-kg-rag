@@ -20,6 +20,7 @@ docugami-kg-rag = {path = "packages/docugami-kg-rag", develop = true}
 jinja2 = "^3.1.2"
 typer = "^0.9.0"
 docugami = "^0.0.4"
+black = "^23.11.0"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -48,7 +49,6 @@ addopts = "--doctest-modules"
 norecursedirs = ".venv"
 
 [tool.pyright]
-include = ["dgml_utils", "tests"]
 ignore = ["**/node_modules", "**/__pycache__", ".venv"]
 reportMissingImports = true
 reportMissingTypeStubs = false

@@ -73,14 +73,10 @@ def chunks_to_direct_retriever_tool_description(name: str, chunks: List[Document
     return f"Searches for and returns chunks from {name} documents. {summary}"
 
 
-def get_retrieval_tool_for_docset(
-    docset_id: str, docset_state: LocalIndexState
-) -> Optional[BaseTool]:
+def get_retrieval_tool_for_docset(docset_id: str, docset_state: LocalIndexState) -> Optional[BaseTool]:
     # Chunks are in the vector store, and full documents are in the store inside the local state
 
-    chunk_vectorstore = Chroma(
-        persist_directory=CHROMA_DIRECTORY, embedding_function=EMBEDDINGS
-    )
+    chunk_vectorstore = Chroma(persist_directory=CHROMA_DIRECTORY, embedding_function=EMBEDDINGS)
 
     retriever = FusedSummaryRetriever(
         vectorstore=chunk_vectorstore,

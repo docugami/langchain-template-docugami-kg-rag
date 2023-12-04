@@ -65,16 +65,12 @@ agent = (
         {
             "input": lambda x: x["input"],  # type: ignore
             "chat_history": lambda x: _format_chat_history(x["chat_history"]),  # type: ignore
-            "agent_scratchpad": lambda x: format_to_openai_functions(
-                x["intermediate_steps"]
-            ),  # type: ignore
+            "agent_scratchpad": lambda x: format_to_openai_functions(x["intermediate_steps"]),  # type: ignore
             "functions": lambda x: [
                 format_tool_to_openai_function(tool)
                 for tool in (
-                    docset_retrieval_tools + report_retrieval_tools
-                    if x["use_reports"]
-                    else docset_retrieval_tools
-                )  # type: ignore
+                    docset_retrieval_tools + report_retrieval_tools if x["use_reports"] else docset_retrieval_tools  # type: ignore
+                )
             ],
         }
     )

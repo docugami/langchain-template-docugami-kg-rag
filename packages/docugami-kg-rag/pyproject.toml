@@ -51,7 +51,6 @@ addopts = "--doctest-modules"
 norecursedirs = ".venv"
 
 [tool.pyright]
-include = ["dgml_utils", "tests"]
 ignore = ["**/node_modules", "**/__pycache__", ".venv"]
 reportMissingImports = true
 reportMissingTypeStubs = false

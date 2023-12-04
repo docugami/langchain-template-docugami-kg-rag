@@ -20,14 +20,10 @@ if not DOCUGAMI_API_KEY:
 CHROMA_DIRECTORY = "/tmp/chroma_db"
 os.makedirs(Path(CHROMA_DIRECTORY).parent, exist_ok=True)
 
-INDEXING_LOCAL_STATE_PATH = os.environ.get(
-    "INDEXING_LOCAL_STATE_PATH", "/tmp/indexing_local_state.pkl"
-)
+INDEXING_LOCAL_STATE_PATH = os.environ.get("INDEXING_LOCAL_STATE_PATH", "/tmp/indexing_local_state.pkl")
 os.makedirs(Path(INDEXING_LOCAL_STATE_PATH).parent, exist_ok=True)
 
-INDEXING_LOCAL_REPORT_DBS_ROOT = os.environ.get(
-    "INDEXING_LOCAL_REPORT_DBS_ROOT", "/tmp/report_dbs"
-)
+INDEXING_LOCAL_REPORT_DBS_ROOT = os.environ.get("INDEXING_LOCAL_REPORT_DBS_ROOT", "/tmp/report_dbs")
 os.makedirs(Path(INDEXING_LOCAL_REPORT_DBS_ROOT).parent, exist_ok=True)
 
 LOCAL_LLM_CACHE_DB_FILE = os.environ.get("LOCAL_LLM_CACHE", "/tmp/.langchain.db")
