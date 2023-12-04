@@ -40,7 +40,7 @@ DOCUMENT_SUMMARY_TEMPLATE: str = """
 
 class FusedSummaryRetriever(BaseRetriever):
     """
-    Retrieves a fused document that using pre-calculated summaries
+    Retrieves a fused document that includes pre-calculated summaries
     for the full-document as well as individual chunks. Specifically:
 
     - Full document summaries are included in the fused document to give
