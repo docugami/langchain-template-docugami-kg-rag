@@ -118,4 +118,4 @@ def index_docset(docset_id: str, name: str):
             chunks_by_id[chunk_id] = chunk
 
     populate_chroma_index(docset_id, list(chunks_by_id.values()))
-    update_local_index(docset_id, name, full_docs_by_id)
+    update_local_index(docset_id, name, full_docs_by_id, chunks_by_id)
