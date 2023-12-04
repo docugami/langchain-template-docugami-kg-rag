@@ -66,11 +66,9 @@ Before the project can work, you'll have to index your Docugami docsets.
 ```bash
 poetry run index
 
-1: Corporate Charters (ID: d6aubexzhf5c)
-2: Customer Calls (ID: j3ms43eg302p)
+1: Master Services Agreements (ID: d6aubexzhf5c)
+2: Non-Disclosure Agreements (ID: j3ms43eg302p)
 3: Earnings Calls (ID: f46vx4fcmxac)
-4: Industry Calls (ID: mew6i8bsxuaz)
-5: Investor Presentations (ID: h2dih9yl1uqs)
 
 Please enter the number(s) of the docset(s) to index (comma-separated) or 'all' to index all docsets:
 ```
