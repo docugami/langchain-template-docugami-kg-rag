@@ -34,11 +34,7 @@ def download_project_latest_xlsx(project_url: str, local_xlsx: Path) -> Optional
     if response.ok:
         response_json = response.json()["artifacts"]
         xlsx_artifact = next(
-            (
-                item
-                for item in response_json
-                if str(item["name"]).lower().endswith(".xlsx")
-            ),
+            (item for item in response_json if str(item["name"]).lower().endswith(".xlsx")),
             None,
         )
         if xlsx_artifact:
@@ -102,9 +98,7 @@ def report_details_to_report_query_tool_description(name: str, table_info: str) 
     return description[:2048]  # cap to avoid failures when the description is too long
 
 
-def excel_to_sqlite_connection(
-    file_path: Union[Path, str], table_name: str
-) -> sqlite3.Connection:
+def excel_to_sqlite_connection(file_path: Union[Path, str], table_name: str) -> sqlite3.Connection:
     # Create a temporary SQLite database in memory
     conn = sqlite3.connect(":memory:")
 
@@ -155,12 +149,8 @@ def build_report_details(docset_id: str) -> List[ReportDetails]:
                     id=project.id,
                     name=report_name,
                     local_xlsx_path=local_xlsx_path,
-                    retrieval_tool_function_name=report_name_to_report_query_tool_function_name(
-                        project.name
-                    ),
-                    retrieval_tool_description=report_details_to_report_query_tool_description(
-                        project.name, table_info
-                    ),
+                    retrieval_tool_function_name=report_name_to_report_query_tool_function_name(project.name),
+                    retrieval_tool_description=report_details_to_report_query_tool_description(project.name, table_info),
                 )
             )
 
@@ -171,14 +161,10 @@ def get_retrieval_tool_for_report(report_details: ReportDetails) -> Optional[Bas
     if not report_details.local_xlsx_path:
         return None
 
-    conn = excel_to_sqlite_connection(
-        report_details.local_xlsx_path, report_details.name
-    )
+    conn = excel_to_sqlite_connection(report_details.local_xlsx_path, report_details.name)
     db = connect_to_db(conn)
     toolkit = SQLDatabaseToolkit(db=db, llm=LLM)
-    agent = create_sql_agent(
-        llm=LLM, toolkit=toolkit, agent_type=AgentType.OPENAI_FUNCTIONS
-    )
+    agent = create_sql_agent(llm=LLM, toolkit=toolkit, agent_type=AgentType.OPENAI_FUNCTIONS)
 
     return Tool.from_function(
         func=agent.run,

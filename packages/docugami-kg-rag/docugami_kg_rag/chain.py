@@ -69,8 +69,8 @@ agent = (
             "functions": lambda x: [
                 format_tool_to_openai_function(tool)
                 for tool in (
-                    docset_retrieval_tools + report_retrieval_tools if x["use_reports"] else docset_retrieval_tools
-                )  # type: ignore
+                    docset_retrieval_tools + report_retrieval_tools if x["use_reports"] else docset_retrieval_tools  # type: ignore
+                )
             ],
         }
     )

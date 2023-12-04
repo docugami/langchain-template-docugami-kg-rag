@@ -107,7 +107,7 @@ def index_docset(docset_id: str, name: str):
     full_docs_by_id: Dict[str, Document] = {}
     chunks_by_id: Dict[str, Document] = {}
     for chunk in chunks:
-        chunk_id = chunk.metadata.get("id")
+        chunk_id = str(chunk.metadata.get("id"))
         parent_chunk_id = chunk.metadata.get(loader.parent_id_key)
         if not parent_chunk_id:
             # parent chunk, add to full docs mapping
