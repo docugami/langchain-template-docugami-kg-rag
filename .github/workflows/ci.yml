@@ -16,11 +16,9 @@ jobs:
       shell: bash
 
     - name: Install dependencies
-      working-directory: python
       run: poetry install
 
     - name: Lint code
-      working-directory: python
       run: make lint
 
     - name: Check PR status
