@@ -16,13 +16,11 @@ After creating your virtual environment, you can install dependencies by running
 poetry install
 ```
 
-We also require you to set environment variables in order to use our tools. You will also need your Docugami API key, OpenAI API key, and a Pinecone API key.
+We also require you to set environment variables in order to use our tools. You will also need your Docugami API key and an OpenAI API key.
 
 ```bash
 export DOCUGAMI_API_KEY=...
-
-export ENVIRONMENT=...
-export PINECONE_API_KEY=...
+export OPENAI_API_KEY=...
 ```
 
 ## Adding more packages
