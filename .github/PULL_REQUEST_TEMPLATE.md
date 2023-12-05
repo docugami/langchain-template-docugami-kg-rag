@@ -1,4 +1,4 @@
-<!-- Thank you for contributing to Docugami's dgml-utils!
+<!-- Thank you for contributing to Docugami's langchain-template-docugami-kg-rag!
 
 Replace this entire comment with:
   - **Description:** a description of the change, 
@@ -9,7 +9,7 @@ Replace this entire comment with:
 Please make sure your PR is passing linting before submitting. Run `make lint` to check this locally.
 
 See contribution guidelines for more information on how to write/run tests, lint, etc: 
-https://github.com/docugami/dgml-utils/tree/main/.github/CONTRIBUTING.md
+https://github.com/docugami/langchain-template-docugami-kg-rag/tree/main/.github/CONTRIBUTING.md
 
 If no one reviews your PR within a few days, please @-mention one of @tjaffri, @kenzie28.
  -->

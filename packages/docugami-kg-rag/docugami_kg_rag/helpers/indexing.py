@@ -1,3 +1,4 @@
+import hashlib
 import os
 import pickle
 from pathlib import Path
@@ -18,8 +19,9 @@ from docugami_kg_rag.config import (
     PARENT_HIERARCHY_LEVELS,
     SUB_CHUNK_TABLES,
     LocalIndexState,
+    ReportDetails,
 )
-from docugami_kg_rag.helpers.documents import build_summary_mappings
+from docugami_kg_rag.helpers.documents import build_full_doc_summary_mappings, build_chunk_summary_mappings
 from docugami_kg_rag.helpers.reports import build_report_details
 from docugami_kg_rag.helpers.retrieval import (
     chunks_to_direct_retriever_tool_description,
@@ -35,25 +37,29 @@ def read_all_local_index_state() -> Dict[str, LocalIndexState]:
         return pickle.load(file)
 
 
-def update_local_index(docset_id: str, name: str, parents_by_id: Dict[str, Document]):
-    # Populate local index
+def update_local_index(
+    docset_id: str,
+    full_doc_summaries_by_id: Dict[str, Document],
+    chunks_by_id: Dict[str, Document],
+    direct_tool_function_name: str,
+    direct_tool_description: str,
+    report_details: List[ReportDetails],
+):
+    """
+    Read and update local index
+    """
 
     state = read_all_local_index_state()
 
-    parents_by_id_store = InMemoryStore()
-    parents_by_id_store.mset(list(parents_by_id.items()))
+    full_doc_summaries_by_id_store = InMemoryStore()
+    full_doc_summaries_by_id_store.mset(list(full_doc_summaries_by_id.items()))
 
-    doc_summaries = build_summary_mappings(parents_by_id)
-    doc_summaries_by_id_store = InMemoryStore()
-    doc_summaries_by_id_store.mset(list(doc_summaries.items()))
-
-    direct_tool_function_name = docset_name_to_direct_retriever_tool_function_name(name)
-    direct_tool_description = chunks_to_direct_retriever_tool_description(name, list(parents_by_id.values()))
-    report_details = build_report_details(docset_id)
+    chunks_by_id_store = InMemoryStore()
+    chunks_by_id_store.mset(list(chunks_by_id.items()))
 
     doc_index_state = LocalIndexState(
-        parents_by_id=parents_by_id_store,
-        doc_summaries_by_id=doc_summaries_by_id_store,
+        full_doc_summaries_by_id=full_doc_summaries_by_id_store,
+        chunks_by_id=chunks_by_id_store,
         retrieval_tool_function_name=direct_tool_function_name,
         retrieval_tool_description=direct_tool_description,
         reports=report_details,
@@ -68,7 +74,10 @@ def update_local_index(docset_id: str, name: str, parents_by_id: Dict[str, Docum
 
 
 def populate_chroma_index(docset_id: str, chunks: List[Document]):
-    # Create index if it does not exist
+    """
+    Create index if it does not exist
+    """
+
     print(f"Creating index for {docset_id}...")
 
     # Reset the collection
@@ -79,7 +88,9 @@ def populate_chroma_index(docset_id: str, chunks: List[Document]):
 
 
 def index_docset(docset_id: str, name: str):
-    # Indexes the given docset
+    """
+    Indexes the given docset
+    """
 
     print(f"Indexing {name} (ID: {docset_id})")
 
@@ -97,18 +108,57 @@ def index_docset(docset_id: str, name: str):
 
     chunks = loader.load()
 
-    # Build separate maps of parent and child chunks
-    parents_by_id: Dict[str, Document] = {}
-    children_by_id: Dict[str, Document] = {}
+    # Build separate maps of chunks, and parents
+    parent_chunks_by_id: Dict[str, Document] = {}
+    chunks_by_source: Dict[str, List[str]] = {}
     for chunk in chunks:
         chunk_id = str(chunk.metadata.get("id"))
+        chunk_source = str(chunk.metadata.get("source"))
         parent_chunk_id = chunk.metadata.get(loader.parent_id_key)
         if not parent_chunk_id:
-            # parent chunk
-            parents_by_id[chunk_id] = chunk
+            # parent chunk, we will use this (for expanded context) as our chunk
+            parent_chunks_by_id[chunk_id] = chunk
         else:
-            # child chunk
-            children_by_id[chunk_id] = chunk
+            # child chunk, we will keep track of this to build up our
+            # full document summary
+            if chunk_source not in chunks_by_source:
+                chunks_by_source[chunk_source] = []
 
-    populate_chroma_index(docset_id, list(children_by_id.values()))
-    update_local_index(docset_id, name, parents_by_id)
+            chunks_by_source[chunk_source].append(chunk.page_content)
+
+    # Build up the full docs by concatenating all the child chunks
+    full_docs_by_id: Dict[str, Document] = {}
+    full_doc_ids_by_source: Dict[str, str] = {}
+    for source in chunks_by_source:
+        chunks_from_source = chunks_by_source[source]
+        full_doc_text = "\n".join([c for c in chunks_from_source])
+        full_doc_id = hashlib.md5(full_doc_text.encode()).hexdigest()
+        full_doc_ids_by_source[source] = full_doc_id
+        full_docs_by_id[full_doc_id] = Document(page_content=full_doc_text, metadata={"id": full_doc_id})
+
+    # Associate parent chunks with full docs
+    for parent_chunk_id in parent_chunks_by_id:
+        parent_chunk = parent_chunks_by_id[parent_chunk_id]
+        parent_chunk_source = parent_chunk.metadata.get("source")
+        if parent_chunk_source:
+            full_doc_id = full_doc_ids_by_source.get(parent_chunk_source)
+            if full_doc_id:
+                parent_chunk.metadata["full_doc_id"] = full_doc_id
+
+    full_doc_summaries_by_id = build_full_doc_summary_mappings(full_docs_by_id)
+    chunk_summaries_by_id = build_chunk_summary_mappings(parent_chunks_by_id)
+
+    direct_tool_function_name = docset_name_to_direct_retriever_tool_function_name(name)
+    direct_tool_description = chunks_to_direct_retriever_tool_description(name, list(parent_chunks_by_id.values()))
+    report_details = build_report_details(docset_id)
+
+    update_local_index(
+        docset_id=docset_id,
+        full_doc_summaries_by_id=full_doc_summaries_by_id,
+        chunks_by_id=parent_chunks_by_id,  # we are using the parent chunks as chunks for expanded context
+        direct_tool_function_name=direct_tool_function_name,
+        direct_tool_description=direct_tool_description,
+        report_details=report_details,
+    )
+
+    populate_chroma_index(docset_id, list(chunk_summaries_by_id.values()))

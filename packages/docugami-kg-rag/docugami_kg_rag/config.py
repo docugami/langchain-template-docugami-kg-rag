@@ -9,7 +9,8 @@ from langchain.embeddings import OpenAIEmbeddings
 from langchain.globals import set_llm_cache
 from langchain.storage.in_memory import InMemoryStore
 
-LLM = ChatOpenAI(temperature=0, model="gpt-4-1106-preview")
+LARGE_CONTEXT_LLM = ChatOpenAI(temperature=0, model="gpt-4-1106-preview")
+SMALL_CONTEXT_LLM = ChatOpenAI(temperature=0, model="gpt-4")
 
 EMBEDDINGS = OpenAIEmbeddings(model="text-embedding-ada-002")
 
@@ -17,16 +18,16 @@ DOCUGAMI_API_KEY = os.environ.get("DOCUGAMI_API_KEY")
 if not DOCUGAMI_API_KEY:
     raise Exception("Please set the DOCUGAMI_API_KEY environment variable")
 
-CHROMA_DIRECTORY = "/tmp/chroma_db"
+CHROMA_DIRECTORY = "/tmp/docugami/chroma_db"
 os.makedirs(Path(CHROMA_DIRECTORY).parent, exist_ok=True)
 
-INDEXING_LOCAL_STATE_PATH = os.environ.get("INDEXING_LOCAL_STATE_PATH", "/tmp/indexing_local_state.pkl")
+INDEXING_LOCAL_STATE_PATH = os.environ.get("INDEXING_LOCAL_STATE_PATH", "/tmp/docugami/indexing_local_state.pkl")
 os.makedirs(Path(INDEXING_LOCAL_STATE_PATH).parent, exist_ok=True)
 
-INDEXING_LOCAL_REPORT_DBS_ROOT = os.environ.get("INDEXING_LOCAL_REPORT_DBS_ROOT", "/tmp/report_dbs")
+INDEXING_LOCAL_REPORT_DBS_ROOT = os.environ.get("INDEXING_LOCAL_REPORT_DBS_ROOT", "/tmp/docugami/report_dbs")
 os.makedirs(Path(INDEXING_LOCAL_REPORT_DBS_ROOT).parent, exist_ok=True)
 
-LOCAL_LLM_CACHE_DB_FILE = os.environ.get("LOCAL_LLM_CACHE", "/tmp/.langchain.db")
+LOCAL_LLM_CACHE_DB_FILE = os.environ.get("LOCAL_LLM_CACHE", "/tmp/docugami/.langchain.db")
 os.makedirs(Path(LOCAL_LLM_CACHE_DB_FILE).parent, exist_ok=True)
 set_llm_cache(SQLiteCache(database_path=LOCAL_LLM_CACHE_DB_FILE))
 
@@ -53,11 +54,11 @@ class ReportDetails:
 
 @dataclass
 class LocalIndexState:
-    parents_by_id: InMemoryStore
-    """Mapping of ID to parent chunks."""
+    full_doc_summaries_by_id: InMemoryStore
+    """Mapping of ID to full document summaries."""
 
-    doc_summaries_by_id: InMemoryStore
-    """Mapping of ID to document summaries."""
+    chunks_by_id: InMemoryStore
+    """Mapping of ID to chunks."""
 
     retrieval_tool_function_name: str
     """Function name for retrieval tool e.g. "search_earnings_calls."""
@@ -71,14 +72,11 @@ class LocalIndexState:
 
 # Lengths for the loader are in terms of characters, 1 token ~= 4 chars in English
 # Reference: https://help.openai.com/en/articles/4936856-what-are-tokens-and-how-to-count-them
-MAX_CHUNK_TEXT_LENGTH = 1024 * 128  # ~32k tokens
-MIN_CHUNK_TEXT_LENGTH = 256
+MAX_CHUNK_TEXT_LENGTH = 1024 * 24  # ~6k tokens
+MIN_CHUNK_TEXT_LENGTH = 1024 * 8  # ~2k tokens
 SUB_CHUNK_TABLES = False
 INCLUDE_XML_TAGS = True
-PARENT_HIERARCHY_LEVELS = 1000
+PARENT_HIERARCHY_LEVELS = 1
 RETRIEVER_K = 10
 
-SMALL_FRAGMENT_MAX_TEXT_LENGTH = 1024 * 4
-LARGE_FRAGMENT_MAX_TEXT_LENGTH = 1024 * 20
-
-BATCH_SIZE = 5
+BATCH_SIZE = 16

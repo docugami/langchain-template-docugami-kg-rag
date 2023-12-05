@@ -10,9 +10,9 @@ You ALWAYS follow the following guidance to generate your answers, regardless of
 All your answers must contain citations to help the user understand how you created the citation, specifically:
 
 - If the given context contains the names of document(s), make sure you include that in your answer as 
-  a citation, e.g. include \n\nSOURCE(S): foo.pdf, bar.pdf at the end of your answer.
+  a citation, e.g. include "\\n\\nSOURCE(S): foo.pdf, bar.pdf" at the end of your answer.
 - If the answer was generated via a SQL Query, make sure you include the SQL query in your answer as
-  a citation, e.g. include \n\nSOURCE(S): SELECT AVG('square footage') from Leases. The SQL query should be
+  a citation, e.g. include "\\n\\nSOURCE(S): SELECT AVG('square footage') from Leases". The SQL query should be
   in the agent scratchpad provided.
 - Make sure there an actual answer if you show a SOURCE citation, i.e. make sure you don't show only
   a bare citation with no actual answer. 
@@ -21,7 +21,7 @@ All your answers must contain citations to help the user understand how you crea
 
 CREATE_DIRECT_RETRIEVAL_TOOL_DESCRIPTION_PROMPT = """Here is a snippet from a sample document of type {docset_name}:
 
-{doc_fragment}
+{document}
 
 Please write a short general description of the given document type, using the given sample as a guide.
 This description will be used to describe this type of document in general in a product. When users ask
@@ -31,8 +31,9 @@ answer for that question is likely to be found in this type of document or not.
 Follow the following rules:
 
 - The generated description must apply to all documents of type {docset_name}, similar to the sample
-  document above, not just the given same document. Do NOT include any data or details from this
-  particular sample document.
+  document above, not just the given same document.
+- Do NOT include any data or details from this particular sample document but DO use this sample
+  document to get a better understanding of what {docset_name} type documents contain in this context.
 - The generated description should be very short and up to 2 sentences max.
 
 Respond only with the requested general description of the document type and no other language
@@ -42,7 +43,7 @@ before or after.
 
 CREATE_FULL_DOCUMENT_SUMMARY_PROMPT = """Here is a document, in {format} format:
 
-{doc_fragment}
+{document}
 
 Please write a detailed summary of the given document.
 
@@ -56,10 +57,12 @@ Keep in mind the following rules:
 Respond only with the detailed summary and no other language before or after.
 """
 
-QUERY_EXPANSION_PROMPT = """Generate four (4) different versions of the given user question to retrieve
-relevant documents from a vector database. By generating multiple perspectives on the user question, your
-goal is to help the user overcome some of the limitations of distance-based similarity search. Provide these
-alternative questions separated by newlines.
+CREATE_CHUNK_SUMMARY_PROMPT = """Here is a chunk from a document, in {format} format:
 
-Original question: {question}
+{document}
+
+I need your help to summarize the document, including any tables or text, for retrieval.
+This summary will be embedded and used to retrieve the raw text or table elements from a vector database.
+Respond only with the requested summary well optimized for retrieval and no other language
+before or after.
 """

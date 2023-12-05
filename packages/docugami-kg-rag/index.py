@@ -1,3 +1,4 @@
+import sys
 import typer
 from docugami import Docugami
 
@@ -35,4 +36,8 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    if sys.gettrace():
+        # This code will only run if a debugger is attached
+        index_docset(docset_id="clajbjkbnuye", name="Semi-Structured")
+    else:
+        main()
