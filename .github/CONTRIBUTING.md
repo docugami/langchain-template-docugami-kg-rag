@@ -1,6 +1,6 @@
 # Contributing to Docugami
 
-Hi there! Thank you for even being interested in contributing to Docugami's dgml-utils.
+Hi there! Thank you for even being interested in contributing to Docugami's langchain-template-docugami-kg-rag.
 As an open-source project in a rapidly developing field, we are extremely open to contributions, whether they involve new features, improved infrastructure, better documentation, or bug fixes.
 
 ## 🗺️ Guidelines
@@ -21,7 +21,7 @@ best way to get our attention.
 
 ### 🚩GitHub Issues
 
-Our [issues](https://github.com/docugami/dgml-utils/issues) page is kept up to date with bugs, improvements, and feature requests.
+Our [issues](https://github.com/docugami/langchain-template-docugami-kg-rag/issues) page is kept up to date with bugs, improvements, and feature requests.
 
 If you start working on an issue, please assign it to yourself.
 
@@ -44,7 +44,7 @@ we do not want these to get in the way of getting good code into the codebase.
 
 ### Local Development Dependencies
 
-Install dgml-utils development requirements (for running dgml-utils, running examples, linting, formatting, tests, and coverage):
+Install langchain-template-docugami-kg-rag development requirements (for running langchain-template-docugami-kg-rag, running examples, linting, formatting, tests, and coverage):
 
 ```bash
 poetry install
@@ -92,8 +92,3 @@ make lint
 ```
 
 We recognize linting can be annoying - if you do not want to do it, please contact a project maintainer, and they can help you with it. We do not want this to be a blocker for good code getting contributed.
-
-## 🏭 Release Process
-
-As of now, Docugami has an ad hoc release process: releases are cut with high frequency by
-a developer and published to [PyPI](https://pypi.org/project/dgml-utils/).
