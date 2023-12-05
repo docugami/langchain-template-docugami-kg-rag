@@ -31,8 +31,9 @@ answer for that question is likely to be found in this type of document or not.
 Follow the following rules:
 
 - The generated description must apply to all documents of type {docset_name}, similar to the sample
-  document above, not just the given same document. Do NOT include any data or details from this
-  particular sample document.
+  document above, not just the given same document.
+- Do NOT include any data or details from this particular sample document but DO use this sample
+  document to get a better understanding of what {docset_name} type documents contain in this context.
 - The generated description should be very short and up to 2 sentences max.
 
 Respond only with the requested general description of the document type and no other language

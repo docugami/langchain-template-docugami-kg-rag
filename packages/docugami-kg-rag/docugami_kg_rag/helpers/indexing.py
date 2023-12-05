@@ -1,3 +1,4 @@
+import hashlib
 import os
 import pickle
 from pathlib import Path
@@ -107,32 +108,54 @@ def index_docset(docset_id: str, name: str):
 
     chunks = loader.load()
 
-    # Build separate maps of chunks, full docs
-    full_docs_by_id: Dict[str, Document] = {}
-    chunks_by_id: Dict[str, Document] = {}
+    # Build separate maps of chunks, and parents
+    parent_chunks_by_id: Dict[str, Document] = {}
+    chunks_by_source: Dict[str, List[str]] = {}
     for chunk in chunks:
         chunk_id = str(chunk.metadata.get("id"))
+        chunk_source = str(chunk.metadata.get("source"))
         parent_chunk_id = chunk.metadata.get(loader.parent_id_key)
         if not parent_chunk_id:
-            # parent chunk, add to full docs mapping
-            full_docs_by_id[chunk_id] = chunk
+            # parent chunk, we will use this (for expanded context) as our chunk
+            parent_chunks_by_id[chunk_id] = chunk
         else:
-            # child chunk, add to chunks mapping
-            del chunk.metadata[loader.parent_id_key]
-            chunk.metadata["full_doc_id"] = parent_chunk_id  # parent is full doc
-            chunks_by_id[chunk_id] = chunk
+            # child chunk, we will keep track of this to build up our
+            # full document summary
+            if chunk_source not in chunks_by_source:
+                chunks_by_source[chunk_source] = []
+
+            chunks_by_source[chunk_source].append(chunk.page_content)
+
+    # Build up the full docs by concatenating all the child chunks
+    full_docs_by_id: Dict[str, Document] = {}
+    full_doc_ids_by_source: Dict[str, str] = {}
+    for source in chunks_by_source:
+        chunks_from_source = chunks_by_source[source]
+        full_doc_text = "\n".join([c for c in chunks_from_source])
+        full_doc_id = hashlib.md5(full_doc_text.encode()).hexdigest()
+        full_doc_ids_by_source[source] = full_doc_id
+        full_docs_by_id[full_doc_id] = Document(page_content=full_doc_text, metadata={"id": full_doc_id})
+
+    # Associate parent chunks with full docs
+    for parent_chunk_id in parent_chunks_by_id:
+        parent_chunk = parent_chunks_by_id[parent_chunk_id]
+        parent_chunk_source = parent_chunk.metadata.get("source")
+        if parent_chunk_source:
+            full_doc_id = full_doc_ids_by_source.get(parent_chunk_source)
+            if full_doc_id:
+                parent_chunk.metadata["full_doc_id"] = full_doc_id
 
     full_doc_summaries_by_id = build_full_doc_summary_mappings(full_docs_by_id)
-    chunk_summaries_by_id = build_chunk_summary_mappings(chunks_by_id)
+    chunk_summaries_by_id = build_chunk_summary_mappings(parent_chunks_by_id)
 
     direct_tool_function_name = docset_name_to_direct_retriever_tool_function_name(name)
-    direct_tool_description = chunks_to_direct_retriever_tool_description(name, list(full_docs_by_id.values()))
+    direct_tool_description = chunks_to_direct_retriever_tool_description(name, list(parent_chunks_by_id.values()))
     report_details = build_report_details(docset_id)
 
     update_local_index(
         docset_id=docset_id,
         full_doc_summaries_by_id=full_doc_summaries_by_id,
-        chunks_by_id=chunks_by_id,
+        chunks_by_id=parent_chunks_by_id,  # we are using the parent chunks as chunks for expanded context
         direct_tool_function_name=direct_tool_function_name,
         direct_tool_description=direct_tool_description,
         report_details=report_details,

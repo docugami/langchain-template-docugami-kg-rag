@@ -10,9 +10,9 @@ from langchain.vectorstores import Chroma
 from docugami_kg_rag.config import (
     CHROMA_DIRECTORY,
     EMBEDDINGS,
-    LLM,
+    LARGE_CONTEXT_LLM,
     RETRIEVER_K,
-    FRAGMENT_MAX_TEXT_LENGTH,
+    MAX_CHUNK_TEXT_LENGTH,
     LocalIndexState,
 )
 from docugami_kg_rag.helpers.fused_summary_retriever import (
@@ -57,7 +57,7 @@ def chunks_to_direct_retriever_tool_description(name: str, chunks: List[Document
     Converts a set of chunks to a direct retriever tool description.
     """
     texts = [c.page_content for c in chunks[:100]]
-    document = "\n".join(texts)[:FRAGMENT_MAX_TEXT_LENGTH]
+    document = "\n".join(texts)[:MAX_CHUNK_TEXT_LENGTH]
 
     chain = (
         ChatPromptTemplate.from_messages(
@@ -66,7 +66,7 @@ def chunks_to_direct_retriever_tool_description(name: str, chunks: List[Document
                 ("human", CREATE_DIRECT_RETRIEVAL_TOOL_DESCRIPTION_PROMPT),
             ]
         )
-        | LLM
+        | LARGE_CONTEXT_LLM
         | StrOutputParser()
     )
     summary = chain.invoke({"docset_name": name, "document": document})

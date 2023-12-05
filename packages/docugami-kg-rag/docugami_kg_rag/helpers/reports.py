@@ -17,7 +17,7 @@ from langchain.utilities.sql_database import SQLDatabase
 from docugami_kg_rag.config import (
     DOCUGAMI_API_KEY,
     INDEXING_LOCAL_REPORT_DBS_ROOT,
-    LLM,
+    SMALL_CONTEXT_LLM,
     ReportDetails,
 )
 
@@ -163,8 +163,8 @@ def get_retrieval_tool_for_report(report_details: ReportDetails) -> Optional[Bas
 
     conn = excel_to_sqlite_connection(report_details.local_xlsx_path, report_details.name)
     db = connect_to_db(conn)
-    toolkit = SQLDatabaseToolkit(db=db, llm=LLM)
-    agent = create_sql_agent(llm=LLM, toolkit=toolkit, agent_type=AgentType.OPENAI_FUNCTIONS)
+    toolkit = SQLDatabaseToolkit(db=db, llm=SMALL_CONTEXT_LLM)
+    agent = create_sql_agent(llm=SMALL_CONTEXT_LLM, toolkit=toolkit, agent_type=AgentType.OPENAI_FUNCTIONS)
 
     return Tool.from_function(
         func=agent.run,

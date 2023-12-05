@@ -4,14 +4,16 @@ from typing import Dict
 
 from langchain.prompts import ChatPromptTemplate
 from langchain.schema import StrOutputParser
+from langchain.chat_models.base import BaseChatModel
 from langchain.schema.runnable import RunnableLambda, RunnableBranch
 from langchain_core.documents import Document
 
 from docugami_kg_rag.config import (
     BATCH_SIZE,
     INCLUDE_XML_TAGS,
-    FRAGMENT_MAX_TEXT_LENGTH,
-    LLM,
+    MAX_CHUNK_TEXT_LENGTH,
+    SMALL_CONTEXT_LLM,
+    LARGE_CONTEXT_LLM,
 )
 from docugami_kg_rag.helpers.prompts import (
     ASSISTANT_SYSTEM_MESSAGE,
@@ -23,6 +25,7 @@ from docugami_kg_rag.helpers.prompts import (
 def _build_summary_mappings(
     docs_by_id: Dict[str, Document],
     prompt_template: str,
+    llm: BaseChatModel = SMALL_CONTEXT_LLM,
     summarize_length_threshold=2048,
     label="summaries",
 ) -> Dict[str, Document]:
@@ -44,7 +47,7 @@ def _build_summary_mappings(
         batch_input = [
             {
                 "format": format,
-                "document": doc.page_content[:FRAGMENT_MAX_TEXT_LENGTH],
+                "document": doc.page_content[:MAX_CHUNK_TEXT_LENGTH],
             }
             for _, doc in batch
         ]
@@ -56,7 +59,7 @@ def _build_summary_mappings(
                     ("human", prompt_template),
                 ]
             )
-            | LLM
+            | llm
             | StrOutputParser()
         )
         noop_chain = RunnableLambda(lambda x: x["document"])
@@ -92,6 +95,7 @@ def build_full_doc_summary_mappings(docs_by_id: Dict[str, Document]) -> Dict[str
     return _build_summary_mappings(
         docs_by_id=docs_by_id,
         prompt_template=CREATE_FULL_DOCUMENT_SUMMARY_PROMPT,
+        llm=LARGE_CONTEXT_LLM,
         label="full document summaries",
     )
 
@@ -104,5 +108,6 @@ def build_chunk_summary_mappings(docs_by_id: Dict[str, Document]) -> Dict[str, D
     return _build_summary_mappings(
         docs_by_id=docs_by_id,
         prompt_template=CREATE_CHUNK_SUMMARY_PROMPT,
+        llm=SMALL_CONTEXT_LLM,
         label="chunk summaries",
     )
