@@ -16,13 +16,14 @@ After creating your virtual environment, you can install dependencies by running
 poetry install
 ```
 
-We also require you to set environment variables in order to use our tools. You will also need your Docugami API key, OpenAI API key, and a Pinecone API key.
+You need to set some required environment variables before using your new app based on this template. These are used to index as well as run the application, and exceptions are raised if the following required environment variables are not set:
 
-```bash
+1. `OPENAI_API_KEY`: from the OpenAI platform.
+2. `DOCUGAMI_API_KEY`: from the [Docugami Developer Playground](https://help.docugami.com/home/docugami-api)
+
+```shell
+export OPENAI_API_KEY=...
 export DOCUGAMI_API_KEY=...
-
-export ENVIRONMENT=...
-export PINECONE_API_KEY=...
 ```
 
 ## Adding more packages
@@ -78,5 +79,5 @@ Note that indexing may take awhile, especially with larger docsets.
 Once you're done creating your index, launch your project with:
 
 ```bash
-poetry run uvicorn app.server:app --reload
+poetry run langchain serve
 ```
