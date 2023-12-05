@@ -12,7 +12,7 @@ from docugami_kg_rag.config import (
     EMBEDDINGS,
     LLM,
     RETRIEVER_K,
-    SMALL_FRAGMENT_MAX_TEXT_LENGTH,
+    FRAGMENT_MAX_TEXT_LENGTH,
     LocalIndexState,
 )
 from docugami_kg_rag.helpers.fused_summary_retriever import (
@@ -57,7 +57,7 @@ def chunks_to_direct_retriever_tool_description(name: str, chunks: List[Document
     Converts a set of chunks to a direct retriever tool description.
     """
     texts = [c.page_content for c in chunks[:100]]
-    document = "\n".join(texts)[:SMALL_FRAGMENT_MAX_TEXT_LENGTH]
+    document = "\n".join(texts)[:FRAGMENT_MAX_TEXT_LENGTH]
 
     chain = (
         ChatPromptTemplate.from_messages(
@@ -82,7 +82,7 @@ def get_retrieval_tool_for_docset(docset_state: LocalIndexState) -> Optional[Bas
 
     retriever = FusedSummaryRetriever(
         vectorstore=chunk_vectorstore,
-        parent_doc_store=docset_state.chunk_summaries_by_id,
+        parent_doc_store=docset_state.chunks_by_id,
         full_doc_summary_store=docset_state.full_doc_summaries_by_id,
         search_kwargs={"k": RETRIEVER_K},
         search_type=SearchType.mmr,

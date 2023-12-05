@@ -55,7 +55,7 @@ class FusedSummaryRetriever(BaseRetriever):
     """The underlying vectorstore to use to store small chunks
     and their embedding vectors."""
 
-    full_doc_summary_store: BaseStore[str, str]
+    full_doc_summary_store: BaseStore[str, Document]
     """The storage layer for the parent document summaries."""
 
     parent_doc_store: BaseStore[str, Document]
@@ -102,7 +102,7 @@ class FusedSummaryRetriever(BaseRetriever):
                 full_doc_summary_in_store = self.full_doc_summary_store.mget([full_doc_summary_id])
                 if parent_in_store and full_doc_summary_in_store:
                     parent: Document = parent_in_store[0]  # type: ignore
-                    full_doc_summary: str = full_doc_summary_in_store[0]  # type: ignore
+                    full_doc_summary: str = full_doc_summary_in_store[0].page_content  # type: ignore
                 else:
                     raise Exception(
                         f"No parent or full doc summary found for retrieved doc {sub_doc},"

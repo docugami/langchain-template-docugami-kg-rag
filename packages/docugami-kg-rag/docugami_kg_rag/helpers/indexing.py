@@ -18,6 +18,7 @@ from docugami_kg_rag.config import (
     PARENT_HIERARCHY_LEVELS,
     SUB_CHUNK_TABLES,
     LocalIndexState,
+    ReportDetails,
 )
 from docugami_kg_rag.helpers.documents import build_full_doc_summary_mappings, build_chunk_summary_mappings
 from docugami_kg_rag.helpers.reports import build_report_details
@@ -37,29 +38,27 @@ def read_all_local_index_state() -> Dict[str, LocalIndexState]:
 
 def update_local_index(
     docset_id: str,
-    name: str,
-    full_docs_by_id: Dict[str, Document],
+    full_doc_summaries_by_id: Dict[str, Document],
     chunks_by_id: Dict[str, Document],
+    direct_tool_function_name: str,
+    direct_tool_description: str,
+    report_details: List[ReportDetails],
 ):
-    # Populate local index
+    """
+    Read and update local index
+    """
 
     state = read_all_local_index_state()
 
-    full_doc_summaries = build_full_doc_summary_mappings(full_docs_by_id)
     full_doc_summaries_by_id_store = InMemoryStore()
-    full_doc_summaries_by_id_store.mset(list(full_doc_summaries.items()))
+    full_doc_summaries_by_id_store.mset(list(full_doc_summaries_by_id.items()))
 
-    chunk_summaries = build_chunk_summary_mappings(chunks_by_id)
-    chunk_summaries_by_id_store = InMemoryStore()
-    chunk_summaries_by_id_store.mset(list(chunk_summaries.items()))
-
-    direct_tool_function_name = docset_name_to_direct_retriever_tool_function_name(name)
-    direct_tool_description = chunks_to_direct_retriever_tool_description(name, list(full_docs_by_id.values()))
-    report_details = build_report_details(docset_id)
+    chunks_by_id_store = InMemoryStore()
+    chunks_by_id_store.mset(list(chunks_by_id.items()))
 
     doc_index_state = LocalIndexState(
         full_doc_summaries_by_id=full_doc_summaries_by_id_store,
-        chunk_summaries_by_id=chunk_summaries_by_id_store,
+        chunks_by_id=chunks_by_id_store,
         retrieval_tool_function_name=direct_tool_function_name,
         retrieval_tool_description=direct_tool_description,
         reports=report_details,
@@ -74,7 +73,10 @@ def update_local_index(
 
 
 def populate_chroma_index(docset_id: str, chunks: List[Document]):
-    # Create index if it does not exist
+    """
+    Create index if it does not exist
+    """
+
     print(f"Creating index for {docset_id}...")
 
     # Reset the collection
@@ -85,7 +87,9 @@ def populate_chroma_index(docset_id: str, chunks: List[Document]):
 
 
 def index_docset(docset_id: str, name: str):
-    # Indexes the given docset
+    """
+    Indexes the given docset
+    """
 
     print(f"Indexing {name} (ID: {docset_id})")
 
@@ -115,7 +119,23 @@ def index_docset(docset_id: str, name: str):
         else:
             # child chunk, add to chunks mapping
             del chunk.metadata[loader.parent_id_key]
+            chunk.metadata["full_doc_id"] = parent_chunk_id  # parent is full doc
             chunks_by_id[chunk_id] = chunk
 
-    populate_chroma_index(docset_id, list(chunks_by_id.values()))
-    update_local_index(docset_id, name, full_docs_by_id, chunks_by_id)
+    full_doc_summaries_by_id = build_full_doc_summary_mappings(full_docs_by_id)
+    chunk_summaries_by_id = build_chunk_summary_mappings(chunks_by_id)
+
+    direct_tool_function_name = docset_name_to_direct_retriever_tool_function_name(name)
+    direct_tool_description = chunks_to_direct_retriever_tool_description(name, list(full_docs_by_id.values()))
+    report_details = build_report_details(docset_id)
+
+    update_local_index(
+        docset_id=docset_id,
+        full_doc_summaries_by_id=full_doc_summaries_by_id,
+        chunks_by_id=chunks_by_id,
+        direct_tool_function_name=direct_tool_function_name,
+        direct_tool_description=direct_tool_description,
+        report_details=report_details,
+    )
+
+    populate_chroma_index(docset_id, list(chunk_summaries_by_id.values()))
