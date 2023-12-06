@@ -3,7 +3,7 @@ from typing import List, Optional
 
 from langchain.agents.agent_toolkits import create_retriever_tool
 from langchain.prompts import ChatPromptTemplate
-from langchain.schema import Document, StrOutputParser
+from langchain.schema import BaseRetriever, Document, StrOutputParser
 from langchain.tools.base import BaseTool
 from langchain.vectorstores import Chroma
 
@@ -23,6 +23,22 @@ from docugami_kg_rag.helpers.prompts import (
     ASSISTANT_SYSTEM_MESSAGE,
     CREATE_DIRECT_RETRIEVAL_TOOL_DESCRIPTION_PROMPT,
 )
+
+
+def get_retriever_for_docset(docset_state: LocalIndexState) -> BaseRetriever:
+    """
+    Gets a retriever for a docset. Chunks are in the vector store, and full documents
+    are in the store inside the local state.
+    """
+    chunk_vectorstore = Chroma(persist_directory=CHROMA_DIRECTORY, embedding_function=EMBEDDINGS)
+
+    return FusedSummaryRetriever(
+        vectorstore=chunk_vectorstore,
+        parent_doc_store=docset_state.chunks_by_id,
+        full_doc_summary_store=docset_state.full_doc_summaries_by_id,
+        search_kwargs={"k": RETRIEVER_K},
+        search_type=SearchType.mmr,
+    )
 
 
 def docset_name_to_direct_retriever_tool_function_name(name: str) -> str:
@@ -75,19 +91,10 @@ def chunks_to_direct_retriever_tool_description(name: str, chunks: List[Document
 
 def get_retrieval_tool_for_docset(docset_state: LocalIndexState) -> Optional[BaseTool]:
     """
-    Chunks are in the vector store, and full documents are in the store inside the local state
+    Gets a retrieval tool for an agent.
     """
 
-    chunk_vectorstore = Chroma(persist_directory=CHROMA_DIRECTORY, embedding_function=EMBEDDINGS)
-
-    retriever = FusedSummaryRetriever(
-        vectorstore=chunk_vectorstore,
-        parent_doc_store=docset_state.chunks_by_id,
-        full_doc_summary_store=docset_state.full_doc_summaries_by_id,
-        search_kwargs={"k": RETRIEVER_K},
-        search_type=SearchType.mmr,
-    )
-
+    retriever = get_retriever_for_docset(docset_state=docset_state)
     return create_retriever_tool(
         retriever=retriever,
         name=docset_state.retrieval_tool_function_name,
