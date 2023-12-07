@@ -8,6 +8,7 @@ from langchain.document_loaders import DocugamiLoader
 from langchain.schema import Document
 from langchain.storage.in_memory import InMemoryStore
 from langchain.vectorstores import Chroma
+import chromadb
 
 from docugami_kg_rag.config import (
     CHROMA_DIRECTORY,
@@ -73,21 +74,36 @@ def update_local_index(
         pickle.dump(state, file)
 
 
-def populate_chroma_index(docset_id: str, chunks: List[Document]):
+def populate_chroma_index(docset_id: str, chunks: List[Document], overwrite=False):
     """
-    Create index if it does not exist
+    Create index if it does not exist, delete and overwrite if overwrite is specified.
     """
 
-    print(f"Creating index for {docset_id}...")
+    persistent_client = chromadb.PersistentClient(path=CHROMA_DIRECTORY)
+    collections = persistent_client.list_collections()
+    matching_collection = None
+    for c in collections:
+        if c.name == docset_id:
+            matching_collection = c
 
-    # Reset the collection
-    chroma = Chroma.from_documents(chunks, EMBEDDINGS, persist_directory=CHROMA_DIRECTORY)
-    chroma.persist()
+    if matching_collection:
+        print(f"Chroma collection already exists for {docset_id}.")
+        if overwrite == True:
+            print(f"Overwrite is {overwrite}, deleting existing index")
+            persistent_client.delete_collection(docset_id)
+        else:
+            print(f"Overwrite is {overwrite}, will just reuse existing index (any new docs will not be added)")
+            return
 
-    print(f"Done embedding documents to chroma collection {docset_id}!")
+    print(f"Embedding documents into chroma for {docset_id}...")
+
+    langchain_chroma = Chroma.from_documents(documents=chunks, embedding=EMBEDDINGS, persist_directory=CHROMA_DIRECTORY)
+    langchain_chroma.persist()
+
+    print(f"Done embedding documents into chroma for {docset_id}!")
 
 
-def index_docset(docset_id: str, name: str):
+def index_docset(docset_id: str, name: str, overwrite=False):
     """
     Indexes the given docset
     """
@@ -161,4 +177,4 @@ def index_docset(docset_id: str, name: str):
         report_details=report_details,
     )
 
-    populate_chroma_index(docset_id, list(chunk_summaries_by_id.values()))
+    populate_chroma_index(docset_id, chunks=list(chunk_summaries_by_id.values()), overwrite=overwrite)

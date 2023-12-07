@@ -6,8 +6,11 @@ from docugami_kg_rag.helpers.indexing import index_docset
 
 docugami_client = Docugami()
 
+app = typer.Typer()
 
-def main():
+
+@app.command()
+def main(overwrite: bool = False):
     docsets_response = docugami_client.docsets.list()
 
     if not docsets_response or not docsets_response.docsets:
@@ -32,7 +35,7 @@ def main():
         if not docset.id or not docset.name:
             raise Exception(f"Docset must have ID as well as Name: {docset}")
 
-        index_docset(docset.id, docset.name)
+        index_docset(docset.id, docset.name, overwrite)
 
 
 if __name__ == "__main__":
@@ -40,4 +43,4 @@ if __name__ == "__main__":
         # This code will only run if a debugger is attached
         index_docset(docset_id="clajbjkbnuye", name="Semi-Structured")
     else:
-        main()
+        app()
