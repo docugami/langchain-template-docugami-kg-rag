@@ -10,7 +10,7 @@ from langchain.globals import set_llm_cache
 from langchain.storage.in_memory import InMemoryStore
 
 LARGE_CONTEXT_LLM = ChatOpenAI(temperature=0, model="gpt-4-1106-preview")
-SMALL_CONTEXT_LLM = ChatOpenAI(temperature=0, model="gpt-4")
+SMALL_CONTEXT_LLM = ChatOpenAI(temperature=0, model="gpt-3.5-turbo-1106")
 
 EMBEDDINGS = OpenAIEmbeddings(model="text-embedding-ada-002")
 
@@ -73,10 +73,10 @@ class LocalIndexState:
 # Lengths for the loader are in terms of characters, 1 token ~= 4 chars in English
 # Reference: https://help.openai.com/en/articles/4936856-what-are-tokens-and-how-to-count-them
 MAX_CHUNK_TEXT_LENGTH = 1024 * 28  # ~7k tokens
-MIN_CHUNK_TEXT_LENGTH = 1024 * 1  # ~1k tokens
+MIN_CHUNK_TEXT_LENGTH = 1024 * 6  # ~1.5k tokens
 SUB_CHUNK_TABLES = False
 INCLUDE_XML_TAGS = True
-PARENT_HIERARCHY_LEVELS = 4
-RETRIEVER_K = 6
+PARENT_HIERARCHY_LEVELS = 2
+RETRIEVER_K = 10
 
 BATCH_SIZE = 16
