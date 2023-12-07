@@ -88,7 +88,7 @@ def populate_chroma_index(docset_id: str, chunks: List[Document], overwrite=Fals
 
     if matching_collection:
         print(f"Chroma collection already exists for {docset_id}.")
-        if overwrite == True:
+        if overwrite is True:
             print(f"Overwrite is {overwrite}, deleting existing index")
             persistent_client.delete_collection(docset_id)
         else:
