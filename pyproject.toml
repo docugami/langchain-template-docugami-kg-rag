@@ -46,7 +46,7 @@ tags = ["vectordbs"]
 
 [tool.pytest.ini_options]
 addopts = "--doctest-modules"
-norecursedirs = ".venv"
+norecursedirs = ".venv temp"
 
 [tool.pyright]
 ignore = ["**/node_modules", "**/__pycache__", ".venv"]

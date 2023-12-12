@@ -2,6 +2,7 @@ import hashlib
 import os
 import pickle
 from pathlib import Path
+import shutil
 from typing import Dict, List
 
 from langchain.document_loaders import DocugamiLoader
@@ -167,6 +168,15 @@ def index_docset(docset_id: str, name: str, overwrite=False):
     direct_tool_function_name = docset_name_to_direct_retriever_tool_function_name(name)
     direct_tool_description = chunks_to_direct_retriever_tool_description(name, list(parent_chunks_by_id.values()))
     report_details = build_report_details(docset_id)
+
+    if overwrite:
+        state = Path(INDEXING_LOCAL_STATE_PATH)
+        if state.is_file() and state.exists():
+            os.remove(state)
+
+        chroma_dir = Path(CHROMA_DIRECTORY)
+        if chroma_dir.is_dir() and chroma_dir.exists():
+            shutil.rmtree(chroma_dir)
 
     update_local_index(
         docset_id=docset_id,
