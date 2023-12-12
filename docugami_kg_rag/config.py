@@ -72,11 +72,11 @@ class LocalIndexState:
 
 # Lengths for the loader are in terms of characters, 1 token ~= 4 chars in English
 # Reference: https://help.openai.com/en/articles/4936856-what-are-tokens-and-how-to-count-them
-MAX_CHUNK_TEXT_LENGTH = 1024 * 28  # ~7k tokens
+MAX_CHUNK_TEXT_LENGTH = 1024 * 26  # ~6.5k tokens
 MIN_CHUNK_TEXT_LENGTH = 1024 * 6  # ~1.5k tokens
 SUB_CHUNK_TABLES = False
 INCLUDE_XML_TAGS = True
 PARENT_HIERARCHY_LEVELS = 2
-RETRIEVER_K = 10
+RETRIEVER_K = 8
 
 BATCH_SIZE = 16
