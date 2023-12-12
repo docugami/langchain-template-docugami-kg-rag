@@ -3,6 +3,10 @@
 
 This template contains a reference architecture for Retrieval Augmented Generation against a set of documents using Docugami's XML Knowledge Graph (KG-RAG).
 
+## Video Walkthrough
+
+[![Docugami KG-RAG Walkthrough](https://img.youtube.com/vi/xOHOmL1NFMg/0.jpg)](https://www.youtube.com/watch?v=xOHOmL1NFMg)
+
 ## Setup
 
 ### Environment Setup
