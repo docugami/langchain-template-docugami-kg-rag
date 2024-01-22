@@ -21,6 +21,8 @@ export OPENAI_API_KEY=...
 export DOCUGAMI_API_KEY=...
 ```
 
+Finally, make sure that you run `poetry install --all-extras` (or select a specific set of extras, see pyproject.toml) to install dependencies.
+
 ### Process Documents in Docugami (before you use this template)
 
 Before you use this template, you must have some documents already processed in Docugami. Here's what you need to get started:
