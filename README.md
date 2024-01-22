@@ -39,7 +39,7 @@ Once your documents are finished processing, you can index them in the following
 
 ### Indexing
 
-Before you can run your app, you need to build your index in Chroma. See [index.py](./index.py) which you can run via `poetry run python index.py` after setting the environment variables as specified above. The CLI will query docsets in the workspace corresponding to your `DOCUGAMI_API_KEY` and let you pick which one(s) you want to index.
+Before you can run your app, you need to build your vector index. See [index.py](./index.py) which you can run via `poetry run python index.py` after setting the environment variables as specified above. The CLI will query docsets in the workspace corresponding to your `DOCUGAMI_API_KEY` and let you pick which one(s) you want to index.
 
 Indexing in this template uses the Docugami Loader for LangChain to create semantic chunks out of your documents. Refer to this [documentation](https://python.langchain.com/docs/integrations/document_loaders/docugami) for details.
 

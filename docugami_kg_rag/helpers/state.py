@@ -1,15 +1,13 @@
 import hashlib
 import os
-import pickle
 from pathlib import Path
+import pickle
 import shutil
 from typing import Dict, List
 
-from langchain.document_loaders import DocugamiLoader
 from langchain.schema import Document
 from langchain.storage.in_memory import InMemoryStore
-from langchain.vectorstores import Chroma
-import chromadb
+from langchain_community.document_loaders.docugami import DocugamiLoader
 
 from docugami_kg_rag.config import (
     CHROMA_DIRECTORY,
@@ -20,15 +18,17 @@ from docugami_kg_rag.config import (
     MIN_CHUNK_TEXT_LENGTH,
     PARENT_HIERARCHY_LEVELS,
     SUB_CHUNK_TABLES,
-    LocalIndexState,
-    ReportDetails,
 )
 from docugami_kg_rag.helpers.documents import build_full_doc_summary_mappings, build_chunk_summary_mappings
-from docugami_kg_rag.helpers.reports import build_report_details
+from docugami_kg_rag.helpers.reports import ReportDetails, build_report_details
 from docugami_kg_rag.helpers.retrieval import (
+    LocalIndexState,
     chunks_to_direct_retriever_tool_description,
     docset_name_to_direct_retriever_tool_function_name,
 )
+
+from langchain_community.vectorstores.chroma import Chroma
+import chromadb
 
 
 def read_all_local_index_state() -> Dict[str, LocalIndexState]:

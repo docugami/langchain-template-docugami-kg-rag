@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "docugami-kg-rag"
-version = "0.1.0"
+version = "0.2.0"
 description = "This template contains a reference architecture for Retrieval Augmented Generation against a set of documents using Docugami's XML Knowledge Graph (KG-RAG)."
 authors = [
     "Docugami <contact@docugami.com>",
@@ -9,17 +9,20 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0"
-langchain = "^0.0.345"
-openai = "^1.3.7"
-tiktoken = ">=0.5.1"
-lxml = "^4.9.3"
+langchain = "^0.1.1"
+langchain-community = "^0.0.13"
 dgml-utils = "0.3.0"
 typer = "^0.9.0"
-docugami = "0.0.9"
-pandas = "^2.1.3"
-chromadb = "0.4.14"
-langsmith = "^0.0.69"
+docugami = "0.1.2"
+pandas = "^2.2.0"
+langsmith = "^0.0.83"
 openpyxl = "^3.1.2"
+openai = { version = "^1.9.0", optional = true }
+tiktoken = { version = "^0.5.2", optional = true }
+chromadb = { version = "0.4.14", optional = true }
+fireworks-ai = { version = "^0.11.2", optional = true }
+redis = { version = "^5.0.1", optional = true }
+redisvl = { version = "^0.0.7", optional = true }
 
 [tool.poetry.group.dev.dependencies]
 langchain-cli = "*"
@@ -28,6 +31,12 @@ black = "*"
 pytest = "*"
 pyyaml = "*"
 ruff = "*"
+
+[tool.poetry.extras]
+openai = ["openai", "tiktoken"]
+fireworks = ["fireworks-ai"]
+chromadb = ["chromadb"]
+redis = ["redis", "redisvl"]
 
 [tool.black]
 line-length = 127

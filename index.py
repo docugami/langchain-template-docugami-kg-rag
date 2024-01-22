@@ -2,7 +2,7 @@ import sys
 import typer
 from docugami import Docugami
 
-from docugami_kg_rag.helpers.indexing import index_docset
+from docugami_kg_rag.helpers.state import index_docset
 
 docugami_client = Docugami()
 

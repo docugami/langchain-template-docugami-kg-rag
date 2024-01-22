@@ -1,11 +1,13 @@
+from dataclasses import dataclass, field
 import re
 from typing import List, Optional
 
 from langchain.agents.agent_toolkits import create_retriever_tool
 from langchain.prompts import ChatPromptTemplate
 from langchain.schema import BaseRetriever, Document, StrOutputParser
+from langchain.storage.in_memory import InMemoryStore
 from langchain.tools.base import BaseTool
-from langchain.vectorstores import Chroma
+from langchain_community.vectorstores.chroma import Chroma
 
 from docugami_kg_rag.config import (
     CHROMA_DIRECTORY,
@@ -13,7 +15,6 @@ from docugami_kg_rag.config import (
     LARGE_CONTEXT_LLM,
     RETRIEVER_K,
     MAX_CHUNK_TEXT_LENGTH,
-    LocalIndexState,
 )
 from docugami_kg_rag.helpers.fused_summary_retriever import (
     FusedSummaryRetriever,
@@ -23,6 +24,25 @@ from docugami_kg_rag.helpers.prompts import (
     ASSISTANT_SYSTEM_MESSAGE,
     CREATE_DIRECT_RETRIEVAL_TOOL_DESCRIPTION_PROMPT,
 )
+from docugami_kg_rag.helpers.reports import ReportDetails
+
+
+@dataclass
+class LocalIndexState:
+    full_doc_summaries_by_id: InMemoryStore
+    """Mapping of ID to full document summaries."""
+
+    chunks_by_id: InMemoryStore
+    """Mapping of ID to chunks."""
+
+    retrieval_tool_function_name: str
+    """Function name for retrieval tool e.g. "search_earnings_calls."""
+
+    retrieval_tool_description: str
+    """Description of retrieval tool e.g. Searches for and returns chunks from earnings call documents."""
+
+    reports: List[ReportDetails] = field(default_factory=list)
+    """Details about any reports for this docset."""
 
 
 def get_retriever_for_docset(docset_state: LocalIndexState) -> BaseRetriever:

@@ -1,27 +1,48 @@
+from dataclasses import dataclass
 import os
 import re
 import sqlite3
 import tempfile
 from pathlib import Path
 from typing import List, Optional, Union
-
 import pandas as pd
 import requests
 from docugami import Docugami
+
 from langchain.agents import create_sql_agent
-from langchain.agents.agent_toolkits import SQLDatabaseToolkit
 from langchain.agents.agent_types import AgentType
 from langchain.tools.base import BaseTool, Tool
 from langchain.utilities.sql_database import SQLDatabase
+
+from langchain_community.agent_toolkits import SQLDatabaseToolkit
 
 from docugami_kg_rag.config import (
     DOCUGAMI_API_KEY,
     INDEXING_LOCAL_REPORT_DBS_ROOT,
     SMALL_CONTEXT_LLM,
-    ReportDetails,
 )
 
 HEADERS = {"Authorization": f"Bearer {DOCUGAMI_API_KEY}"}
+
+
+@dataclass
+class ReportDetails:
+    id: str
+    """ID of report."""
+
+    name: str
+    """Name of report."""
+
+    local_xlsx_path: Path
+    """Local path to XLSX of the report."""
+
+    retrieval_tool_function_name: str
+    """Function name for retrieval tool e.g. sql_query_earnings_calls."""
+
+    retrieval_tool_description: str
+    """
+    Description of retrieval tool e.g. Runs a SQL query over the REPORT_NAME report, 
+    represented as the following SQL Table... etc."""
 
 
 def download_project_latest_xlsx(project_url: str, local_xlsx: Path) -> Optional[Path]:
