@@ -106,5 +106,17 @@ from langserve.client import RemoteRunnable
 runnable = RemoteRunnable("http://localhost:8000/docugami-kg-rag")
 ```
 
-### Using Local GPU
+# Advanced Configuration
+
+## Using Local GPU
 Optionally, if using local embeddings or llms in `config.py`, make sure your local CUDA runtime is updated. You can run `torch.cuda.is_available()` in a python REPL to make sure, and if you need to install a specific version for your local CUDA driver you can run something like `poetry run pip3 install torch==1.13.1+cu117 --extra-index-url https://download.pytorch.org/whl/cu117` to update it.
+
+## Using Redis
+
+Under `config.py` you can configure the vector store to use Redis. See documentation here:
+
+One of the things you need to specify is the REDIS_URL. You may have an instance already running that you can point to, or for development you may want to deploy Redis locally:
+
+`docker run -d -p 6379:6379 -p 8001:8001 redis/redis-stack:latest`
+
+See documentation [here](https://python.langchain.com/docs/integrations/vectorstores/redis#redis-connection-url-examples) for how to configure the REDIS_URL

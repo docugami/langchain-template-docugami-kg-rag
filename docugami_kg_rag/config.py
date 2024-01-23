@@ -6,6 +6,23 @@ from langchain_core.vectorstores import VectorStore
 from langchain.cache import SQLiteCache
 from langchain.globals import set_llm_cache
 
+DOCUGAMI_API_KEY = os.environ.get("DOCUGAMI_API_KEY")
+if not DOCUGAMI_API_KEY:
+    raise Exception("Please set the DOCUGAMI_API_KEY environment variable")
+
+
+INDEXING_LOCAL_STATE_PATH = os.environ.get("INDEXING_LOCAL_STATE_PATH", "/tmp/docugami/indexing_local_state.pkl")
+os.makedirs(Path(INDEXING_LOCAL_STATE_PATH).parent, exist_ok=True)
+
+INDEXING_LOCAL_REPORT_DBS_ROOT = os.environ.get("INDEXING_LOCAL_REPORT_DBS_ROOT", "/tmp/docugami/report_dbs")
+os.makedirs(Path(INDEXING_LOCAL_REPORT_DBS_ROOT).parent, exist_ok=True)
+
+LOCAL_LLM_CACHE_DB_FILE = os.environ.get("LOCAL_LLM_CACHE", "/tmp/docugami/.langchain.db")
+os.makedirs(Path(LOCAL_LLM_CACHE_DB_FILE).parent, exist_ok=True)
+set_llm_cache(SQLiteCache(database_path=LOCAL_LLM_CACHE_DB_FILE))
+
+USE_REPORTS = True
+
 ##### <LLMs and Embeddings>
 # OpenAI models and Embeddings
 # Reference: https://platform.openai.com/docs/models
@@ -71,50 +88,50 @@ BATCH_SIZE = 16
 ##### </LLMs and Embeddings>
 
 ##### <Vector Store>
-from langchain_community.vectorstores.chroma import Chroma
-import chromadb
+# ChromaDB
+# Reference: https://python.langchain.com/docs/integrations/vectorstores/chroma
+# from langchain_community.vectorstores.chroma import Chroma
+# import chromadb
 
-CHROMA_DIRECTORY = Path("/tmp/docugami/chroma_db")
+# CHROMA_DIRECTORY = Path("/tmp/docugami/chroma_db")
+
+# def get_vector_store_index(docset_id: str) -> VectorStore:
+#     return Chroma(
+#         collection_name=docset_id,
+#         persist_directory=str(CHROMA_DIRECTORY.absolute()),
+#         embedding_function=EMBEDDINGS,
+#     )
+
+# def vector_store_index_exists(docset_id: str) -> bool:
+#     persistent_client = chromadb.PersistentClient(path=str(CHROMA_DIRECTORY.absolute()))
+#     collections = persistent_client.list_collections()
+#     for c in collections:
+#         if c.name == docset_id:
+#             return True
+
+#     return False
+
+# def del_vector_store_index(docset_id: str):
+#     persistent_client = chromadb.PersistentClient(path=str(CHROMA_DIRECTORY.absolute()))
+#     persistent_client.delete_collection(docset_id)
+
+# Redis
+# Reference: hhttps://python.langchain.com/docs/integrations/vectorstores/redis
+from langchain_community.vectorstores.redis.base import Redis, check_index_exists
+
+REDIS_URL = "redis://localhost:6379"
 
 
 def get_vector_store_index(docset_id: str) -> VectorStore:
-    return Chroma(
-        collection_name=docset_id,
-        persist_directory=str(CHROMA_DIRECTORY.absolute()),
-        embedding_function=EMBEDDINGS,
-    )
+    return Redis(redis_url=REDIS_URL, index_name=docset_id, embedding=EMBEDDINGS)
 
 
 def vector_store_index_exists(docset_id: str) -> bool:
-    persistent_client = chromadb.PersistentClient(path=str(CHROMA_DIRECTORY.absolute()))
-    collections = persistent_client.list_collections()
-    for c in collections:
-        if c.name == docset_id:
-            return True
-
-    return False
-
+    index = get_vector_store_index(docset_id)
+    check_index_exists(index, docset_id)
 
 def del_vector_store_index(docset_id: str):
-    persistent_client = chromadb.PersistentClient(path=str(CHROMA_DIRECTORY.absolute()))
-    persistent_client.delete_collection(docset_id)
+    Redis.drop_index(docset_id, True, redis_url=REDIS_URL)
 
 
 ##### </Vector Store>
-
-DOCUGAMI_API_KEY = os.environ.get("DOCUGAMI_API_KEY")
-if not DOCUGAMI_API_KEY:
-    raise Exception("Please set the DOCUGAMI_API_KEY environment variable")
-
-
-INDEXING_LOCAL_STATE_PATH = os.environ.get("INDEXING_LOCAL_STATE_PATH", "/tmp/docugami/indexing_local_state.pkl")
-os.makedirs(Path(INDEXING_LOCAL_STATE_PATH).parent, exist_ok=True)
-
-INDEXING_LOCAL_REPORT_DBS_ROOT = os.environ.get("INDEXING_LOCAL_REPORT_DBS_ROOT", "/tmp/docugami/report_dbs")
-os.makedirs(Path(INDEXING_LOCAL_REPORT_DBS_ROOT).parent, exist_ok=True)
-
-LOCAL_LLM_CACHE_DB_FILE = os.environ.get("LOCAL_LLM_CACHE", "/tmp/docugami/.langchain.db")
-os.makedirs(Path(LOCAL_LLM_CACHE_DB_FILE).parent, exist_ok=True)
-set_llm_cache(SQLiteCache(database_path=LOCAL_LLM_CACHE_DB_FILE))
-
-USE_REPORTS = True

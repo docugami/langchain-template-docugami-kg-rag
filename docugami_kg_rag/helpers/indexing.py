@@ -78,13 +78,13 @@ def populate_vector_index(docset_id: str, chunks: List[Document], overwrite=Fals
     """
 
     if vector_store_index_exists(docset_id):
-        print(f"Vector store persist dir already exists for {docset_id}.")
+        print(f"Vector store index already exists for {docset_id}.")
         if overwrite is True:
-            print(f"Overwrite is {overwrite}, deleting existing persisted vector store")
+            print(f"Overwrite is {overwrite}, deleting existing index")
             del_vector_store_index(docset_id)
         else:
             print(
-                f"Overwrite is {overwrite}, will just reuse existing persisted vector store (any new docs will not be added)"
+                f"Overwrite is {overwrite}, will just reuse existing index (any new docs will not be added)"
             )
             return
 
