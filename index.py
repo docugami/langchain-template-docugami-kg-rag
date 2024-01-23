@@ -2,7 +2,7 @@ import sys
 import typer
 from docugami import Docugami
 
-from docugami_kg_rag.helpers.state import index_docset
+from docugami_kg_rag.helpers.indexing import index_docset
 
 docugami_client = Docugami()
 
@@ -41,6 +41,6 @@ def main(overwrite: bool = False):
 if __name__ == "__main__":
     if sys.gettrace():
         # This code will only run if a debugger is attached
-        index_docset(docset_id="clajbjkbnuye", name="Semi-Structured")
+        index_docset(docset_id="uh31voknl1p6", name="NTSB Accident Report", overwrite=True)
     else:
         app()

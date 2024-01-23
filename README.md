@@ -14,7 +14,7 @@ This template contains a reference architecture for Retrieval Augmented Generati
 You need to set some required environment variables before using your new app based on this template. These are used to index as well as run the application, and exceptions are raised if the following required environment variables are not set:
 
 1. `OPENAI_API_KEY`: from the OpenAI platform.
-2. `DOCUGAMI_API_KEY`: from the [Docugami Developer Playground](https://help.docugami.com/home/docugami-api)
+1. `DOCUGAMI_API_KEY`: from the [Docugami Developer Playground](https://help.docugami.com/home/docugami-api)
 
 ```shell
 export OPENAI_API_KEY=...
@@ -28,8 +28,8 @@ Finally, make sure that you run `poetry install --all-extras` (or select a speci
 Before you use this template, you must have some documents already processed in Docugami. Here's what you need to get started:
 
 1. Create a [Docugami workspace](https://app.docugami.com/) (free trials available)
-2. Create an access token via the Developer Playground for your workspace. [Detailed instructions](https://help.docugami.com/home/docugami-api).
-3. Add your documents to Docugami for processing. There are two ways to do this:
+1. Create an access token via the Developer Playground for your workspace. [Detailed instructions](https://help.docugami.com/home/docugami-api).
+1. Add your documents to Docugami for processing. There are two ways to do this:
     - Upload via the simple Docugami web experience. [Detailed instructions](https://help.docugami.com/home/adding-documents).
     - Upload via the Docugami API, specifically the [documents](https://api-docs.docugami.com/#tag/documents/operation/upload-document) endpoint. Code samples are available for python and JavaScript or you can use the [docugami](https://pypi.org/project/docugami/) python library.
 
@@ -105,3 +105,18 @@ from langserve.client import RemoteRunnable
 
 runnable = RemoteRunnable("http://localhost:8000/docugami-kg-rag")
 ```
+
+# Advanced Configuration
+
+## Using Local GPU
+Optionally, if using local embeddings or llms in `config.py`, make sure your local CUDA runtime is updated. You can run `torch.cuda.is_available()` in a python REPL to make sure, and if you need to install a specific version for your local CUDA driver you can run something like `poetry run pip3 install torch==1.13.1+cu117 --extra-index-url https://download.pytorch.org/whl/cu117` to update it.
+
+## Using Redis
+
+Under `config.py` you can configure the vector store to use Redis. See documentation here:
+
+One of the things you need to specify is the REDIS_URL. You may have an instance already running that you can point to, or for development you may want to deploy Redis locally:
+
+`docker run -d -p 6379:6379 -p 8001:8001 redis/redis-stack:latest`
+
+See documentation [here](https://python.langchain.com/docs/integrations/vectorstores/redis#redis-connection-url-examples) for how to configure the REDIS_URL
