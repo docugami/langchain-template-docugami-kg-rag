@@ -21,7 +21,7 @@ from docugami_kg_rag.helpers.fused_summary_retriever import (
     SearchType,
 )
 from docugami_kg_rag.helpers.prompts import (
-    ASSISTANT_SYSTEM_MESSAGE,
+    CREATE_DIRECT_RETRIEVAL_TOOL_SYSTEM_MESSAGE,
     CREATE_DIRECT_RETRIEVAL_TOOL_DESCRIPTION_PROMPT,
 )
 from docugami_kg_rag.helpers.reports import ReportDetails
@@ -98,7 +98,7 @@ def chunks_to_direct_retriever_tool_description(name: str, chunks: List[Document
     chain = (
         ChatPromptTemplate.from_messages(
             [
-                ("system", ASSISTANT_SYSTEM_MESSAGE),
+                ("system", CREATE_DIRECT_RETRIEVAL_TOOL_SYSTEM_MESSAGE),
                 ("human", CREATE_DIRECT_RETRIEVAL_TOOL_DESCRIPTION_PROMPT),
             ]
         )

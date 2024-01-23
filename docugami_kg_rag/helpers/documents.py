@@ -12,21 +12,26 @@ from docugami_kg_rag.config import (
     BATCH_SIZE,
     INCLUDE_XML_TAGS,
     MAX_CHUNK_TEXT_LENGTH,
+    MAX_FULL_DOCUMENT_TEXT_LENGTH,
+    MIN_LENGTH_TO_SUMMARIZE,
     SMALL_CONTEXT_LLM,
     LARGE_CONTEXT_LLM,
 )
 from docugami_kg_rag.helpers.prompts import (
-    ASSISTANT_SYSTEM_MESSAGE,
+    CREATE_CHUNK_SUMMARY_SYSTEM_MESSAGE,
     CREATE_FULL_DOCUMENT_SUMMARY_PROMPT,
     CREATE_CHUNK_SUMMARY_PROMPT,
+    CREATE_FULL_DOCUMENT_SUMMARY_SYSTEM_MESSAGE,
 )
 
 
 def _build_summary_mappings(
     docs_by_id: Dict[str, Document],
+    system_message: str,
     prompt_template: str,
     llm: BaseChatModel = SMALL_CONTEXT_LLM,
-    summarize_length_threshold=2048,
+    min_length_to_summarize=MIN_LENGTH_TO_SUMMARIZE,
+    max_length_cutoff=MAX_CHUNK_TEXT_LENGTH,
     label="summaries",
 ) -> Dict[str, Document]:
     """
@@ -47,7 +52,7 @@ def _build_summary_mappings(
         batch_input = [
             {
                 "format": format,
-                "document": doc.page_content[:MAX_CHUNK_TEXT_LENGTH],
+                "document": doc.page_content[:max_length_cutoff],
             }
             for _, doc in batch
         ]
@@ -55,7 +60,7 @@ def _build_summary_mappings(
         summarize_chain = (
             ChatPromptTemplate.from_messages(
                 [
-                    ("system", ASSISTANT_SYSTEM_MESSAGE),
+                    ("system", system_message),
                     ("human", prompt_template),
                 ]
             )
@@ -66,7 +71,7 @@ def _build_summary_mappings(
 
         # Build meta chain that only summarizes inputs larger than threshold
         chain = RunnableBranch(
-            (lambda x: len(x["document"]) > summarize_length_threshold, summarize_chain),  # type: ignore
+            (lambda x: len(x["document"]) > min_length_to_summarize, summarize_chain),  # type: ignore
             noop_chain,
         )
 
@@ -94,8 +99,10 @@ def build_full_doc_summary_mappings(docs_by_id: Dict[str, Document]) -> Dict[str
 
     return _build_summary_mappings(
         docs_by_id=docs_by_id,
+        system_message=CREATE_FULL_DOCUMENT_SUMMARY_SYSTEM_MESSAGE,
         prompt_template=CREATE_FULL_DOCUMENT_SUMMARY_PROMPT,
         llm=LARGE_CONTEXT_LLM,
+        max_length_cutoff=MAX_FULL_DOCUMENT_TEXT_LENGTH,
         label="full document summaries",
     )
 
@@ -107,7 +114,9 @@ def build_chunk_summary_mappings(docs_by_id: Dict[str, Document]) -> Dict[str, D
 
     return _build_summary_mappings(
         docs_by_id=docs_by_id,
+        system_message=CREATE_CHUNK_SUMMARY_SYSTEM_MESSAGE,
         prompt_template=CREATE_CHUNK_SUMMARY_PROMPT,
         llm=SMALL_CONTEXT_LLM,
+        max_length_cutoff=MAX_CHUNK_TEXT_LENGTH,
         label="chunk summaries",
     )
