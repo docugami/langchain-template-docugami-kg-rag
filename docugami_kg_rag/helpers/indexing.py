@@ -83,9 +83,7 @@ def populate_vector_index(docset_id: str, chunks: List[Document], overwrite=Fals
             print(f"Overwrite is {overwrite}, deleting existing index")
             del_vector_store_index(docset_id)
         else:
-            print(
-                f"Overwrite is {overwrite}, will just reuse existing index (any new docs will not be added)"
-            )
+            print(f"Overwrite is {overwrite}, will just reuse existing index (any new docs will not be added)")
             return
 
     print(f"Embedding documents into vector store for {docset_id}...")
