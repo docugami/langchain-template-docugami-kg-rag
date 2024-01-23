@@ -87,3 +87,5 @@ os.makedirs(Path(INDEXING_LOCAL_REPORT_DBS_ROOT).parent, exist_ok=True)
 LOCAL_LLM_CACHE_DB_FILE = os.environ.get("LOCAL_LLM_CACHE", "/tmp/docugami/.langchain.db")
 os.makedirs(Path(LOCAL_LLM_CACHE_DB_FILE).parent, exist_ok=True)
 set_llm_cache(SQLiteCache(database_path=LOCAL_LLM_CACHE_DB_FILE))
+
+USE_REPORTS = True

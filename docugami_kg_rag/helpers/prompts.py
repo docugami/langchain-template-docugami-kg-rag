@@ -45,8 +45,8 @@ You will be asked to summarize chunks of documents. You ALWAYS follow these rule
 - Your generated summary should be in the same format as the given document, using the same overall schema.
 - The generated summary will be embedded and used to retrieve the raw text or table elements from a vector database.
 - Only summarize, don't try to change any facts in the chunk even if they appear incorrect to you.
-- The chunk may contain tables, text, or other markup. Make sure you look at the structure of the input when summarizing.
 - Include as many facts and data points from the original chunk as you can, in your summary.
+- Pay special attention to monetary amounts, dates, names of people and companies, etc and include in your summary.
 """
 
 CREATE_CHUNK_SUMMARY_PROMPT = """Here is a chunk from a document, in {format} format:

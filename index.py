@@ -41,6 +41,6 @@ def main(overwrite: bool = False):
 if __name__ == "__main__":
     if sys.gettrace():
         # This code will only run if a debugger is attached
-        index_docset(docset_id="clajbjkbnuye", name="Semi-Structured")
+        index_docset(docset_id="uh31voknl1p6", name="NTSB Accident Report", overwrite=True)
     else:
         app()
