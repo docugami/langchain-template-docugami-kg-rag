@@ -28,7 +28,7 @@ def _get_tools(use_reports=USE_REPORTS) -> List[BaseTool]:
     report_retrieval_tools: List[BaseTool] = []
     for docset_id in local_state:
         docset_state = local_state[docset_id]
-        direct_retrieval_tool = get_retrieval_tool_for_docset(docset_state)
+        direct_retrieval_tool = get_retrieval_tool_for_docset(docset_id, docset_state)
         if direct_retrieval_tool:
             # Direct retrieval tool for each indexed docset (direct KG-RAG against semantic XML)
             docset_retrieval_tools.append(direct_retrieval_tool)

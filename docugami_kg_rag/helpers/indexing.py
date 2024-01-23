@@ -2,7 +2,6 @@ import hashlib
 import os
 from pathlib import Path
 import pickle
-import shutil
 from typing import Dict, List
 
 from langchain.schema import Document
@@ -10,14 +9,15 @@ from langchain.storage.in_memory import InMemoryStore
 from langchain_community.document_loaders.docugami import DocugamiLoader
 
 from docugami_kg_rag.config import (
-    CHROMA_DIRECTORY,
-    EMBEDDINGS,
     INCLUDE_XML_TAGS,
     INDEXING_LOCAL_STATE_PATH,
     MAX_CHUNK_TEXT_LENGTH,
     MIN_CHUNK_TEXT_LENGTH,
     PARENT_HIERARCHY_LEVELS,
     SUB_CHUNK_TABLES,
+    get_vector_store_index,
+    vector_store_index_exists,
+    del_vector_store_index,
 )
 from docugami_kg_rag.helpers.documents import build_full_doc_summary_mappings, build_chunk_summary_mappings
 from docugami_kg_rag.helpers.reports import ReportDetails, build_report_details
@@ -26,9 +26,6 @@ from docugami_kg_rag.helpers.retrieval import (
     chunks_to_direct_retriever_tool_description,
     docset_name_to_direct_retriever_tool_function_name,
 )
-
-from langchain_community.vectorstores.chroma import Chroma
-import chromadb
 
 
 def read_all_local_index_state() -> Dict[str, LocalIndexState]:
@@ -75,33 +72,28 @@ def update_local_index(
         pickle.dump(state, file)
 
 
-def populate_chroma_index(docset_id: str, chunks: List[Document], overwrite=False):
+def populate_vector_index(docset_id: str, chunks: List[Document], overwrite=False):
     """
     Create index if it does not exist, delete and overwrite if overwrite is specified.
     """
 
-    persistent_client = chromadb.PersistentClient(path=CHROMA_DIRECTORY)
-    collections = persistent_client.list_collections()
-    matching_collection = None
-    for c in collections:
-        if c.name == docset_id:
-            matching_collection = c
-
-    if matching_collection:
-        print(f"Chroma collection already exists for {docset_id}.")
+    if vector_store_index_exists(docset_id):
+        print(f"Vector store persist dir already exists for {docset_id}.")
         if overwrite is True:
-            print(f"Overwrite is {overwrite}, deleting existing index")
-            persistent_client.delete_collection(docset_id)
+            print(f"Overwrite is {overwrite}, deleting existing persisted vector store")
+            del_vector_store_index(docset_id)
         else:
-            print(f"Overwrite is {overwrite}, will just reuse existing index (any new docs will not be added)")
+            print(
+                f"Overwrite is {overwrite}, will just reuse existing persisted vector store (any new docs will not be added)"
+            )
             return
 
-    print(f"Embedding documents into chroma for {docset_id}...")
+    print(f"Embedding documents into vector store for {docset_id}...")
 
-    langchain_chroma = Chroma.from_documents(documents=chunks, embedding=EMBEDDINGS, persist_directory=CHROMA_DIRECTORY)
-    langchain_chroma.persist()
+    store = get_vector_store_index(docset_id)
+    store.add_documents(chunks)
 
-    print(f"Done embedding documents into chroma for {docset_id}!")
+    print(f"Done embedding documents into vector store for {docset_id}")
 
 
 def index_docset(docset_id: str, name: str, overwrite=False):
@@ -174,9 +166,7 @@ def index_docset(docset_id: str, name: str, overwrite=False):
         if state.is_file() and state.exists():
             os.remove(state)
 
-        chroma_dir = Path(CHROMA_DIRECTORY)
-        if chroma_dir.is_dir() and chroma_dir.exists():
-            shutil.rmtree(chroma_dir)
+        del_vector_store_index(docset_id)
 
     update_local_index(
         docset_id=docset_id,
@@ -187,4 +177,4 @@ def index_docset(docset_id: str, name: str, overwrite=False):
         report_details=report_details,
     )
 
-    populate_chroma_index(docset_id, chunks=list(chunk_summaries_by_id.values()), overwrite=overwrite)
+    populate_vector_index(docset_id, chunks=list(chunk_summaries_by_id.values()), overwrite=overwrite)

@@ -49,7 +49,7 @@ huggingface = ["torch", "huggingface", "sentence-transformers"]
 line-length = 127
 
 [tool.ruff]
-ignore = ["E501"]
+ignore = ["E501", "E402"]
 
 [tool.langserve]
 export_module = "docugami_kg_rag"

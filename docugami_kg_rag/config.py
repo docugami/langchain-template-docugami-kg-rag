@@ -1,6 +1,8 @@
 import os
 from pathlib import Path
 
+from langchain_core.vectorstores import VectorStore
+
 from langchain.cache import SQLiteCache
 from langchain.globals import set_llm_cache
 
@@ -69,8 +71,35 @@ BATCH_SIZE = 16
 ##### </LLMs and Embeddings>
 
 ##### <Vector Store>
-CHROMA_DIRECTORY = "/tmp/docugami/chroma_db"
-os.makedirs(Path(CHROMA_DIRECTORY).parent, exist_ok=True)
+from langchain_community.vectorstores.chroma import Chroma
+import chromadb
+
+CHROMA_DIRECTORY = Path("/tmp/docugami/chroma_db")
+
+
+def get_vector_store_index(docset_id: str) -> VectorStore:
+    return Chroma(
+        collection_name=docset_id,
+        persist_directory=str(CHROMA_DIRECTORY.absolute()),
+        embedding_function=EMBEDDINGS,
+    )
+
+
+def vector_store_index_exists(docset_id: str) -> bool:
+    persistent_client = chromadb.PersistentClient(path=str(CHROMA_DIRECTORY.absolute()))
+    collections = persistent_client.list_collections()
+    for c in collections:
+        if c.name == docset_id:
+            return True
+
+    return False
+
+
+def del_vector_store_index(docset_id: str):
+    persistent_client = chromadb.PersistentClient(path=str(CHROMA_DIRECTORY.absolute()))
+    persistent_client.delete_collection(docset_id)
+
+
 ##### </Vector Store>
 
 DOCUGAMI_API_KEY = os.environ.get("DOCUGAMI_API_KEY")
