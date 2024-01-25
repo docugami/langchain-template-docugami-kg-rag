@@ -21,7 +21,7 @@ LOCAL_LLM_CACHE_DB_FILE = os.environ.get("LOCAL_LLM_CACHE", "/tmp/docugami/.lang
 os.makedirs(Path(LOCAL_LLM_CACHE_DB_FILE).parent, exist_ok=True)
 set_llm_cache(SQLiteCache(database_path=LOCAL_LLM_CACHE_DB_FILE))
 
-USE_REPORTS = True
+DEFAULT_USE_REPORTS = True
 
 ##### <LLMs and Embeddings>
 # OpenAI models and Embeddings
