@@ -16,7 +16,7 @@ from docugami_kg_rag.config import (
     PARENT_HIERARCHY_LEVELS,
     SUB_CHUNK_TABLES,
     get_vector_store_index,
-    vector_store_index_exists,
+    init_vector_store_index,
     del_vector_store_index,
 )
 from docugami_kg_rag.helpers.documents import build_full_doc_summary_mappings, build_chunk_summary_mappings
@@ -77,19 +77,19 @@ def populate_vector_index(docset_id: str, chunks: List[Document], overwrite=Fals
     Create index if it does not exist, delete and overwrite if overwrite is specified.
     """
 
-    if vector_store_index_exists(docset_id):
+    vector_store = get_vector_store_index(docset_id)
+
+    if vector_store is not None:
         print(f"Vector store index already exists for {docset_id}.")
         if overwrite is True:
-            print(f"Overwrite is {overwrite}, deleting existing index")
-            del_vector_store_index(docset_id)
+            print(f"Overwrite is {overwrite}, existing index will be deleted and re-created")
         else:
             print(f"Overwrite is {overwrite}, will just reuse existing index (any new docs will not be added)")
             return
 
     print(f"Embedding documents into vector store for {docset_id}...")
 
-    store = get_vector_store_index(docset_id)
-    store.add_documents(chunks)
+    vector_store = init_vector_store_index(docset_id, chunks, overwrite)
 
     print(f"Done embedding documents into vector store for {docset_id}")
 
@@ -164,7 +164,8 @@ def index_docset(docset_id: str, name: str, overwrite=False):
         if state.is_file() and state.exists():
             os.remove(state)
 
-        del_vector_store_index(docset_id)
+        if get_vector_store_index(docset_id) is not None:
+            del_vector_store_index(docset_id)
 
     update_local_index(
         docset_id=docset_id,

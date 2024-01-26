@@ -43,12 +43,15 @@ class LocalIndexState:
     """Details about any reports for this docset."""
 
 
-def get_retriever_for_docset(docset_id: str, docset_state: LocalIndexState) -> BaseRetriever:
+def get_retriever_for_docset(docset_id: str, docset_state: LocalIndexState) -> Optional[BaseRetriever]:
     """
     Gets a retriever for a docset. Chunks are in the vector store, and full documents
     are in the store inside the local state.
     """
     chunk_vectorstore = get_vector_store_index(docset_id)
+
+    if not chunk_vectorstore:
+        return None
 
     return FusedSummaryRetriever(
         vectorstore=chunk_vectorstore,
@@ -113,6 +116,9 @@ def get_retrieval_tool_for_docset(docset_id: str, docset_state: LocalIndexState)
     """
 
     retriever = get_retriever_for_docset(docset_id=docset_id, docset_state=docset_state)
+    if not retriever:
+        return None
+
     return create_retriever_tool(
         retriever=retriever,
         name=docset_state.retrieval_tool_function_name,

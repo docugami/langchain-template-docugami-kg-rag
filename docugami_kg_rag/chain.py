@@ -112,9 +112,11 @@ if __name__ == "__main__":
     if sys.gettrace():
         # This code will only run if a debugger is attached
 
-        chain.invoke(
+        output = chain.invoke(
             {
                 "input": "What happened in Yelm, Washington?",
                 "chat_history": [],
             }
         )
+
+        print(output)
