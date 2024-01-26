@@ -1,23 +1,27 @@
 import sys
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
-from langchain.agents import AgentExecutor, create_openai_tools_agent
+from langchain.agents import AgentExecutor
+from langchain.agents.format_scratchpad import format_to_openai_functions
+from langchain.agents.output_parsers import OpenAIFunctionsAgentOutputParser
 from langchain.prompts import (
     ChatPromptTemplate,
     MessagesPlaceholder,
 )
 from langchain.schema.messages import AIMessage, HumanMessage
-from langchain.schema.runnable import Runnable, RunnableLambda
+from langchain.schema.runnable import Runnable, RunnableLambda, RunnableParallel
 from langchain.tools.base import BaseTool
+from langchain.tools.render import format_tool_to_openai_function
+from langchain_core.pydantic_v1 import BaseModel, Field
 
-from docugami_kg_rag.config import LARGE_CONTEXT_LLM, USE_REPORTS
+from docugami_kg_rag.config import LARGE_CONTEXT_LLM, DEFAULT_USE_REPORTS
 from docugami_kg_rag.helpers.indexing import read_all_local_index_state
 from docugami_kg_rag.helpers.prompts import ASSISTANT_SYSTEM_MESSAGE
 from docugami_kg_rag.helpers.reports import get_retrieval_tool_for_report
 from docugami_kg_rag.helpers.retrieval import get_retrieval_tool_for_docset
 
 
-def _get_tools(use_reports=USE_REPORTS) -> List[BaseTool]:
+def _get_tools(use_reports=DEFAULT_USE_REPORTS) -> List[BaseTool]:
     """
     Build retrieval tools.
     """
@@ -68,17 +72,51 @@ prompt = ChatPromptTemplate.from_messages(
     ]
 )
 
+agent = (
+    RunnableParallel(
+        {
+            "input": lambda x: x["input"],  # type: ignore
+            "chat_history": lambda x: _format_chat_history(x["chat_history"]),  # type: ignore
+            "agent_scratchpad": lambda x: format_to_openai_functions(x["intermediate_steps"]),  # type: ignore
+            "functions": lambda x: [format_tool_to_openai_function(tool) for tool in _get_tools("use_reports" in x and x["use_reports"] is True)],  # type: ignore
+        }
+    )
+    | {
+        "input": prompt,
+        "functions": lambda x: x["functions"],
+    }
+    | _llm_with_tools
+    | OpenAIFunctionsAgentOutputParser()
+)
 
-agent = create_openai_tools_agent(LARGE_CONTEXT_LLM, _get_tools(), prompt)
-chain = AgentExecutor(agent=agent, tools=_get_tools())  # type: ignore
+
+class AgentInput(BaseModel):
+    input: str = ""
+    use_reports: bool = Field(
+        default=DEFAULT_USE_REPORTS,
+        extra={"widget": {"type": "bool", "input": "input", "output": "output"}},
+    )
+    chat_history: Optional[List[Tuple[str, str]]] = Field(
+        ..., extra={"widget": {"type": "chat", "input": "input", "output": "output"}}
+    )
+
+
+chain = AgentExecutor(
+    agent=agent,  # type: ignore
+    tools=_get_tools(),
+).with_types(
+    input_type=AgentInput,  # type: ignore
+)
 
 if __name__ == "__main__":
     if sys.gettrace():
         # This code will only run if a debugger is attached
 
-        chain.invoke(
+        output = chain.invoke(
             {
                 "input": "What happened in Yelm, Washington?",
                 "chat_history": [],
             }
         )
+
+        print(output)

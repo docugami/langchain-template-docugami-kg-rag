@@ -1,9 +1,11 @@
 import os
 from pathlib import Path
+from typing import Optional, List
 
 from langchain_core.vectorstores import VectorStore
 
 from langchain.cache import SQLiteCache
+from langchain.schema import Document
 from langchain.globals import set_llm_cache
 
 DOCUGAMI_API_KEY = os.environ.get("DOCUGAMI_API_KEY")
@@ -21,7 +23,7 @@ LOCAL_LLM_CACHE_DB_FILE = os.environ.get("LOCAL_LLM_CACHE", "/tmp/docugami/.lang
 os.makedirs(Path(LOCAL_LLM_CACHE_DB_FILE).parent, exist_ok=True)
 set_llm_cache(SQLiteCache(database_path=LOCAL_LLM_CACHE_DB_FILE))
 
-USE_REPORTS = True
+DEFAULT_USE_REPORTS = False
 
 ##### <LLMs and Embeddings>
 # OpenAI models and Embeddings
@@ -32,7 +34,7 @@ from langchain_openai import OpenAIEmbeddings
 if "OPENAI_API_KEY" not in os.environ:
     raise Exception("OPENAI_API_KEY environment variable not set")
 
-LARGE_CONTEXT_LLM = ChatOpenAI(temperature=0, model="gpt-4-1106-preview", cache=True)  # 128k tokens
+LARGE_CONTEXT_LLM = ChatOpenAI(temperature=0, model="gpt-4-turbo-preview", cache=True)  # 128k tokens
 SMALL_CONTEXT_LLM = ChatOpenAI(temperature=0, model="gpt-3.5-turbo-1106", cache=True)  # 16k tokens
 EMBEDDINGS = OpenAIEmbeddings(model="text-embedding-ada-002")
 
@@ -94,14 +96,7 @@ from langchain_community.vectorstores.chroma import Chroma
 import chromadb
 
 CHROMA_DIRECTORY = Path("/tmp/docugami/chroma_db")
-
-
-def get_vector_store_index(docset_id: str) -> VectorStore:
-    return Chroma(
-        collection_name=docset_id,
-        persist_directory=str(CHROMA_DIRECTORY.absolute()),
-        embedding_function=EMBEDDINGS,
-    )
+CHROMA_DIRECTORY.mkdir(parents=True, exist_ok=True)
 
 
 def vector_store_index_exists(docset_id: str) -> bool:
@@ -114,6 +109,29 @@ def vector_store_index_exists(docset_id: str) -> bool:
     return False
 
 
+def get_vector_store_index(docset_id: str) -> Optional[VectorStore]:
+    if vector_store_index_exists(docset_id):
+        return Chroma(
+            collection_name=docset_id,
+            persist_directory=str(CHROMA_DIRECTORY.absolute()),
+            embedding_function=EMBEDDINGS,
+        )
+
+    return None
+
+
+def init_vector_store_index(docset_id: str, docs: List[Document], force=True) -> VectorStore:
+    if force and vector_store_index_exists(docset_id):
+        del_vector_store_index(docset_id)
+
+    return Chroma.from_documents(
+        documents=docs,
+        collection_name=docset_id,
+        embedding=EMBEDDINGS,
+        persist_directory=str(CHROMA_DIRECTORY.absolute()),
+    )
+
+
 def del_vector_store_index(docset_id: str):
     persistent_client = chromadb.PersistentClient(path=str(CHROMA_DIRECTORY.absolute()))
     persistent_client.delete_collection(docset_id)
@@ -122,17 +140,39 @@ def del_vector_store_index(docset_id: str):
 # Redis
 # Reference: https://python.langchain.com/docs/integrations/vectorstores/redis
 # from langchain_community.vectorstores.redis.base import Redis, check_index_exists
+# from docugami_kg_rag.helpers.fused_summary_retriever import PARENT_DOC_ID_KEY, FULL_DOC_SUMMARY_ID_KEY, SOURCE_KEY
 
 # REDIS_URL = "redis://localhost:6379"
-
-
-# def get_vector_store_index(docset_id: str) -> VectorStore:
-#     return Redis(redis_url=REDIS_URL, index_name=docset_id, embedding=EMBEDDINGS)
+# REDIS_INDEX_SCHEMA = {
+#     "text": [
+#         {"name": "id"},
+#         {"name": PARENT_DOC_ID_KEY},
+#         {"name": FULL_DOC_SUMMARY_ID_KEY},
+#         {"name": SOURCE_KEY},
+#     ],
+# }
 
 
 # def vector_store_index_exists(docset_id: str) -> bool:
-#     index = get_vector_store_index(docset_id)
-#     check_index_exists(index, docset_id)
+#     conn = Redis(redis_url=REDIS_URL, index_name=docset_id, embedding=EMBEDDINGS)
+#     return check_index_exists(conn.client, docset_id)
+
+
+# def get_vector_store_index(docset_id: str) -> Optional[VectorStore]:
+#     if vector_store_index_exists(docset_id):
+#         return Redis.from_existing_index(
+#             embedding=EMBEDDINGS, index_name=docset_id, schema=REDIS_INDEX_SCHEMA, redis_url=REDIS_URL  # type: ignore
+#         )
+#     else:
+#         return None
+
+
+# def init_vector_store_index(docset_id: str, docs: List[Document], force=True) -> VectorStore:
+#     if force and vector_store_index_exists(docset_id):
+#         del_vector_store_index(docset_id)
+
+#     return Redis.from_documents(docs, index_name=docset_id, embedding=EMBEDDINGS, redis_url=REDIS_URL)
+
 
 # def del_vector_store_index(docset_id: str):
 #     Redis.drop_index(docset_id, True, redis_url=REDIS_URL)

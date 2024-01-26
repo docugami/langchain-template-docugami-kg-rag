@@ -7,6 +7,10 @@ from langchain.pydantic_v1 import Field
 from langchain.schema import BaseRetriever, BaseStore, Document
 from langchain.schema.vectorstore import VectorStore
 
+PARENT_DOC_ID_KEY = "doc_id"
+FULL_DOC_SUMMARY_ID_KEY = "full_doc_id"
+SOURCE_KEY = "source"
+
 
 class SearchType(str, Enum):
     """Enumerator of the types of search to perform."""
@@ -62,15 +66,15 @@ class FusedSummaryRetriever(BaseRetriever):
     """The storage layer for the parent (original) docs for summaries in
     the vector store."""
 
-    parent_id_key: str = "doc_id"
+    parent_id_key: str = PARENT_DOC_ID_KEY
     """Metadata key for parent doc ID (maps chunk summaries in the vector 
     store to parent docs)."""
 
-    full_doc_summary_id_key: str = "full_doc_id"
+    full_doc_summary_id_key: str = FULL_DOC_SUMMARY_ID_KEY
     """Metadata key for full doc summary ID (maps chunk summaries in the
     vector store to full doc summaries)."""
 
-    source_key: str = "source"
+    source_key: str = SOURCE_KEY
     """Metadata key for source document of chunks."""
 
     search_kwargs: dict = Field(default_factory=dict)

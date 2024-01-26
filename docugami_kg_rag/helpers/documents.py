@@ -17,6 +17,7 @@ from docugami_kg_rag.config import (
     SMALL_CONTEXT_LLM,
     LARGE_CONTEXT_LLM,
 )
+from docugami_kg_rag.helpers.fused_summary_retriever import PARENT_DOC_ID_KEY
 from docugami_kg_rag.helpers.prompts import (
     CREATE_CHUNK_SUMMARY_SYSTEM_MESSAGE,
     CREATE_FULL_DOCUMENT_SUMMARY_PROMPT,
@@ -82,7 +83,7 @@ def _build_summary_mappings(
             summary_id = hashlib.md5(summary.encode()).hexdigest()
             meta = doc.metadata
             meta["id"] = summary_id
-            meta["doc_id"] = id
+            meta[PARENT_DOC_ID_KEY] = id
 
             summaries[id] = Document(
                 page_content=summary,

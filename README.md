@@ -113,10 +113,10 @@ Optionally, if using local embeddings or llms in `config.py`, make sure your loc
 
 ## Using Redis
 
-Under `config.py` you can configure the vector store to use Redis. See documentation here:
+Under `config.py` you can configure the vector store to use Redis. See documentation here: https://python.langchain.com/docs/integrations/vectorstores/redis
 
 One of the things you need to specify is the REDIS_URL. You may have an instance already running that you can point to, or for development you may want to deploy Redis locally:
 
 `docker run -d -p 6379:6379 -p 8001:8001 redis/redis-stack:latest`
 
-See documentation [here](https://python.langchain.com/docs/integrations/vectorstores/redis#redis-connection-url-examples) for how to configure the REDIS_URL
+See documentation [here](https://python.langchain.com/docs/integrations/vectorstores/redis#redis-connection-url-examples) for how to configure the REDIS_URL.

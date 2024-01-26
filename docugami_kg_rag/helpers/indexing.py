@@ -16,10 +16,11 @@ from docugami_kg_rag.config import (
     PARENT_HIERARCHY_LEVELS,
     SUB_CHUNK_TABLES,
     get_vector_store_index,
-    vector_store_index_exists,
+    init_vector_store_index,
     del_vector_store_index,
 )
 from docugami_kg_rag.helpers.documents import build_full_doc_summary_mappings, build_chunk_summary_mappings
+from docugami_kg_rag.helpers.fused_summary_retriever import FULL_DOC_SUMMARY_ID_KEY, SOURCE_KEY
 from docugami_kg_rag.helpers.reports import ReportDetails, build_report_details
 from docugami_kg_rag.helpers.retrieval import (
     LocalIndexState,
@@ -77,19 +78,19 @@ def populate_vector_index(docset_id: str, chunks: List[Document], overwrite=Fals
     Create index if it does not exist, delete and overwrite if overwrite is specified.
     """
 
-    if vector_store_index_exists(docset_id):
+    vector_store = get_vector_store_index(docset_id)
+
+    if vector_store is not None:
         print(f"Vector store index already exists for {docset_id}.")
         if overwrite is True:
-            print(f"Overwrite is {overwrite}, deleting existing index")
-            del_vector_store_index(docset_id)
+            print(f"Overwrite is {overwrite}, existing index will be deleted and re-created")
         else:
             print(f"Overwrite is {overwrite}, will just reuse existing index (any new docs will not be added)")
             return
 
     print(f"Embedding documents into vector store for {docset_id}...")
 
-    store = get_vector_store_index(docset_id)
-    store.add_documents(chunks)
+    vector_store = init_vector_store_index(docset_id, chunks, overwrite)
 
     print(f"Done embedding documents into vector store for {docset_id}")
 
@@ -120,7 +121,7 @@ def index_docset(docset_id: str, name: str, overwrite=False):
     chunks_by_source: Dict[str, List[str]] = {}
     for chunk in chunks:
         chunk_id = str(chunk.metadata.get("id"))
-        chunk_source = str(chunk.metadata.get("source"))
+        chunk_source = str(chunk.metadata.get(SOURCE_KEY))
         parent_chunk_id = chunk.metadata.get(loader.parent_id_key)
         if not parent_chunk_id:
             # parent chunk, we will use this (for expanded context) as our chunk
@@ -146,11 +147,11 @@ def index_docset(docset_id: str, name: str, overwrite=False):
     # Associate parent chunks with full docs
     for parent_chunk_id in parent_chunks_by_id:
         parent_chunk = parent_chunks_by_id[parent_chunk_id]
-        parent_chunk_source = parent_chunk.metadata.get("source")
+        parent_chunk_source = parent_chunk.metadata.get(SOURCE_KEY)
         if parent_chunk_source:
             full_doc_id = full_doc_ids_by_source.get(parent_chunk_source)
             if full_doc_id:
-                parent_chunk.metadata["full_doc_id"] = full_doc_id
+                parent_chunk.metadata[FULL_DOC_SUMMARY_ID_KEY] = full_doc_id
 
     full_doc_summaries_by_id = build_full_doc_summary_mappings(full_docs_by_id)
     chunk_summaries_by_id = build_chunk_summary_mappings(parent_chunks_by_id)
@@ -164,7 +165,8 @@ def index_docset(docset_id: str, name: str, overwrite=False):
         if state.is_file() and state.exists():
             os.remove(state)
 
-        del_vector_store_index(docset_id)
+        if get_vector_store_index(docset_id) is not None:
+            del_vector_store_index(docset_id)
 
     update_local_index(
         docset_id=docset_id,
