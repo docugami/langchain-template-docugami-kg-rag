@@ -20,6 +20,7 @@ from docugami_kg_rag.config import (
     del_vector_store_index,
 )
 from docugami_kg_rag.helpers.documents import build_full_doc_summary_mappings, build_chunk_summary_mappings
+from docugami_kg_rag.helpers.fused_summary_retriever import FULL_DOC_SUMMARY_ID_KEY, SOURCE_KEY
 from docugami_kg_rag.helpers.reports import ReportDetails, build_report_details
 from docugami_kg_rag.helpers.retrieval import (
     LocalIndexState,
@@ -120,7 +121,7 @@ def index_docset(docset_id: str, name: str, overwrite=False):
     chunks_by_source: Dict[str, List[str]] = {}
     for chunk in chunks:
         chunk_id = str(chunk.metadata.get("id"))
-        chunk_source = str(chunk.metadata.get("source"))
+        chunk_source = str(chunk.metadata.get(SOURCE_KEY))
         parent_chunk_id = chunk.metadata.get(loader.parent_id_key)
         if not parent_chunk_id:
             # parent chunk, we will use this (for expanded context) as our chunk
@@ -146,11 +147,11 @@ def index_docset(docset_id: str, name: str, overwrite=False):
     # Associate parent chunks with full docs
     for parent_chunk_id in parent_chunks_by_id:
         parent_chunk = parent_chunks_by_id[parent_chunk_id]
-        parent_chunk_source = parent_chunk.metadata.get("source")
+        parent_chunk_source = parent_chunk.metadata.get(SOURCE_KEY)
         if parent_chunk_source:
             full_doc_id = full_doc_ids_by_source.get(parent_chunk_source)
             if full_doc_id:
-                parent_chunk.metadata["full_doc_id"] = full_doc_id
+                parent_chunk.metadata[FULL_DOC_SUMMARY_ID_KEY] = full_doc_id
 
     full_doc_summaries_by_id = build_full_doc_summary_mappings(full_docs_by_id)
     chunk_summaries_by_id = build_chunk_summary_mappings(parent_chunks_by_id)
