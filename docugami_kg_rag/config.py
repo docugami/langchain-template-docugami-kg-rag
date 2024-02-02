@@ -45,7 +45,7 @@ MAX_FULL_DOCUMENT_TEXT_LENGTH = 1024 * 56  # ~14k tokens
 MAX_CHUNK_TEXT_LENGTH = 1024 * 26  # ~6.5k tokens
 MIN_CHUNK_TEXT_LENGTH = 1024 * 6  # ~1.5k tokens
 SUB_CHUNK_TABLES = False
-INCLUDE_XML_TAGS = False
+INCLUDE_XML_TAGS = True
 PARENT_HIERARCHY_LEVELS = 2
 RETRIEVER_K = 8
 
@@ -136,7 +136,6 @@ def del_vector_store_index(docset_id: str):
     persistent_client = chromadb.PersistentClient(path=str(CHROMA_DIRECTORY.absolute()))
     persistent_client.delete_collection(docset_id)
 
-
 # Redis
 # Reference: https://python.langchain.com/docs/integrations/vectorstores/redis
 # from langchain_community.vectorstores.redis.base import Redis, check_index_exists
@@ -161,7 +160,7 @@ def del_vector_store_index(docset_id: str):
 # def get_vector_store_index(docset_id: str) -> Optional[VectorStore]:
 #     if vector_store_index_exists(docset_id):
 #         return Redis.from_existing_index(
-#             embedding=EMBEDDINGS, index_name=docset_id, schema=REDIS_INDEX_SCHEMA, redis_url=REDIS_URL  # type: ignore
+#             embedding=EMBEDDINGS, index_name=docset_id, schema=REDIS_INDEX_SCHEMA, redis_url=REDIS_URL  # type: ignorecl
 #         )
 #     else:
 #         return None
@@ -176,6 +175,5 @@ def del_vector_store_index(docset_id: str):
 
 # def del_vector_store_index(docset_id: str):
 #     Redis.drop_index(docset_id, True, redis_url=REDIS_URL)
-
 
 ##### </Vector Store>
