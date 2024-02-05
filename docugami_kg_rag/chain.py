@@ -46,11 +46,6 @@ def _get_tools(use_reports=DEFAULT_USE_REPORTS) -> List[BaseTool]:
 
     return tools
 
-
-def _llm() -> Runnable:
-    return RunnableLambda(lambda x: x["input"]) | LARGE_CONTEXT_LLM.bind(stop=["\nObservation"])
-
-
 # setup ReAct style prompt
 prompt = hub.pull("hwchase17/react-json")
 tools = _get_tools()
@@ -59,13 +54,14 @@ prompt = prompt.partial(
     tool_names=", ".join([t.name for t in tools]),
 )
 
+model_with_stop = LARGE_CONTEXT_LLM.bind(stop=["\nObservation"])
 agent = (
     {
         "input": lambda x: x["input"],
         "agent_scratchpad": lambda x: format_log_to_str(x["intermediate_steps"]),
     }
     | prompt
-    | _llm
+    | model_with_stop
     | ReActJsonSingleInputOutputParser()
 )
 
@@ -94,7 +90,7 @@ if __name__ == "__main__":
 
         output = chain.invoke(
             {
-                "input": "What happened in Yelm, Washington?",
+                "input": "What is the project number for the contract with snelson?",
             }
         )
 

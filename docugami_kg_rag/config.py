@@ -136,6 +136,7 @@ def del_vector_store_index(docset_id: str):
     persistent_client = chromadb.PersistentClient(path=str(CHROMA_DIRECTORY.absolute()))
     persistent_client.delete_collection(docset_id)
 
+
 # Redis
 # Reference: https://python.langchain.com/docs/integrations/vectorstores/redis
 # from langchain_community.vectorstores.redis.base import Redis, check_index_exists

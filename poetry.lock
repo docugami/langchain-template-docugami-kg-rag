@@ -1622,6 +1622,21 @@ openai = ">=1.6.1,<2.0.0"
 tiktoken = ">=0.5.2,<0.6.0"
 
 [[package]]
+name = "langchainhub"
+version = "0.1.14"
+description = ""
+optional = false
+python-versions = ">=3.8.1,<4.0"
+files = [
+    {file = "langchainhub-0.1.14-py3-none-any.whl", hash = "sha256:3d58a050a3a70684bca2e049a2425a2418d199d0b14e3c8aa318123b7f18b21a"},
+    {file = "langchainhub-0.1.14.tar.gz", hash = "sha256:c1aeda38d66df1146f9e60e47bde7fb12bad902eb19dba78ac02f89e0f1f1867"},
+]
+
+[package.dependencies]
+requests = ">=2,<3"
+types-requests = ">=2.31.0.2,<3.0.0.0"
+
+[[package]]
 name = "langserve"
 version = "0.0.39"
 description = ""
@@ -4862,4 +4877,4 @@ redis = ["redis", "redisvl"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<4.0"
-content-hash = "1d7ba0648565486475dcb76619b22823b33bfb3d4e04e151dbd38378d1655552"
+content-hash = "602f7102e835ebe08b78eb94c3ae6d77ed2752108bedebc7aec32db1a4967896"
