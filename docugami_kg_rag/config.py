@@ -24,6 +24,7 @@ os.makedirs(Path(LOCAL_LLM_CACHE_DB_FILE).parent, exist_ok=True)
 set_llm_cache(SQLiteCache(database_path=LOCAL_LLM_CACHE_DB_FILE))
 
 DEFAULT_USE_REPORTS = False
+AGENT_MAX_ITERATIONS = 5
 
 ##### <LLMs and Embeddings>
 # OpenAI models and Embeddings
