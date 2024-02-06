@@ -11,7 +11,6 @@ from langchain_core.prompts import (
 
 from langchain.agents import AgentExecutor
 from langchain.agents.format_scratchpad import format_log_to_str
-from langchain.agents.output_parsers import ReActJsonSingleInputOutputParser
 from langchain.tools.base import BaseTool
 from langchain.tools.render import render_text_description
 
@@ -21,6 +20,7 @@ from docugami_kg_rag.helpers.indexing import read_all_local_index_state
 from docugami_kg_rag.helpers.prompts import ASSISTANT_SYSTEM_MESSAGE
 from docugami_kg_rag.helpers.reports import get_retrieval_tool_for_report
 from docugami_kg_rag.helpers.retrieval import get_retrieval_tool_for_docset
+from docugami_kg_rag.helpers.soft_react_json_single_input import SoftReActJsonSingleInputOutputParser
 
 
 def _get_tools(use_reports=DEFAULT_USE_REPORTS) -> List[BaseTool]:
@@ -78,7 +78,7 @@ agent = (
     }
     | prompt
     | model_with_stop
-    | ReActJsonSingleInputOutputParser()
+    | SoftReActJsonSingleInputOutputParser()
 )
 
 

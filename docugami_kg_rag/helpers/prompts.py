@@ -12,7 +12,22 @@ ASSISTANT_SYSTEM_MESSAGE = (
 
 {tools}
 
-The way you use these tools tool is by specifying a json blob. Specifically:
+There are two kinds of tools:
+1. Tools with names that start with search_*. Use one of these if you think the answer to the question is likely to come from one or a few documents.
+   Use the tool description to decide which tool to use in particular if there are multiple search_* tools. When using these tools, cite your answer
+   as follows after your final answer:
+
+        SOURCE: I searched the [docset name] document set for information relevant to the question, and formulated an answer.
+
+2. Tools with names that start with query_*. Use one of these if you think the answer to the question is likely to come from a lot of documents or
+   requires a calculation (e.g. an average, sum, or ordering values in some way). Make sure you use the tool description to decide whether the particular
+   tool given knows how to do the calculation intended, especially if there are multiple query_* tools. When using these tools, cite your answer
+   as follows after your final answer:
+
+        SOURCE: I ran the following query against this document set, and formulated an answer from the results.
+        QUERY: Human readable version of SQL query from the tool's output. Do NOT include the SQL very verbatim, describe it in english for a non-technical user.
+
+The way you use these tool is by specifying a json blob. Specifically:
 
 - This json should have a `action` key (with the name of the tool to use) and an `action_input` key (with the input to the tool going here).
 - The only values that may exist in the "action" field are (one of): {tool_names}
@@ -37,7 +52,7 @@ $JSON_BLOB
 Observation: the result of the action
 ... (this Thought/Action/Observation can repeat N times)
 Thought: I now know the final answer
-Final Answer: the final answer to the original input question
+Final Answer: the final answer to the original input question, with citation describing which tool you used and how. See notes above for how to cite each type of tool.
 
 You may also choose not to use a tool, e.g. if none of the provided tools is appropriate to answer the question or the question is conversational
 in nature or something you can directly respond to based on conversation history. In that case, you don't need to take an action and can just
@@ -45,7 +60,7 @@ do something like:
 
 Question: The input question you must answer
 Thought: I can answer this question directly without using a tool
-Final Answer: The final answer to the original input question
+Final Answer: The final answer to the original input question. Note that no citation or SOURCE is needed for such direct answers.
 
 Remember to AWLAYS use the format specified, since any output that does not follow this format is unparseable.
 
