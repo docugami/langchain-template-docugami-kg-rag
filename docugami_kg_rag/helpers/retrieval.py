@@ -13,6 +13,7 @@ from docugami_kg_rag.config import (
     LARGE_CONTEXT_LLM,
     RETRIEVER_K,
     MAX_CHUNK_TEXT_LENGTH,
+    EMBEDDINGS,
     get_vector_store_index,
 )
 from docugami_kg_rag.helpers.fused_summary_retriever import (
@@ -103,7 +104,7 @@ def get_retrieval_tool_for_docset(docset_id: str, docset_state: LocalIndexState)
     Gets a retrieval tool for an agent.
     """
 
-    chunk_vectorstore = get_vector_store_index(docset_id)
+    chunk_vectorstore = get_vector_store_index(docset_id, EMBEDDINGS)
 
     if not chunk_vectorstore:
         return None

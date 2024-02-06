@@ -15,6 +15,7 @@ from docugami_kg_rag.config import (
     MIN_CHUNK_TEXT_LENGTH,
     PARENT_HIERARCHY_LEVELS,
     SUB_CHUNK_TABLES,
+    EMBEDDINGS,
     get_vector_store_index,
     init_vector_store_index,
     del_vector_store_index,
@@ -78,7 +79,7 @@ def populate_vector_index(docset_id: str, chunks: List[Document], overwrite=Fals
     Create index if it does not exist, delete and overwrite if overwrite is specified.
     """
 
-    vector_store = get_vector_store_index(docset_id)
+    vector_store = get_vector_store_index(docset_id, EMBEDDINGS)
 
     if vector_store is not None:
         print(f"Vector store index already exists for {docset_id}.")
@@ -90,7 +91,7 @@ def populate_vector_index(docset_id: str, chunks: List[Document], overwrite=Fals
 
     print(f"Embedding documents into vector store for {docset_id}...")
 
-    vector_store = init_vector_store_index(docset_id, chunks, overwrite)
+    vector_store = init_vector_store_index(docset_id, chunks, EMBEDDINGS, overwrite)
 
     print(f"Done embedding documents into vector store for {docset_id}")
 
@@ -165,7 +166,7 @@ def index_docset(docset_id: str, name: str, overwrite=False):
         if state.is_file() and state.exists():
             os.remove(state)
 
-        if get_vector_store_index(docset_id) is not None:
+        if get_vector_store_index(docset_id, EMBEDDINGS) is not None:
             del_vector_store_index(docset_id)
 
     update_local_index(

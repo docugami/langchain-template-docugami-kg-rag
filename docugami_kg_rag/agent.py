@@ -96,7 +96,7 @@ class AgentInput(BaseModel):
     )
 
 
-chain = AgentExecutor(
+agent = AgentExecutor(
     agent=agent,  # type: ignore
     tools=_get_tools(True),  # pass in ALL the tools here (the prompt will filter down to non-report ones if needed)
     verbose=False,
@@ -111,7 +111,7 @@ if __name__ == "__main__":
     if sys.gettrace():
         # This code will only run if a debugger is attached
 
-        output = chain.invoke(
+        output = agent.invoke(
             {
                 "input": "What is the project number for the contract with snelson?",
                 "chat_history": [],
