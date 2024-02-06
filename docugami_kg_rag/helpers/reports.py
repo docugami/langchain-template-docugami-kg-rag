@@ -11,7 +11,7 @@ from docugami import Docugami
 
 from langchain.agents import create_sql_agent
 from langchain.agents.agent_types import AgentType
-from langchain.tools.base import BaseTool, Tool
+from langchain.tools.base import Tool
 from langchain.utilities.sql_database import SQLDatabase
 
 from langchain_community.agent_toolkits import SQLDatabaseToolkit
@@ -178,7 +178,7 @@ def build_report_details(docset_id: str) -> List[ReportDetails]:
     return details
 
 
-def get_retrieval_tool_for_report(report_details: ReportDetails) -> Optional[BaseTool]:
+def get_retrieval_tool_for_report(report_details: ReportDetails) -> Optional[Tool]:
     if not report_details.local_xlsx_path:
         return None
 

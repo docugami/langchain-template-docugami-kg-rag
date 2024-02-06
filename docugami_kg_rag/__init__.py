@@ -1,3 +1,3 @@
-from docugami_kg_rag.chain import chain
+from docugami_kg_rag.agent import agent
 
-__all__ = ["chain"]
+__all__ = ["agent"]

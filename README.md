@@ -108,12 +108,22 @@ runnable = RemoteRunnable("http://localhost:8000/docugami-kg-rag")
 
 # Advanced Configuration
 
+## Changing Default Configuration
+By default, this template uses OpenAI LLMs and Embeddings, plus ChromaDB as the vector database. This is specified in `docugami_kg_rag/config/__init__.py` in the following import lines at the top of the file:
+
+```python
+from docugami_kg_rag.config.openai import *
+from docugami_kg_rag.config.chromadb import *
+```
+
+You can change these defaults by changing which config you import, e.g. you can import the `fireworksai.py` config to run OSS models in fireworksai (or create your own config)
+
 ## Using Local GPU
-Optionally, if using local embeddings or llms in `config.py`, make sure your local CUDA runtime is updated. You can run `torch.cuda.is_available()` in a python REPL to make sure, and if you need to install a specific version for your local CUDA driver you can run something like `poetry run pip3 install torch==1.13.1+cu117 --extra-index-url https://download.pytorch.org/whl/cu117` to update it.
+Optionally, if using local embeddings or llms, make sure your local CUDA runtime is updated. You can run `torch.cuda.is_available()` in a python REPL to make sure, and if you need to install a specific version for your local CUDA driver you can run something like `poetry run pip3 install torch==1.13.1+cu117 --extra-index-url https://download.pytorch.org/whl/cu117` to update it.
 
 ## Using Redis
 
-Under `config.py` you can configure the vector store to use Redis. See documentation here: https://python.langchain.com/docs/integrations/vectorstores/redis
+If using redis as a vector database in your config, you can configure the vector store to use Redis. See documentation here: https://python.langchain.com/docs/integrations/vectorstores/redis
 
 One of the things you need to specify is the REDIS_URL. You may have an instance already running that you can point to, or for development you may want to deploy Redis locally:
 

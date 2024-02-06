@@ -11,6 +11,7 @@ readme = "README.md"
 python = ">=3.9,<4.0"
 langchain = "^0.1.1"
 langchain-community = "^0.0.13"
+langchainhub = "^0.1.14"
 dgml-utils = "0.3.0"
 typer = "^0.9.0"
 docugami = "0.1.2"
@@ -49,11 +50,11 @@ huggingface = ["torch", "huggingface", "sentence-transformers"]
 line-length = 127
 
 [tool.ruff]
-ignore = ["E501", "E402"]
+ignore = ["E501", "E402", "F403"]
 
 [tool.langserve]
 export_module = "docugami_kg_rag"
-export_attr = "chain"
+export_attr = "agent"
 
 [tool.templates-hub]
 use-case = "rag"
