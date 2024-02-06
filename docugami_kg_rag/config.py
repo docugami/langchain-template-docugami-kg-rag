@@ -79,12 +79,12 @@ BATCH_SIZE = 16
 # # Reference: https://help.openai.com/en/articles/4936856-what-are-tokens-and-how-to-count-them
 # MIN_LENGTH_TO_SUMMARIZE = 2048  # chunks and docs below this length are embedded as-is
 # MAX_FULL_DOCUMENT_TEXT_LENGTH = 1024 * 56  # ~14k tokens
-# MAX_CHUNK_TEXT_LENGTH = 1024 * 26  # ~6.5k tokens
+# MAX_CHUNK_TEXT_LENGTH = 1024 * 18  # ~4.5k tokens
 # MIN_CHUNK_TEXT_LENGTH = 1024 * 6  # ~1.5k tokens
 # SUB_CHUNK_TABLES = False
-# INCLUDE_XML_TAGS = False
+# INCLUDE_XML_TAGS = True
 # PARENT_HIERARCHY_LEVELS = 2
-# RETRIEVER_K = 8
+# RETRIEVER_K = 1
 
 # BATCH_SIZE = 16
 ##### </LLMs and Embeddings>

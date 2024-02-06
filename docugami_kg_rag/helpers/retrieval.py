@@ -2,11 +2,12 @@ from dataclasses import dataclass, field
 import re
 from typing import List, Optional
 
-from langchain.agents.agent_toolkits import create_retriever_tool
+from langchain_core.pydantic_v1 import BaseModel, Field
+
 from langchain.prompts import ChatPromptTemplate
-from langchain.schema import BaseRetriever, Document, StrOutputParser
+from langchain.schema import Document, StrOutputParser
 from langchain.storage.in_memory import InMemoryStore
-from langchain.tools.base import BaseTool
+from langchain.tools.base import Tool
 
 from docugami_kg_rag.config import (
     LARGE_CONTEXT_LLM,
@@ -43,23 +44,10 @@ class LocalIndexState:
     """Details about any reports for this docset."""
 
 
-def get_retriever_for_docset(docset_id: str, docset_state: LocalIndexState) -> Optional[BaseRetriever]:
-    """
-    Gets a retriever for a docset. Chunks are in the vector store, and full documents
-    are in the store inside the local state.
-    """
-    chunk_vectorstore = get_vector_store_index(docset_id)
+class RetrieverInput(BaseModel):
+    """Input to the retriever."""
 
-    if not chunk_vectorstore:
-        return None
-
-    return FusedSummaryRetriever(
-        vectorstore=chunk_vectorstore,
-        parent_doc_store=docset_state.chunks_by_id,
-        full_doc_summary_store=docset_state.full_doc_summaries_by_id,
-        search_kwargs={"k": RETRIEVER_K},
-        search_type=SearchType.mmr,
-    )
+    query: str = Field(description="query to look up in retriever")
 
 
 def docset_name_to_direct_retriever_tool_function_name(name: str) -> str:
@@ -107,20 +95,46 @@ def chunks_to_direct_retriever_tool_description(name: str, chunks: List[Document
         | StrOutputParser()
     )
     summary = chain.invoke({"docset_name": name, "document": document})
-    return f"Searches for and returns chunks from {name} documents. {summary}"
+    return f"Searches for and returns chunks from {name} documents. {summary}. Action input must be a single 'query' string."
 
 
-def get_retrieval_tool_for_docset(docset_id: str, docset_state: LocalIndexState) -> Optional[BaseTool]:
+def get_retrieval_tool_for_docset(docset_id: str, docset_state: LocalIndexState) -> Optional[Tool]:
     """
     Gets a retrieval tool for an agent.
     """
 
-    retriever = get_retriever_for_docset(docset_id=docset_id, docset_state=docset_state)
+    chunk_vectorstore = get_vector_store_index(docset_id)
+
+    if not chunk_vectorstore:
+        return None
+
+    retriever = FusedSummaryRetriever(
+        vectorstore=chunk_vectorstore,
+        parent_doc_store=docset_state.chunks_by_id,
+        full_doc_summary_store=docset_state.full_doc_summaries_by_id,
+        search_kwargs={"k": RETRIEVER_K},
+        search_type=SearchType.mmr,
+    )
+
     if not retriever:
         return None
 
-    return create_retriever_tool(
-        retriever=retriever,
+    def wrapped_get_relevant_documents(query, callbacks=None, tags=None, metadata=None, run_name=None, **kwargs):
+        docs: List[Document] = retriever.get_relevant_documents(
+            query, callbacks=callbacks, tags=tags, metadata=metadata, run_name=run_name, **kwargs
+        )
+        return "\n\n".join([doc.page_content for doc in docs])
+
+    async def awrapped_get_relevant_documents(query, callbacks=None, tags=None, metadata=None, run_name=None, **kwargs):
+        docs: List[Document] = await retriever.aget_relevant_documents(
+            query, callbacks=callbacks, tags=tags, metadata=metadata, run_name=run_name, **kwargs
+        )
+        return "\n\n".join([doc.page_content for doc in docs])
+
+    return Tool(
         name=docset_state.retrieval_tool_function_name,
         description=docset_state.retrieval_tool_description,
+        func=wrapped_get_relevant_documents,
+        coroutine=awrapped_get_relevant_documents,
+        args_schema=RetrieverInput,
     )

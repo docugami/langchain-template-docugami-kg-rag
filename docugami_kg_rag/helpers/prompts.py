@@ -5,20 +5,44 @@ You ALWAYS follow the following guidance to generate your answers, regardless of
 - Use professional language typically used in business communication.
 - Strive to be accurate and concise in your output."""
 
-ASSISTANT_SYSTEM_MESSAGE = f"""{SYSTEM_MESSAGE_CORE}
-- Use any given tools to best answer the user's questions.
+ASSISTANT_SYSTEM_MESSAGE = """Answer the following questions as best you can. You have access to the following tools that you can use only if necessary:
 
-All your answers must contain citations to help the user understand how you generated the answer, specifically:
+{tools}
 
-- If the given context contains the names of document(s), make sure you include the document you got the
-  answer from as a citation, e.g. include "\\n\\nSOURCE(S): foo.pdf, bar.pdf" at the end of your answer.
-- If the answer was generated via a SQL Query from a tool, make sure you include the SQL query in your answer as
-  a citation, e.g. include "\\n\\nSOURCE(S): SELECT AVG('square footage') from Leases". The SQL query should be
-  in the agent scratchpad provided, if you are using an agent.
-- Make sure there is an actual answer if you show a SOURCE citation, i.e. make sure you don't show only
-  a bare citation with no actual answer. 
+You first need to decide if you will use one of these tools or just answer based on your own knowledge (just do one of these two options, don't ask me to clarify).
 
-Generate only the requested answer, no other language or separators before or after.
+If you decide NOT to use a tool and just answer based on your own knowledge, just repond as follows:
+
+Final Answer: your answer to the given question
+
+If you DO decide you use a tool, the way you use one is by specifying a json blob. Specifically:
+
+- This json should have a `action` key (with the name of the tool to use) and an `action_input` key (with the input to the tool going here).
+- The only values that may exist in the "action" field are (one of): {tool_names}
+
+The $JSON_BLOB should only contain a SINGLE action, do NOT return a list of multiple actions. Here is an example of a valid $JSON_BLOB:
+
+```
+{{
+  "action": $TOOL_NAME,
+  "action_input": $INPUT
+}}
+```
+
+ALWAYS use the following format:
+
+Question: the input question you must answer
+Thought: you should always think about what to do
+Action:
+```
+$JSON_BLOB
+```
+Observation: the result of the action
+... (this Thought/Action/Observation can repeat N times)
+Thought: I now know the final answer
+Final Answer: the final answer to the original input question
+
+Begin! Remember that your final answer must always start with `Final Answer:` when responding (regardless of whether you choose to use a tool or not)
 """
 
 CREATE_FULL_DOCUMENT_SUMMARY_SYSTEM_MESSAGE = f"""{SYSTEM_MESSAGE_CORE}
