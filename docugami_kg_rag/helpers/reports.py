@@ -3,24 +3,28 @@ import os
 import re
 import sqlite3
 import tempfile
+from operator import itemgetter
 from pathlib import Path
 from typing import List, Optional, Union
 import pandas as pd
 import requests
 from docugami import Docugami
 
-from langchain.agents import create_sql_agent
-from langchain.agents.agent_types import AgentType
-from langchain.tools.base import Tool
+from langchain.tools.base import BaseTool
 from langchain.utilities.sql_database import SQLDatabase
 
-from langchain_community.agent_toolkits import SQLDatabaseToolkit
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import PromptTemplate
+from langchain_core.runnables import RunnablePassthrough
 
-from docugami_kg_rag.config import (
-    DOCUGAMI_API_KEY,
-    INDEXING_LOCAL_REPORT_DBS_ROOT,
-    SMALL_CONTEXT_LLM,
-)
+from langchain.chains import create_sql_query_chain
+from langchain.callbacks.manager import CallbackManagerForToolRun
+
+from langchain_community.tools.sql_database.tool import BaseSQLDatabaseTool, QuerySQLDataBaseTool
+
+from docugami_kg_rag.config import DOCUGAMI_API_KEY, INDEXING_LOCAL_REPORT_DBS_ROOT
+from docugami_kg_rag.config.fireworksai import SMALL_CONTEXT_INSTRUCT_LLM, SQL_GEN_LLM
+from docugami_kg_rag.helpers.prompts import EXPLAINED_QUERY_PROMPT
 
 HEADERS = {"Authorization": f"Bearer {DOCUGAMI_API_KEY}"}
 
@@ -43,6 +47,30 @@ class ReportDetails:
     """
     Description of retrieval tool e.g. Runs a SQL query over the REPORT_NAME report, 
     represented as the following SQL Table... etc."""
+
+
+class CustomReportRetrievalTool(BaseSQLDatabaseTool, BaseTool):
+    db: SQLDatabase
+    name: str = "query_report"
+    description: str = ""
+
+    def _run(self, query: str, run_manager: Optional[CallbackManagerForToolRun] = None) -> str:  # type: ignore
+        """Use the tool."""
+        execute_query = QuerySQLDataBaseTool(db=self.db)
+        write_query = create_sql_query_chain(SQL_GEN_LLM, self.db)
+
+        answer_prompt = PromptTemplate.from_template(EXPLAINED_QUERY_PROMPT)
+
+        answer = answer_prompt | SMALL_CONTEXT_INSTRUCT_LLM | StrOutputParser()
+        chain = (
+            RunnablePassthrough.assign(
+                query=write_query,  # type: ignore
+            ).assign(
+                result=itemgetter("query") | execute_query,
+            )
+            | answer
+        )
+        return chain.invoke({"question": query})
 
 
 def download_project_latest_xlsx(project_url: str, local_xlsx: Path) -> Optional[Path]:
@@ -114,7 +142,7 @@ def report_details_to_report_query_tool_description(name: str, table_info: str) 
     Converts a set of chunks to a direct retriever tool description.
     """
     table_info = re.sub(r"\s+", " ", table_info)
-    description = f"Runs a SQL query over the {name} report, represented as the following SQL Table:\n\n{table_info}"
+    description = f"Given a single input 'query' parameter, runs a SQL query over the {name} report, represented as the following SQL Table:\n\n{table_info}"
 
     return description[:2048]  # cap to avoid failures when the description is too long
 
@@ -178,17 +206,16 @@ def build_report_details(docset_id: str) -> List[ReportDetails]:
     return details
 
 
-def get_retrieval_tool_for_report(report_details: ReportDetails) -> Optional[Tool]:
+def get_retrieval_tool_for_report(report_details: ReportDetails) -> Optional[BaseTool]:
     if not report_details.local_xlsx_path:
         return None
 
     conn = excel_to_sqlite_connection(report_details.local_xlsx_path, report_details.name)
     db = connect_to_db(conn)
-    toolkit = SQLDatabaseToolkit(db=db, llm=SMALL_CONTEXT_LLM)
-    agent = create_sql_agent(llm=SMALL_CONTEXT_LLM, toolkit=toolkit, agent_type=AgentType.OPENAI_FUNCTIONS)
 
-    return Tool.from_function(
-        func=agent.run,
+    return CustomReportRetrievalTool(
+        db=db,
         name=report_details.retrieval_tool_function_name,
         description=report_details.retrieval_tool_description,
+        return_direct=True,
     )

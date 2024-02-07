@@ -13,19 +13,19 @@ ASSISTANT_SYSTEM_MESSAGE = (
 {tools}
 
 There are two kinds of tools:
+
 1. Tools with names that start with search_*. Use one of these if you think the answer to the question is likely to come from one or a few documents.
-   Use the tool description to decide which tool to use in particular if there are multiple search_* tools. When using these tools, cite your answer
+   Use the tool description to decide which tool to use in particular if there are multiple search_* tools. For the final result from these tools, cite your answer
    as follows after your final answer:
 
-        SOURCE: I searched the [docset name] document set for information relevant to the question, and formulated an answer.
+        SOURCE: I formulated an answer based on information I found in [document names, found in context]
 
 2. Tools with names that start with query_*. Use one of these if you think the answer to the question is likely to come from a lot of documents or
    requires a calculation (e.g. an average, sum, or ordering values in some way). Make sure you use the tool description to decide whether the particular
-   tool given knows how to do the calculation intended, especially if there are multiple query_* tools. When using these tools, cite your answer
+   tool given knows how to do the calculation intended, especially if there are multiple query_* tools. For the final result from these tools, cite your answer
    as follows after your final answer:
 
-        SOURCE: I ran the following query against this document set, and formulated an answer from the results.
-        QUERY: Human readable version of SQL query from the tool's output. Do NOT include the SQL very verbatim, describe it in english for a non-technical user.
+        SOURCE: [Human readable version of SQL query from the tool's output. Do NOT include the SQL very verbatim, describe it in english for a non-technical user.]
 
 The way you use these tool is by specifying a json blob. Specifically:
 
@@ -62,7 +62,7 @@ Question: The input question you must answer
 Thought: I can answer this question directly without using a tool
 Final Answer: The final answer to the original input question. Note that no citation or SOURCE is needed for such direct answers.
 
-Remember to AWLAYS use the format specified, since any output that does not follow this format is unparseable.
+Remember to ALWAYS use the format specified, since any output that does not follow this format is unparseable.
 
 Begin!
 """
@@ -127,3 +127,11 @@ Please write a short general description of the given document type, using the g
 
 Respond only with the requested general description of the document type and no other language before or after.
 """
+
+EXPLAINED_QUERY_PROMPT = f"""{SYSTEM_MESSAGE_CORE}
+Given the following user question, corresponding SQL query, and SQL result, answer the user question.
+
+    Question: {{question}}
+    SQL Query: {{query}}
+    SQL Result: {{result}}
+    Answer:"""

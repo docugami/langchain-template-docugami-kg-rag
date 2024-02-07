@@ -7,8 +7,10 @@ from langchain_openai import OpenAIEmbeddings
 if "OPENAI_API_KEY" not in os.environ:
     raise Exception("OPENAI_API_KEY environment variable not set")
 
-LARGE_CONTEXT_LLM = ChatOpenAI(temperature=0.5, model="gpt-4-turbo-preview", cache=True)  # 128k tokens
-SMALL_CONTEXT_LLM = ChatOpenAI(temperature=0.5, model="gpt-3.5-turbo-1106", cache=True)  # 16k tokens
+LARGE_CONTEXT_INSTRUCT_LLM = ChatOpenAI(temperature=0.5, model="gpt-4-turbo-preview", cache=True)  # 128k tokens
+SMALL_CONTEXT_INSTRUCT_LLM = ChatOpenAI(temperature=0.5, model="gpt-3.5-turbo-1106", cache=True)  # 16k tokens
+SQL_GEN_LLM = SMALL_CONTEXT_INSTRUCT_LLM  # Use the same model for sql gen
+
 EMBEDDINGS = OpenAIEmbeddings(model="text-embedding-ada-002")
 
 # Lengths for the Docugami loader are in terms of characters, 1 token ~= 4 chars in English

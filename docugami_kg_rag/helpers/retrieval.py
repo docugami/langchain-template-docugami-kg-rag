@@ -7,10 +7,10 @@ from langchain_core.pydantic_v1 import BaseModel, Field
 from langchain.prompts import ChatPromptTemplate
 from langchain.schema import Document, StrOutputParser
 from langchain.storage.in_memory import InMemoryStore
-from langchain.tools.base import Tool
+from langchain.tools.base import BaseTool, Tool
 
 from docugami_kg_rag.config import (
-    LARGE_CONTEXT_LLM,
+    LARGE_CONTEXT_INSTRUCT_LLM,
     RETRIEVER_K,
     MAX_CHUNK_TEXT_LENGTH,
     EMBEDDINGS,
@@ -92,14 +92,14 @@ def chunks_to_direct_retriever_tool_description(name: str, chunks: List[Document
                 ("human", CREATE_DIRECT_RETRIEVAL_TOOL_DESCRIPTION_PROMPT),
             ]
         )
-        | LARGE_CONTEXT_LLM
+        | LARGE_CONTEXT_INSTRUCT_LLM
         | StrOutputParser()
     )
     summary = chain.invoke({"docset_name": name, "document": document})
     return f"Given a single input 'query' parameter, searches for and returns chunks from {name} documents. {summary}"
 
 
-def get_retrieval_tool_for_docset(docset_id: str, docset_state: LocalIndexState) -> Optional[Tool]:
+def get_retrieval_tool_for_docset(docset_id: str, docset_state: LocalIndexState) -> Optional[BaseTool]:
     """
     Gets a retrieval tool for an agent.
     """
