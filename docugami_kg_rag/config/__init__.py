@@ -5,12 +5,12 @@ from langchain.cache import SQLiteCache
 
 from langchain.globals import set_llm_cache
 
-# from docugami_kg_rag.config.openai import *
-# from docugami_kg_rag.config.chromadb import *
+from docugami_kg_rag.config.openai import *
+from docugami_kg_rag.config.chromadb import *
 
-from docugami_kg_rag.config.fireworksai import *
-from docugami_kg_rag.config.huggingface import *
-from docugami_kg_rag.config.redis import *
+# from docugami_kg_rag.config.fireworksai import *
+# from docugami_kg_rag.config.huggingface import *
+# from docugami_kg_rag.config.redis import *
 
 DOCUGAMI_API_KEY = os.environ.get("DOCUGAMI_API_KEY")
 if not DOCUGAMI_API_KEY:
