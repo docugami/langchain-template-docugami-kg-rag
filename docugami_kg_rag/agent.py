@@ -15,7 +15,7 @@ from langchain.tools.base import BaseTool
 from langchain.tools.render import render_text_description
 
 
-from docugami_kg_rag.config import AGENT_MAX_ITERATIONS, LARGE_CONTEXT_LLM, DEFAULT_USE_REPORTS
+from docugami_kg_rag.config import AGENT_MAX_ITERATIONS, LARGE_CONTEXT_INSTRUCT_LLM, DEFAULT_USE_REPORTS
 from docugami_kg_rag.helpers.indexing import read_all_local_index_state
 from docugami_kg_rag.helpers.prompts import ASSISTANT_SYSTEM_MESSAGE
 from docugami_kg_rag.helpers.reports import get_retrieval_tool_for_report
@@ -57,7 +57,7 @@ prompt = ChatPromptTemplate.from_messages(
     ]
 )
 
-model_with_stop = LARGE_CONTEXT_LLM.bind(stop=["\nObservation"])
+model_with_stop = LARGE_CONTEXT_INSTRUCT_LLM.bind(stop=["\nObservation"])
 
 
 def _format_chat_history(chat_history: List[Tuple[str, str]]):
@@ -105,7 +105,6 @@ agent = AgentExecutor(
 ).with_types(
     input_type=AgentInput,  # type: ignore
 )
-
 
 if __name__ == "__main__":
     if sys.gettrace():

@@ -14,8 +14,8 @@ from docugami_kg_rag.config import (
     MAX_CHUNK_TEXT_LENGTH,
     MAX_FULL_DOCUMENT_TEXT_LENGTH,
     MIN_LENGTH_TO_SUMMARIZE,
-    SMALL_CONTEXT_LLM,
-    LARGE_CONTEXT_LLM,
+    SMALL_CONTEXT_INSTRUCT_LLM,
+    LARGE_CONTEXT_INSTRUCT_LLM,
 )
 from docugami_kg_rag.helpers.fused_summary_retriever import PARENT_DOC_ID_KEY
 from docugami_kg_rag.helpers.prompts import (
@@ -30,7 +30,7 @@ def _build_summary_mappings(
     docs_by_id: Dict[str, Document],
     system_message: str,
     prompt_template: str,
-    llm: BaseChatModel = SMALL_CONTEXT_LLM,
+    llm: BaseChatModel = SMALL_CONTEXT_INSTRUCT_LLM,
     min_length_to_summarize=MIN_LENGTH_TO_SUMMARIZE,
     max_length_cutoff=MAX_CHUNK_TEXT_LENGTH,
     label="summaries",
@@ -102,7 +102,7 @@ def build_full_doc_summary_mappings(docs_by_id: Dict[str, Document]) -> Dict[str
         docs_by_id=docs_by_id,
         system_message=CREATE_FULL_DOCUMENT_SUMMARY_SYSTEM_MESSAGE,
         prompt_template=CREATE_FULL_DOCUMENT_SUMMARY_PROMPT,
-        llm=LARGE_CONTEXT_LLM,
+        llm=LARGE_CONTEXT_INSTRUCT_LLM,
         max_length_cutoff=MAX_FULL_DOCUMENT_TEXT_LENGTH,
         label="full document summaries",
     )
@@ -117,7 +117,7 @@ def build_chunk_summary_mappings(docs_by_id: Dict[str, Document]) -> Dict[str, D
         docs_by_id=docs_by_id,
         system_message=CREATE_CHUNK_SUMMARY_SYSTEM_MESSAGE,
         prompt_template=CREATE_CHUNK_SUMMARY_PROMPT,
-        llm=SMALL_CONTEXT_LLM,
+        llm=SMALL_CONTEXT_INSTRUCT_LLM,
         max_length_cutoff=MAX_CHUNK_TEXT_LENGTH,
         label="chunk summaries",
     )
