@@ -6,7 +6,13 @@ from typing import Dict, List
 
 from langchain.schema import Document
 from langchain.storage.in_memory import InMemoryStore
-from langchain_community.document_loaders.docugami import DocugamiLoader
+
+from langchain_docugami.document_loaders.docugami import DocugamiLoader
+from langchain_docugami.retrievers.fused_summary import FULL_DOC_SUMMARY_ID_KEY, SOURCE_KEY
+from langchain_docugami.tools.retrieval import (
+    chunks_to_direct_retriever_tool_description,
+    docset_name_to_direct_retriever_tool_function_name,
+)
 
 from docugami_kg_rag.config import (
     INCLUDE_XML_TAGS,
@@ -16,18 +22,14 @@ from docugami_kg_rag.config import (
     PARENT_HIERARCHY_LEVELS,
     SUB_CHUNK_TABLES,
     EMBEDDINGS,
+    SMALL_CONTEXT_INSTRUCT_LLM,
     get_vector_store_index,
     init_vector_store_index,
     del_vector_store_index,
 )
 from docugami_kg_rag.helpers.documents import build_full_doc_summary_mappings, build_chunk_summary_mappings
-from docugami_kg_rag.helpers.fused_summary_retriever import FULL_DOC_SUMMARY_ID_KEY, SOURCE_KEY
 from docugami_kg_rag.helpers.reports import ReportDetails, build_report_details
-from docugami_kg_rag.helpers.retrieval import (
-    LocalIndexState,
-    chunks_to_direct_retriever_tool_description,
-    docset_name_to_direct_retriever_tool_function_name,
-)
+from docugami_kg_rag.helpers.retrieval import LocalIndexState
 
 
 def read_all_local_index_state() -> Dict[str, LocalIndexState]:
@@ -158,7 +160,12 @@ def index_docset(docset_id: str, name: str, overwrite=False):
     chunk_summaries_by_id = build_chunk_summary_mappings(parent_chunks_by_id)
 
     direct_tool_function_name = docset_name_to_direct_retriever_tool_function_name(name)
-    direct_tool_description = chunks_to_direct_retriever_tool_description(name, list(parent_chunks_by_id.values()))
+    direct_tool_description = chunks_to_direct_retriever_tool_description(
+        name=name,
+        chunks=list(parent_chunks_by_id.values()),
+        llm=SMALL_CONTEXT_INSTRUCT_LLM,
+        max_chunk_text_length=MAX_CHUNK_TEXT_LENGTH,
+    )
     report_details = build_report_details(docset_id)
 
     if overwrite:

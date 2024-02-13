@@ -14,13 +14,22 @@ from langchain.agents.format_scratchpad import format_log_to_str
 from langchain.tools.base import BaseTool
 from langchain.tools.render import render_text_description
 
+from langchain_docugami.output_parsers.soft_react_json_single_input import SoftReActJsonSingleInputOutputParser
+from langchain_docugami.prompts import ASSISTANT_SYSTEM_MESSAGE
+from langchain_docugami.tools.reports import get_retrieval_tool_for_report
+from langchain_docugami.tools.retrieval import get_retrieval_tool_for_docset
 
-from docugami_kg_rag.config import AGENT_MAX_ITERATIONS, LARGE_CONTEXT_INSTRUCT_LLM, DEFAULT_USE_REPORTS
+
+from docugami_kg_rag.config import (
+    AGENT_MAX_ITERATIONS,
+    LARGE_CONTEXT_INSTRUCT_LLM,
+    SQL_GEN_LLM,
+    DEFAULT_USE_REPORTS,
+    RETRIEVER_K,
+    EMBEDDINGS,
+    get_vector_store_index,
+)
 from docugami_kg_rag.helpers.indexing import read_all_local_index_state
-from docugami_kg_rag.helpers.prompts import ASSISTANT_SYSTEM_MESSAGE
-from docugami_kg_rag.helpers.reports import get_retrieval_tool_for_report
-from docugami_kg_rag.helpers.retrieval import get_retrieval_tool_for_docset
-from docugami_kg_rag.helpers.soft_react_json_single_input import SoftReActJsonSingleInputOutputParser
 
 
 def _get_tools(use_reports=DEFAULT_USE_REPORTS) -> List[BaseTool]:
@@ -33,15 +42,33 @@ def _get_tools(use_reports=DEFAULT_USE_REPORTS) -> List[BaseTool]:
     tools: List[BaseTool] = []
     for docset_id in local_state:
         docset_state = local_state[docset_id]
-        direct_retrieval_tool = get_retrieval_tool_for_docset(docset_id, docset_state)
-        if direct_retrieval_tool:
-            # Direct retrieval tool for each indexed docset (direct KG-RAG against semantic XML)
-            tools.append(direct_retrieval_tool)
+        chunk_vectorstore = get_vector_store_index(docset_id, EMBEDDINGS)
+
+        if chunk_vectorstore is not None:
+
+            direct_retrieval_tool = get_retrieval_tool_for_docset(
+                chunk_vectorstore=chunk_vectorstore,
+                retrieval_tool_function_name=docset_state.retrieval_tool_function_name,
+                retrieval_tool_description=docset_state.retrieval_tool_description,
+                full_doc_summary_store=docset_state.full_doc_summaries_by_id,
+                parent_doc_store=docset_state.chunks_by_id,
+                retrieval_k=RETRIEVER_K,
+            )
+            if direct_retrieval_tool:
+                # Direct retrieval tool for each indexed docset (direct KG-RAG against semantic XML)
+                tools.append(direct_retrieval_tool)
 
         if use_reports:
             for report in docset_state.reports:
                 # Report retrieval tool for each published report (user-curated views on semantic XML)
-                report_retrieval_tool = get_retrieval_tool_for_report(report)
+                report_retrieval_tool = get_retrieval_tool_for_report(
+                    local_xlsx_path=report.local_xlsx_path,
+                    report_name=report.name,
+                    retrieval_tool_function_name=report.retrieval_tool_function_name,
+                    retrieval_tool_description=report.retrieval_tool_description,
+                    assistant_llm=LARGE_CONTEXT_INSTRUCT_LLM,
+                    sql_llm=SQL_GEN_LLM,
+                )
                 if report_retrieval_tool:
                     tools.append(report_retrieval_tool)
 
