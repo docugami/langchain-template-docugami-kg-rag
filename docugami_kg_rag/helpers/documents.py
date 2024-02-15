@@ -17,7 +17,6 @@ from langchain_docugami.prompts import (
 )
 
 from docugami_kg_rag.config import (
-    BATCH_SIZE,
     INCLUDE_XML_TAGS,
     MAX_CHUNK_TEXT_LENGTH,
     MAX_FULL_DOCUMENT_TEXT_LENGTH,

@@ -6,10 +6,14 @@ from langchain.chat_models.fireworks import ChatFireworks
 if "FIREWORKS_API_KEY" not in os.environ:
     raise Exception("FIREWORKS_API_KEY environment variable not set")
 LARGE_CONTEXT_INSTRUCT_LLM = ChatFireworks(
-    model="accounts/fireworks/models/mixtral-8x7b-instruct",
-    model_kwargs={"temperature": 0, "max_tokens": 1024},
+    model="accounts/fireworks/models/mixtral-8x7b-instruct",  # input context limit is 32k tokens
+    model_kwargs={
+        "context_length_exceeded_behavior": "truncate",
+        "temperature": 0,
+        "max_tokens": 32 * 1024,  # this sets the total token max (input and output)
+    },
     cache=True,
-)  # 128k tokens
+)
 SMALL_CONTEXT_INSTRUCT_LLM = LARGE_CONTEXT_INSTRUCT_LLM  # Use the same model for large and small context tasks
 SQL_GEN_LLM = LARGE_CONTEXT_INSTRUCT_LLM  # Use the same model for sql gen
 

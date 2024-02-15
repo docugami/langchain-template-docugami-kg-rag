@@ -24,7 +24,7 @@ chromadb = { version = "0.4.14", optional = true }
 fireworks-ai = { version = "^0.11.2", optional = true }
 redis = { version = "^5.0.1", optional = true }
 redisvl = { version = "^0.0.7", optional = true }
-torch = {  version = "^2.1.2", optional = true }
+torch = {  version = "<=1.13.1", optional = true }
 huggingface = { version = "^0.0.1", optional = true }
 sentence-transformers = { version = "^2.2.2", optional = true }
 

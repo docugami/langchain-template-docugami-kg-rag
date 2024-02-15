@@ -66,8 +66,8 @@ def _get_tools(use_reports=DEFAULT_USE_REPORTS) -> List[BaseTool]:
                     report_name=report.name,
                     retrieval_tool_function_name=report.retrieval_tool_function_name,
                     retrieval_tool_description=report.retrieval_tool_description,
-                    assistant_llm=LARGE_CONTEXT_INSTRUCT_LLM,
                     sql_llm=SQL_GEN_LLM,
+                    embeddings=EMBEDDINGS,
                 )
                 if report_retrieval_tool:
                     tools.append(report_retrieval_tool)
