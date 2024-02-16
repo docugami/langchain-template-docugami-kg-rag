@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "docugami-kg-rag"
-version = "0.3.0"
+version = "0.4.0"
 description = "This template contains a reference architecture for Retrieval Augmented Generation against a set of documents using Docugami's XML Knowledge Graph (KG-RAG)."
 authors = [
     "Docugami <contact@docugami.com>",
@@ -11,7 +11,7 @@ readme = "README.md"
 python = ">=3.9,<4.0"
 langchain = ">=0.1.6"
 langchain-community = "^0.0.19"
-langchain-docugami = {git = "https://github.com/langchain-ai/langchain-docugami.git", rev = "tjaffri/refactor"}
+langchain-docugami = {git = "https://github.com/langchain-ai/langchain-docugami.git", rev = "tjaffri/agent"}
 typer = "^0.9.0"
 docugami = "0.1.2"
 pyarrow = "^15.0.0"

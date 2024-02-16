@@ -15,13 +15,13 @@ from langchain.tools.base import BaseTool
 from langchain.tools.render import render_text_description
 
 from langchain_docugami.output_parsers.soft_react_json_single_input import SoftReActJsonSingleInputOutputParser
-from langchain_docugami.prompts import ASSISTANT_SYSTEM_MESSAGE
 from langchain_docugami.tools.reports import get_retrieval_tool_for_report
 from langchain_docugami.tools.retrieval import get_retrieval_tool_for_docset
-
+from langchain_docugami.agents.assistant import ASSISTANT_SYSTEM_MESSAGE
 
 from docugami_kg_rag.config import (
     AGENT_MAX_ITERATIONS,
+    EXAMPLES_PATH,
     LARGE_CONTEXT_INSTRUCT_LLM,
     SQL_GEN_LLM,
     DEFAULT_USE_REPORTS,
@@ -29,7 +29,7 @@ from docugami_kg_rag.config import (
     EMBEDDINGS,
     get_vector_store_index,
 )
-from docugami_kg_rag.helpers.indexing import read_all_local_index_state
+from docugami_kg_rag.indexing import read_all_local_index_state
 
 
 def _get_tools(use_reports=DEFAULT_USE_REPORTS) -> List[BaseTool]:
@@ -68,6 +68,8 @@ def _get_tools(use_reports=DEFAULT_USE_REPORTS) -> List[BaseTool]:
                     retrieval_tool_description=report.retrieval_tool_description,
                     sql_llm=SQL_GEN_LLM,
                     embeddings=EMBEDDINGS,
+                    sql_fixup_examples_file=EXAMPLES_PATH / "sql_fixup_examples.yaml",
+                    sql_examples_file=EXAMPLES_PATH / "sql_examples.yaml",
                 )
                 if report_retrieval_tool:
                     tools.append(report_retrieval_tool)
