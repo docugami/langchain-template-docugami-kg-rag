@@ -1,4 +1,3 @@
-import hashlib
 import os
 from pathlib import Path
 import pickle
@@ -12,8 +11,11 @@ from langchain_core.documents import Document
 from langchain.storage.in_memory import InMemoryStore
 
 from langchain_docugami.document_loaders.docugami import DocugamiLoader
-from langchain_docugami.retrievers.fused_summary import FULL_DOC_SUMMARY_ID_KEY, SOURCE_KEY
-from langchain_docugami.retrievers.mappings import build_full_doc_summary_mappings, build_chunk_summary_mappings
+from langchain_docugami.retrievers.mappings import (
+    build_full_doc_summary_mappings,
+    build_chunk_summary_mappings,
+    build_doc_maps_from_chunks,
+)
 from langchain_docugami.tools.retrieval import (
     summaries_to_direct_retriever_tool_description,
     docset_name_to_direct_retriever_tool_function_name,
@@ -136,42 +138,7 @@ def index_docset(docset_id: str, name: str, overwrite=False):
 
     chunks = loader.load()
 
-    # Build separate maps of chunks, and parents
-    parent_chunks_by_id: Dict[str, Document] = {}
-    chunks_by_source: Dict[str, List[str]] = {}
-    for chunk in chunks:
-        chunk_id = str(chunk.metadata.get("id"))
-        chunk_source = str(chunk.metadata.get(SOURCE_KEY))
-        parent_chunk_id = chunk.metadata.get(loader.parent_id_key)
-        if not parent_chunk_id:
-            # parent chunk, we will use this (for expanded context) as our chunk
-            parent_chunks_by_id[chunk_id] = chunk
-        else:
-            # child chunk, we will keep track of this to build up our
-            # full document summary
-            if chunk_source not in chunks_by_source:
-                chunks_by_source[chunk_source] = []
-
-            chunks_by_source[chunk_source].append(chunk.page_content)
-
-    # Build up the full docs by concatenating all the child chunks
-    full_docs_by_id: Dict[str, Document] = {}
-    full_doc_ids_by_source: Dict[str, str] = {}
-    for source in chunks_by_source:
-        chunks_from_source = chunks_by_source[source]
-        full_doc_text = "\n".join([c for c in chunks_from_source])
-        full_doc_id = hashlib.md5(full_doc_text.encode()).hexdigest()
-        full_doc_ids_by_source[source] = full_doc_id
-        full_docs_by_id[full_doc_id] = Document(page_content=full_doc_text, metadata={"id": full_doc_id})
-
-    # Associate parent chunks with full docs
-    for parent_chunk_id in parent_chunks_by_id:
-        parent_chunk = parent_chunks_by_id[parent_chunk_id]
-        parent_chunk_source = parent_chunk.metadata.get(SOURCE_KEY)
-        if parent_chunk_source:
-            full_doc_id = full_doc_ids_by_source.get(parent_chunk_source)
-            if full_doc_id:
-                parent_chunk.metadata[FULL_DOC_SUMMARY_ID_KEY] = full_doc_id
+    full_docs_by_id, parent_chunks_by_id = build_doc_maps_from_chunks(chunks)
 
     full_doc_summaries_by_id = build_full_doc_summary_mappings(
         docs_by_id=full_docs_by_id,

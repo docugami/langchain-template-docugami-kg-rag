@@ -1,13 +1,13 @@
 import sys
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 
-from langchain_core.pydantic_v1 import BaseModel, Field
+from langchain_core.documents import Document
 from langchain_core.messages import AIMessage, HumanMessage
 from langchain_core.prompts import (
     ChatPromptTemplate,
     MessagesPlaceholder,
 )
-
+from langchain_core.pydantic_v1 import BaseModel, Field
 
 from langchain.agents import AgentExecutor
 from langchain.agents.format_scratchpad import format_log_to_str
@@ -46,12 +46,26 @@ def _get_tools(use_reports=DEFAULT_USE_REPORTS) -> List[BaseTool]:
 
         if chunk_vectorstore is not None:
 
+            def _fetch_parent_doc_callback(key: str) -> Optional[str]:
+                results = docset_state.chunks_by_id.mget([key])
+                if results and results[0]:
+                    first_result: Document = results[0]
+                    return first_result.page_content
+                return None
+
+            def _fetch_full_doc_summary_callback(key: str) -> Optional[str]:
+                results = docset_state.full_doc_summaries_by_id.mget([key])
+                if results and results[0]:
+                    first_result: Document = results[0]
+                    return first_result.page_content
+                return None
+
             direct_retrieval_tool = get_retrieval_tool_for_docset(
                 chunk_vectorstore=chunk_vectorstore,
                 retrieval_tool_function_name=docset_state.retrieval_tool_function_name,
                 retrieval_tool_description=docset_state.retrieval_tool_description,
-                full_doc_summary_store=docset_state.full_doc_summaries_by_id,
-                parent_doc_store=docset_state.chunks_by_id,
+                fetch_parent_doc_callback=_fetch_parent_doc_callback,
+                fetch_full_doc_summary_callback=_fetch_full_doc_summary_callback,
                 retrieval_k=RETRIEVER_K,
             )
             if direct_retrieval_tool:
