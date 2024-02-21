@@ -12,7 +12,7 @@ from langchain_core.pydantic_v1 import BaseModel, Field
 from langchain.agents import AgentExecutor
 from langchain.agents.format_scratchpad import format_log_to_str
 from langchain.tools.base import BaseTool
-from langchain.tools.render import render_text_description
+from langchain.tools.render import render_text_description_and_args
 
 from langchain_docugami.output_parsers.soft_react_json_single_input import SoftReActJsonSingleInputOutputParser
 from langchain_docugami.tools.reports import get_retrieval_tool_for_report
@@ -116,7 +116,7 @@ agent = (
         "input": lambda x: x["input"],
         "chat_history": lambda x: _format_chat_history(x["chat_history"]),
         "agent_scratchpad": lambda x: format_log_to_str(x["intermediate_steps"]),
-        "tools": lambda x: render_text_description(_get_tools(x["use_reports"])),
+        "tools": lambda x: render_text_description_and_args(_get_tools(x["use_reports"])),
         "tool_names": lambda x: ", ".join([t.name for t in _get_tools(x["use_reports"])]),
     }
     | prompt
