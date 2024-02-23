@@ -10,7 +10,7 @@ app = typer.Typer()
 
 
 @app.command()
-def main(overwrite: bool = False):
+def main():
     docsets_response = docugami_client.docsets.list()
 
     if not docsets_response or not docsets_response.docsets:
@@ -35,14 +35,14 @@ def main(overwrite: bool = False):
         if not docset.id or not docset.name:
             raise Exception(f"Docset must have ID as well as Name: {docset}")
 
-        index_docset(docset.id, docset.name, overwrite)
+        index_docset(docset.id, docset.name)
 
 
 if __name__ == "__main__":
     if sys.gettrace():
         # This code will only run if a debugger is attached
-        index_docset(docset_id="tjwrr2ekqkc3", name="SEC 10Q Reports", overwrite=False)
-        # index_docset(docset_id="uh31voknl1p6", name="NTSB Accident Report", overwrite=True)
+        index_docset(docset_id="tjwrr2ekqkc3", name="SEC 10Q Reports")
+        # index_docset(docset_id="uh31voknl1p6", name="NTSB Accident Report")
         # index_docset(docset_id="ue548ls3yjqu", name="City of Anacortes Contractor Agreement")
     else:
         app()

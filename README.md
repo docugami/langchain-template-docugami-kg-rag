@@ -45,7 +45,7 @@ Before you can run your app, you need to build your vector index. See [index.py]
 
 Indexing in this template uses the Docugami Loader for LangChain to create semantic chunks out of your documents. Refer to this [documentation](https://python.langchain.com/docs/integrations/document_loaders/docugami) for details.
 
-Note that if you previously ran indexing for the same docset, the index will not be recreated. If you want to force recreate the index (e.g. if you have new docs in the docset or changed your chunking config parameters) please specify `poetry run index.py --overwrite`
+Note that if you previously ran indexing for the same docset, the index will not be recreated. If you want to force recreate the index (e.g. if you have new docs in the docset or changed your chunking config parameters) please specify `poetry run index.py`
 
 ### Creating app
 To use this package, you should first have the LangChain CLI installed:

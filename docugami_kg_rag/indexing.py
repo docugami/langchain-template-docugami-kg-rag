@@ -94,29 +94,24 @@ def update_local_index(
         pickle.dump(state, file)
 
 
-def populate_vector_index(docset_id: str, chunks: List[Document], overwrite=False):
+def populate_vector_index(docset_id: str, chunks: List[Document]):
     """
-    Create index if it does not exist, delete and overwrite if overwrite is specified.
+    Create index if it does not exist, delete and recreate if already exists.
     """
 
     vector_store = get_vector_store_index(docset_id, EMBEDDINGS)
 
     if vector_store is not None:
-        print(f"Vector store index already exists for {docset_id}.")
-        if overwrite is True:
-            print(f"Overwrite is {overwrite}, existing index will be deleted and re-created")
-        else:
-            print(f"Overwrite is {overwrite}, will just reuse existing index (any new docs will not be added)")
-            return
+        print(f"Vector store index already exists for {docset_id}, existing index will be deleted and re-created")
 
     print(f"Embedding documents into vector store for {docset_id}...")
 
-    vector_store = init_vector_store_index(docset_id, chunks, EMBEDDINGS, overwrite)
+    vector_store = init_vector_store_index(docset_id, chunks, EMBEDDINGS)
 
     print(f"Done embedding documents into vector store for {docset_id}")
 
 
-def index_docset(docset_id: str, name: str, overwrite=False):
+def index_docset(docset_id: str, name: str):
     """
     Indexes the given docset
     """
@@ -167,13 +162,12 @@ def index_docset(docset_id: str, name: str, overwrite=False):
     )
     report_details = build_report_details(docset_id)
 
-    if overwrite:
-        state = Path(INDEXING_LOCAL_STATE_PATH)
-        if state.is_file() and state.exists():
-            os.remove(state)
+    state = Path(INDEXING_LOCAL_STATE_PATH)
+    if state.is_file() and state.exists():
+        os.remove(state)
 
-        if get_vector_store_index(docset_id, EMBEDDINGS) is not None:
-            del_vector_store_index(docset_id)
+    if get_vector_store_index(docset_id, EMBEDDINGS) is not None:
+        del_vector_store_index(docset_id)
 
     update_local_index(
         docset_id=docset_id,
@@ -184,7 +178,7 @@ def index_docset(docset_id: str, name: str, overwrite=False):
         report_details=report_details,
     )
 
-    populate_vector_index(docset_id, chunks=list(chunk_summaries_by_id.values()), overwrite=overwrite)
+    populate_vector_index(docset_id, chunks=list(chunk_summaries_by_id.values()))
 
 
 def download_project_latest_xlsx(project_url: str, local_xlsx: Path) -> Optional[Path]:

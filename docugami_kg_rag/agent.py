@@ -85,29 +85,31 @@ def build_tools(use_reports=DEFAULT_USE_REPORTS) -> List[BaseTool]:
 class AgentInput(BaseModel):
     question: str = ""
     chat_history: list[Tuple[str, str]] = Field(
-        default=[],
+        ...,
         extra={
-            "widget": {"type": "chat", "input": "input", "output": "output"},
+            "widget": {
+                "type": "chat",
+                "input": "question",
+                "output": "agent_outcome.return_values.output",
+            },
         },
     )
 
 
 agent = (
-    ReActAgent(llm=LARGE_CONTEXT_INSTRUCT_LLM, embeddings=EMBEDDINGS)
+    ReActAgent(llm=LARGE_CONTEXT_INSTRUCT_LLM, embeddings=EMBEDDINGS, tools=build_tools())
     .runnable()
     .with_types(
         input_type=AgentInput,  # type: ignore
     )
 )
-
-
 if __name__ == "__main__":
     if sys.gettrace():
         # This code will only run if a debugger is attached
 
         output = agent.invoke(
             {
-                "input": "What is the project number for the contract with snelson?",
+                "question": "What is the project number for the contract with snelson?",
                 "chat_history": [],
             }
         )
