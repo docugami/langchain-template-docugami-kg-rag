@@ -10,12 +10,12 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0"
 langchain = ">=0.1.6"
-langchain-community = "^0.0.19"
-langchain-docugami = {git = "https://github.com/langchain-ai/langchain-docugami.git", rev = "tjaffri/agent"}
+langchain-community = "^0.0.21"
+docugami-langchain = {git = "https://github.com/docugami/docugami-langchain.git", rev = "tjaffri/langgraph_agent"}
 typer = "^0.9.0"
 docugami = "0.1.2"
 pyarrow = "^15.0.0"
-langsmith = "^0.0.87"
+langsmith = ">=0.1.0,<0.2.0"
 openpyxl = "^3.1.2"
 openai = { version = "^1.9.0", optional = true }
 langchain-openai = { version = "^0.0.3", optional = true }
@@ -27,6 +27,7 @@ redisvl = { version = "^0.0.7", optional = true }
 torch = {  version = "<=1.13.1", optional = true }
 huggingface = { version = "^0.0.1", optional = true }
 sentence-transformers = { version = "^2.2.2", optional = true }
+faiss-cpu = "^1.7.4"
 
 [tool.poetry.group.dev.dependencies]
 langchain-cli = "*"

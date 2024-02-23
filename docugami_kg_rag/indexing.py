@@ -10,15 +10,21 @@ from docugami import Docugami
 from langchain_core.documents import Document
 from langchain.storage.in_memory import InMemoryStore
 
-from langchain_docugami.document_loaders.docugami import DocugamiLoader
-from langchain_docugami.retrievers.mappings import (
+from docugami_langchain.document_loaders.docugami import DocugamiLoader
+from docugami_langchain.retrievers.mappings import (
     build_full_doc_summary_mappings,
     build_chunk_summary_mappings,
     build_doc_maps_from_chunks,
 )
-from langchain_docugami.tools.retrieval import (
+from docugami_langchain.tools.retrieval import (
     summaries_to_direct_retriever_tool_description,
     docset_name_to_direct_retriever_tool_function_name,
+)
+from docugami_langchain.tools.reports import (
+    connect_to_db,
+    excel_to_sqlite_connection,
+    report_name_to_report_query_tool_function_name,
+    report_details_to_report_query_tool_description,
 )
 
 from docugami_kg_rag.config import (
@@ -39,13 +45,6 @@ from docugami_kg_rag.config import (
 )
 from docugami_kg_rag.state_models import ReportDetails, LocalIndexState
 from docugami_kg_rag.config import DOCUGAMI_API_KEY, INDEXING_LOCAL_REPORT_DBS_ROOT
-
-from langchain_docugami.tools.reports import (
-    connect_to_db,
-    excel_to_sqlite_connection,
-    report_name_to_report_query_tool_function_name,
-    report_details_to_report_query_tool_description,
-)
 
 
 HEADERS = {"Authorization": f"Bearer {DOCUGAMI_API_KEY}"}

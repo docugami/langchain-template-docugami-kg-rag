@@ -7,7 +7,7 @@ from langchain.schema.embeddings import Embeddings
 from langchain_core.vectorstores import VectorStore
 from langchain_community.vectorstores.redis.base import Redis, check_index_exists
 
-from langchain_docugami.retrievers.fused_summary import PARENT_DOC_ID_KEY, FULL_DOC_SUMMARY_ID_KEY, SOURCE_KEY
+from docugami_langchain.retrievers.fused_summary import PARENT_DOC_ID_KEY, FULL_DOC_SUMMARY_ID_KEY, SOURCE_KEY
 
 
 REDIS_URL = "redis://localhost:6379"

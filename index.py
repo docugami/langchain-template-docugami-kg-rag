@@ -41,8 +41,8 @@ def main(overwrite: bool = False):
 if __name__ == "__main__":
     if sys.gettrace():
         # This code will only run if a debugger is attached
-        # index_docset(docset_id="tjwrr2ekqkc3", name="SEC 10Q Reports", overwrite=True)
+        index_docset(docset_id="tjwrr2ekqkc3", name="SEC 10Q Reports", overwrite=False)
         # index_docset(docset_id="uh31voknl1p6", name="NTSB Accident Report", overwrite=True)
-        index_docset(docset_id="ue548ls3yjqu", name="City of Anacortes Contractor Agreement")
+        # index_docset(docset_id="ue548ls3yjqu", name="City of Anacortes Contractor Agreement")
     else:
         app()

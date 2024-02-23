@@ -30,4 +30,3 @@ set_llm_cache(SQLiteCache(database_path=LOCAL_LLM_CACHE_DB_FILE))
 EXAMPLES_PATH = Path(__file__).parent.parent / "green_examples"
 
 DEFAULT_USE_REPORTS = False
-AGENT_MAX_ITERATIONS = 5
