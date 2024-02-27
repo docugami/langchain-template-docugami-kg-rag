@@ -8,7 +8,6 @@ from langchain_core.tools import BaseTool
 from langchain_core.pydantic_v1 import BaseModel, Field
 from docugami_langchain.tools.reports import get_retrieval_tool_for_report
 from docugami_langchain.tools.retrieval import get_retrieval_tool_for_docset
-
 from docugami_langchain.agents import ReActAgent
 
 from docugami_kg_rag.config import (
