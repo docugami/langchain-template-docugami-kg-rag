@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-from langchain.cache import SQLiteCache
+from langchain_community.cache import SQLiteCache
 
 from langchain.globals import set_llm_cache
 
