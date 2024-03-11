@@ -6,7 +6,7 @@ from typing import Dict, List
 
 from langchain.schema import Document
 from langchain.storage.in_memory import InMemoryStore
-from langchain_community.document_loaders.docugami import DocugamiLoader
+from docugami_langchain.document_loaders import DocugamiLoader
 
 from docugami_kg_rag.config import (
     INCLUDE_XML_TAGS,
