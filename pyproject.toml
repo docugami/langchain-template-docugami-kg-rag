@@ -9,27 +9,25 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0"
-langchain = ">=0.1.11"
+langchain = ">=0.1.13"
 langchain-community = ">=0.0.29"
-# docugami-langchain = "^0.0.7rc17"
+# docugami-langchain = "^0.0.7rc18"
 docugami-langchain = {git = "https://github.com/docugami/docugami-langchain.git"}
-typer = "^0.9.0"
-docugami = "0.1.2"
-pyarrow = "^15.0.0"
-langsmith = ">=0.1.0,<0.2.0"
-openpyxl = "^3.1.2"
-faiss-cpu = "^1.7.4"
+typer = ">=0.9.0"
+docugami = ">=0.1.2"
+pyarrow = ">=15.0.2"
+langsmith = ">=0.1.31"
+openpyxl = ">=3.1.2"
+faiss-cpu = ">=1.8.0"
 rerankers = { extras = ["all"], version = ">=0.1.2" }
-langchain-openai = { version = "^0.0.8", optional = true }
+langchain-openai = { version = ">=0.1.1", optional = true }
 langchain-fireworks = { version = ">=0.1.1", optional = true } 
-tiktoken = { version = "^0.5.2", optional = true }
-chromadb = { version = "0.4.14", optional = true }
-redis = { version = "^5.0.1", optional = true }
-redisvl = { version = "^0.0.7", optional = true }
-torch = {  version = "<=1.13.1", optional = true }
-huggingface = { version = "^0.0.1", optional = true }
-sentence-transformers = { version = "^2.2.2", optional = true }
-
+chromadb = { version = ">=0.4.24", optional = true }
+redis = { version = ">=5.0.3", optional = true }
+redisvl = { version = ">=0.1.2", optional = true }
+torch = {  version = ">=2.2.1", optional = true }
+huggingface = { version = ">=0.0.1", optional = true }
+sentence-transformers = { version = ">=2.6.0", optional = true }
 
 [tool.poetry.group.dev.dependencies]
 langchain-cli = "*"
