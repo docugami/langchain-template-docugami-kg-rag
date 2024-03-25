@@ -28,6 +28,7 @@ from docugami_langchain.tools.reports import (
 )
 
 from docugami_kg_rag.config import (
+    DOCUGAMI_API_ENDPOINT,
     EXAMPLES_PATH,
     INCLUDE_XML_TAGS,
     INDEXING_LOCAL_STATE_PATH,
@@ -119,6 +120,7 @@ def index_docset(docset_id: str, name: str):
     print(f"Indexing {name} (ID: {docset_id})")
 
     loader = DocugamiLoader(
+        api=DOCUGAMI_API_ENDPOINT,
         docset_id=docset_id,
         file_paths=None,
         document_ids=None,

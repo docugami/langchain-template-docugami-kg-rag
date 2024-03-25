@@ -1,65 +1,179 @@
 - format: text
   contents: |
-    INITIAL STATEMENT OF WORK (SOW)
-    The purpose of this SOW is to describe the Services that Company will initially provide to Zinga, Inc. the “Client”) under the terms and conditions of the Services Agreement entered into between the parties on March 15, 2021 (the “Agreement”). Additional terms and conditions may be set forth in this SOW, and additional SOWs that may be subsequently signed.
-    To the extent the terms and conditions of this SOW are inconsistent with those of the Agreement, the terms of this SOW will control with respect to the Services described herein. Capitalized terms used herein shall have the same meaning as those used in the Agreement.
-    This SOW is an attachment to and is incorporated by this reference into the Agreement as if fully set forth therein and made a part thereof. This SOW, together with the Agreement, represents the complete and total understanding of the parties regarding the Services to be provided by Company hereunder.
-    1. Services Period .
-    Unless otherwise terminated earlier in accordance with the terms of the Agreement, the Services will end upon the completion of the Services by Company, which in no event shall be later than March 15, 2022 , and payment by client.
-    2. Services.
-    The Services outlined in this SOW reflect the initial understanding of Client’s desired Deliverable and Company reserves the right to alter the manner in which Services are provided if Company determines different services are necessary to complete the Deliverable. Company shall provide the following Services to the Client:
-    +----------------------+----------+-------------+---------------+
-    | Description          | Duration | Hourly Rate | Subtotal      |
-    +----------------------+----------+-------------+---------------+
-    | SOC Analyst          | 20 weeks | $62.60      | $520,832.00   |
-    +----------------------+----------+-------------+---------------+
-    | Project Engineer III | 20 weeks | $88.92      | $400,384.00   |
-    +----------------------+----------+-------------+---------------+
-    | Software Engineer IV | 20 weeks | $105.00     | $100,200.00   |
-    +----------------------+----------+-------------+---------------+
-    | Network Engineer III | 20 weeks | $88.92      | $105,953.60   |
-    +----------------------+----------+-------------+---------------+
-    | ESTIMATED TOTAL      |          |             | $1,126,369.60 |
-    +----------------------+----------+-------------+---------------+
-    3. Deliverables.
-    Company shall deliver the following Deliverable:
-    A. Conduct a one-week Discovery session with Zinga to understand needs, identify stakeholders and research areas.
-    B. Conduct ten 45-minute User Research sessions with Zinga Customers
-    C. Conduct three one-week Design Sprints to ideate possible product solutions
-    D. Document Identified Customer Personas , Journey Maps & Design Sprint Ideas for Zinga
-    4. Fees and Terms.
-    Total Amount : $ 1,126,369.60 Start Date : 03/03/2021 End Date: 06/01/2021 If the Client desires to initiate changes to the SOW, it shall submit to Company a written request to do so. The request will set forth the nature of the Company’s proposed changes to the SOW. Contractor shall complete and return to the Company a written document (“ Change Order ”) setting forth (i) a written description of the changes to the SOW, (ii) any changes to the schedule, (iii) any changes or additions to the Deliverables and (iv) any changes or additions to the fees. A Change Order will be binding only if signed by both parties. Any and all Change Orders will be governed by the terms and conditions set forth in this Agreement and are hereby incorporated by this reference. Any additional Deliverables described in the Change Order will be subject to the Payment provisions as described in Section 7 of the Agreement.
-    5. Hours of Operation
-    • Engineering:
-    • Monday - Friday 6AM-6PM PST
-    • engineering@digitalmemex.com
-    • ( 206 ) 684 - 8889
-    • Support:
-    • 24 x 7 x 365
-    • support@digitalmemex.com
-    • ( 206 ) 684 - 8888
-    6 . Travel.
-    If the Deliverable will be completed according to a fixed price SOW and travel is required, then Client must sign the Agreement and SOW and pay required Deposit at least 30 days prior to proposed travel. If the Agreement and SOW are not signed and Deposit is not received at least 30 days prior to proposed travel, Company reserves the right to amend the SOW estimate solely with regard to travel and lodging expenses so that the SOW estimate reflects actual costs incurred by Company.
-    [ Signature Page Follows]
-    Accepted and agreed to as of the SOW Effective Date by the authorized representative of each party.
-    +----------------------------+--------+-------------------------------------+
-    | Zinga, Inc.                |        | Digital Memories Corporation , Inc. |
-    +----------------------------+--------+-------------------------------------+
-    | Signature:                 | acelin | Signature: Ye                       |
-    +----------------------------+--------+-------------------------------------+
-    | Print Name : Aziz Khan     |        | Print Name : Morris Minor           |
-    +----------------------------+--------+-------------------------------------+
-    | Print Title : COO          |        | Print Title : CEO                   |
-    +----------------------------+--------+-------------------------------------+
-    | Date: 06/01/2021           |        | Date: 06/01/2021                    |
-    +----------------------------+--------+-------------------------------------+
-    | Email: aziz.khan@zinga.com |        | Email: morris@digitalmemex.com      |
-    +----------------------------+--------+-------------------------------------+
+    National Transportation Safety Board Aviation Accident Final Report
+    +-------------------------+---------------------------------------+-------------------+-------------+
+    | Location:               | Talladega , AL                        | Accident Number:  | MIA08CA030  |
+    +-------------------------+---------------------------------------+-------------------+-------------+
+    | Date & Time:            | 12/18/2007 , 0951 CST                 | Registration:     | N2180E      |
+    +-------------------------+---------------------------------------+-------------------+-------------+
+    | Aircraft:               | Cessna 172N                           | Aircraft Damage : | Substantial |
+    +-------------------------+---------------------------------------+-------------------+-------------+
+    | Defining Event:         |                                       | Injuries:         | 1 None      |
+    +-------------------------+---------------------------------------+-------------------+-------------+
+    | Flight Conducted Under: | Part 91 : General Aviation - Personal |                   |             |
+    +-------------------------+---------------------------------------+-------------------+-------------+
+    Analysis
+    The student pilot stated that he entered left closed traffic for runway 21 at the Talladega Municipal Airport , Talladega , Alabama . He landed and started to prepare airplane for a touch- and-go. As he applied power he lost directional control of the airplane, went off the left side of the runway, and collided with a tree. The student pilot did not report any mechanical or flight control anomalies with the airplane.
+    Probable Cause and Findings
+    The National Transportation Safety Board determines the probable cause(s) of this accident to be: The pilot's failure to maintain directional control of the airplane.
+    Findings
+    Occurrence # 1 : LOSS OF CONTROL - ON GROUND /WATER
+    Phase of Operation: LANDING - ROLL
+    Findings
+    1 . (C) DIRECTIONAL CONTROL - NOT MAINTAINED - PILOT IN COMMAND
+    • Occurrence # 2 : IN FLIGHT COLLISION WITH OBJECT Phase of Operation: LANDING - ROLL
+    Findings
+    2 . OBJECT - TREE(S)
+    Page 1 of 4
+    Factual Information
+    Student Pilot Information
+    +---------------------------+----------------------------------------------------------------+-----------------------------------+----------------------------+
+    | Certificate:              | Student                                                        | Age:                              | 47 , Male                  |
+    +---------------------------+----------------------------------------------------------------+-----------------------------------+----------------------------+
+    | Airplane Rating(s):       | Single-engine Land                                             | Seat Occupied:                    | Left                       |
+    +---------------------------+----------------------------------------------------------------+-----------------------------------+----------------------------+
+    | Other Aircraft Rating(s): | None                                                           | Restraint Used:                   | Seatbelt, Shoulder harness |
+    +---------------------------+----------------------------------------------------------------+-----------------------------------+----------------------------+
+    | Instrument Rating(s):     | None                                                           | Second Pilot Present :            | No                         |
+    +---------------------------+----------------------------------------------------------------+-----------------------------------+----------------------------+
+    | Instructor Rating(s):     | None                                                           | Toxicology Performed:             | No                         |
+    +---------------------------+----------------------------------------------------------------+-----------------------------------+----------------------------+
+    | Medical Certification :   | Class 3 None                                                   | Last FAA Medical Exam :           | 06/01/2007                 |
+    +---------------------------+----------------------------------------------------------------+-----------------------------------+----------------------------+
+    | Occupational Pilot :      |                                                                | Last Flight Review or Equivalent: |                            |
+    +---------------------------+----------------------------------------------------------------+-----------------------------------+----------------------------+
+    | Flight Time:              | 37 hours (Total, all aircraft), 37 hours (Total, this make and |                                   |                            |
+    |                           | model), 10 hours (Pilot In Command, all aircraft), 24 hours    |                                   |                            |
+    |                           | (Last 90 days , all aircraft), 14 hours (Last 30 days , all    |                                   |                            |
+    |                           | aircraft)                                                      |                                   |                            |
+    +---------------------------+----------------------------------------------------------------+-----------------------------------+----------------------------+
+    Aircraft and Owner/Operator Information
+    +-------------------------------+----------------------------------+--------------------------------+-----------------+
+    | Aircraft Make :               | Cessna                           | Registration:                  | N2180E          |
+    +-------------------------------+----------------------------------+--------------------------------+-----------------+
+    | Model/Series:                 | 172N                             | Aircraft Category :            | Airplane        |
+    +-------------------------------+----------------------------------+--------------------------------+-----------------+
+    | Year of Manufacture:          |                                  | Amateur Built:                 | No              |
+    +-------------------------------+----------------------------------+--------------------------------+-----------------+
+    | Airworthiness Certificate :   | Normal                           | Serial Number:                 | 172 - 71159     |
+    +-------------------------------+----------------------------------+--------------------------------+-----------------+
+    | Landing Gear Type :           | Tricycle                         | Seats:                         | 4               |
+    +-------------------------------+----------------------------------+--------------------------------+-----------------+
+    | Date/Type of Last Inspection: | 07/01/2007 , Annual              | Certified Max Gross Wt .:      | 2300 lbs        |
+    +-------------------------------+----------------------------------+--------------------------------+-----------------+
+    | Time Since Last Inspection:   | 0 Hours                          | Engines:                       | 1 Reciprocating |
+    +-------------------------------+----------------------------------+--------------------------------+-----------------+
+    | Airframe Total Time :         | 4937 Hours at time of accident   | Engine Manufacturer :          | Lycoming        |
+    +-------------------------------+----------------------------------+--------------------------------+-----------------+
+    | ELT:                          | Installed, not activated         | Engine Model/Series:           | O-320-HAD       |
+    +-------------------------------+----------------------------------+--------------------------------+-----------------+
+    | Registered Owner :            | Redstone Arsenal Flying Activity | Rated Power :                  | 160 hp          |
+    +-------------------------------+----------------------------------+--------------------------------+-----------------+
+    | Operator:                     | Redstone Arsenal Flying Activity | Operating Certificate(s) Held: | None            |
+    +-------------------------------+----------------------------------+--------------------------------+-----------------+
+    Meteorological Information and Flight Plan
+    +-----------------------------------+----------------------------------+--------------------------------------+------------------+
+    | Conditions at Accident Site :     | Visual Conditions                | Condition of Light:                  | Day              |
+    +-----------------------------------+----------------------------------+--------------------------------------+------------------+
+    | Observation Facility , Elevation: | KAFN, 509 ft msl                 | Distance from Accident Site :        | 0 Nautical Miles |
+    +-----------------------------------+----------------------------------+--------------------------------------+------------------+
+    | Observation Time :                | 0855 CST                         | Direction from Accident Site :       | 0 °              |
+    +-----------------------------------+----------------------------------+--------------------------------------+------------------+
+    | Lowest Cloud Condition :          | Clear                            | Visibility                           | 10 Miles         |
+    +-----------------------------------+----------------------------------+--------------------------------------+------------------+
+    | Lowest Ceiling:                   | None                             | Visibility (RVR):                    |                  |
+    +-----------------------------------+----------------------------------+--------------------------------------+------------------+
+    | Wind Speed/Gusts:                 | 8 knots /                        | Turbulence Type Forecast/Actual:     | /                |
+    +-----------------------------------+----------------------------------+--------------------------------------+------------------+
+    | Wind Direction :                  | 170 °                            | Turbulence Severity Forecast/Actual: | /                |
+    +-----------------------------------+----------------------------------+--------------------------------------+------------------+
+    | Altimeter Setting:                | 30.2 inches Hg                   | Temperature/Dew Point:               | 5 °C / 15°C      |
+    +-----------------------------------+----------------------------------+--------------------------------------+------------------+
+    | Precipitation and Obscuration:    | No Obscuration; No Precipitation |                                      |                  |
+    +-----------------------------------+----------------------------------+--------------------------------------+------------------+
+    | Departure Point :                 | Talladega, AL (HUA)              | Type of Flight Plan Filed:           | None             |
+    +-----------------------------------+----------------------------------+--------------------------------------+------------------+
+    | Destination:                      | JAFFREY, NH (AFN)                | Type of Clearance:                   | None             |
+    +-----------------------------------+----------------------------------+--------------------------------------+------------------+
+    | Departure Time :                  | 0855 CST                         | Type of Airspace:                    |                  |
+    +-----------------------------------+----------------------------------+--------------------------------------+------------------+
+    Airport Information
+    +----------------------+-----------------------+----------------------------+-----------+
+    | Airport:             | TALLADEGA MUNI (ASN ) | Runway Surface Type :      | Asphalt   |
+    +----------------------+-----------------------+----------------------------+-----------+
+    | Airport Elevation :  | 529 ft                | Runway Surface Condition : | Dry       |
+    +----------------------+-----------------------+----------------------------+-----------+
+    | Runway Used:         | 21                    | IFR Approach :             | Visual    |
+    +----------------------+-----------------------+----------------------------+-----------+
+    | Runway Length/Width: | 6001 ft / 100 ft      | VFR Approach/Landing:      | Full Stop |
+    +----------------------+-----------------------+----------------------------+-----------+
+    Wreckage and Impact Information
+    +----------------------+--------+----------------------+------------------------+
+    | Crew Injuries :      | 1 None | Aircraft Damage :    | Substantial            |
+    +----------------------+--------+----------------------+------------------------+
+    | Passenger Injuries : | N/A    | Aircraft Fire :      | None                   |
+    +----------------------+--------+----------------------+------------------------+
+    | Ground Injuries :    | N/A    | Aircraft Explosion : | None                   |
+    +----------------------+--------+----------------------+------------------------+
+    | Total Injuries :     | 1 None | Latitude, Longitude: | 33.568611 , -86.050556 |
+    +----------------------+--------+----------------------+------------------------+
+    Administrative Information
+    +------------------------------------+------------------------------------------------------------------+---------------+------------+
+    | Investigator In Charge (IIC):      | Eric H Alleyne                                                   | Report Date : | 03/31/2008 |
+    +------------------------------------+------------------------------------------------------------------+---------------+------------+
+    | Additional Participating Persons : | James West ; Birmingham FSDO-09 ; Birmingham, AL                 |               |            |
+    +------------------------------------+------------------------------------------------------------------+---------------+------------+
+    | Publish Date :                     |                                                                  |               |            |
+    +------------------------------------+------------------------------------------------------------------+---------------+------------+
+    | Note: Investigation Docket :       | This accident report documents the factual circumstances of this |               |            |
+    |                                    | accident as described to the NTSB . NTSB accident and incident   |               |            |
+    |                                    | dockets serve as permanent archival information for the NTSB ’s  |               |            |
+    |                                    | investigations. Dockets released prior to June 1, 2009 are       |               |            |
+    |                                    | publicly available from the NTSB’s Record Management Division at |               |            |
+    |                                    | pubinq@ntsb.gov , or at 800 - 877 - 6799 . Dockets released      |               |            |
+    |                                    | after this date are available at http://dms.ntsb.gov/pubdms/.    |               |            |
+    +------------------------------------+------------------------------------------------------------------+---------------+------------+
+    The National Transportation Safety Board (NTSB ), established in 1967 , is an independent federal agency mandated by Congress through the Independent Safety Board Act of 1974 to investigate transportation accidents, determine the probable causes of the accidents, issue safety recommendations, study transportation safety issues, and evaluate the safety effectiveness of government agencies involved in transportation. The NTSB makes public its actions and decisions through accident reports, safety studies, special investigation reports, safety recommendations, and statistical reviews.
+    The Independent Safety Board Act , as codified at 49 U.S.C. Section 1154(b), precludes the admission into evidence or use of any part of an NTSB report related to an incident or accident in a civil action for damages resulting from a matter mentioned in the report. A factual report that may be admissible under 49 U.S.C. § 1154(b) is available here.
   summary: |
-    This document is an initial Statement of Work (SOW) between Company and Zinga, Inc. It outlines the services that Company will provide to Zinga under the Services Agreement.
-    The SOW is an attachment to the Agreement and represents the complete understanding of the parties regarding the services to be provided. The Services Period will end no later
-    than March 15, 2022. The Services include SOC Analyst, Project Engineer III, Software Engineer IV, and Network Engineer III, with respective durations and hourly rates.
-    The estimated total cost of the Services is $1,126,369.60. The Deliverables include a Discovery session, User Research sessions, Design Sprints, and documentation of 
-    Customer Personas, Journey Maps, and Design Sprint Ideas. Changes to the SOW can be initiated through a written request and a Change Order must be signed by both parties to be binding.
-    The hours of operation for Engineering and Support are specified. Travel expenses will be incurred if required and must be accounted for in the SOW. 
-    The document includes signature and contact information for both parties.
+    National Transportation Safety Board Aviation Accident Final Report Summary
+
+    Basic Information:
+
+    - Location: Talladega, AL
+    - Date & Time: 12/18/2007, 0951 CST
+    - Accident Number: MIA08CA030
+    - Aircraft: Cessna 172N, Registration N2180E
+    - Injuries: 1 None
+    - Aircraft Damage: Substantial
+
+    Analysis:
+    The student pilot lost directional control during a touch-and-go on runway 21 at Talladega Municipal Airport, resulting in a collision with a tree. No mechanical issues were reported.
+
+    Probable Cause:
+    Failure to maintain directional control by the pilot.
+
+    Aircraft and Operator Information:
+
+    - Make/Model: Cessna 172N
+    - Owner/Operator: Redstone Arsenal Flying Activity
+    - Airworthiness: Normal
+    - Engine: Lycoming O-320-HAD, 160 hp
+    - Meteorological Information:
+    - Visual conditions, clear skies, 10 miles visibility, and wind from 170° at 8 knots.
+
+    Flight Plan:
+    No flight plan filed, departure from Talladega, AL, intended for JAFFREY, NH.
+
+    Airport Information:
+    Talladega Muni (ASN), runway 21, asphalt, dry, 6001 ft long.
+
+    Wreckage and Impact Information:
+    The accident resulted in substantial aircraft damage but no fire or explosion.
+
+    Administrative Information:
+    - Investigator In Charge: Eric H. Alleyne
+    - Report Date: 03/31/2008
+
+    NTSB Overview:
+    Established in 1967, the NTSB investigates transportation accidents, determines probable causes, issues safety recommendations, and evaluates the safety effectiveness of transportation entities.

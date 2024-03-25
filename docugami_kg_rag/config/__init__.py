@@ -3,7 +3,7 @@ from pathlib import Path
 
 from langchain_community.cache import SQLiteCache
 
-from langchain.globals import set_llm_cache
+from langchain_core.globals import set_llm_cache
 
 from docugami_kg_rag.config.openai import *
 from docugami_kg_rag.config.chromadb import *
@@ -12,6 +12,7 @@ from docugami_kg_rag.config.chromadb import *
 # from docugami_kg_rag.config.huggingface import *
 # from docugami_kg_rag.config.redis import *
 
+DOCUGAMI_API_ENDPOINT = "https://api-staging.docugami.com/v1preview1"
 DOCUGAMI_API_KEY = os.environ.get("DOCUGAMI_API_KEY")
 if not DOCUGAMI_API_KEY:
     raise Exception("Please set the DOCUGAMI_API_KEY environment variable")
@@ -29,4 +30,5 @@ set_llm_cache(SQLiteCache(database_path=LOCAL_LLM_CACHE_DB_FILE))
 
 EXAMPLES_PATH = Path(__file__).parent.parent / "green_examples"
 
-DEFAULT_USE_REPORTS = True
+DEFAULT_USE_REPORTS = False
+DEFAULT_USE_CONVERSATIONAL_TOOLS = False

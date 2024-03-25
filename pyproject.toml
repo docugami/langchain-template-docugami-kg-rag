@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "docugami-kg-rag"
-version = "0.4.0"
+version = "0.5.0"
 description = "This template contains a reference architecture for Retrieval Augmented Generation against a set of documents using Docugami's XML Knowledge Graph (KG-RAG)."
 authors = [
     "Docugami <contact@docugami.com>",
@@ -10,24 +10,26 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0"
 langchain = ">=0.1.11"
-langchain-community = "^0.0.25"
-docugami-langchain = "^0.0.7rc8"
+langchain-community = ">=0.0.29"
+# docugami-langchain = "^0.0.7rc17"
+docugami-langchain = {git = "https://github.com/docugami/docugami-langchain.git"}
 typer = "^0.9.0"
 docugami = "0.1.2"
 pyarrow = "^15.0.0"
 langsmith = ">=0.1.0,<0.2.0"
 openpyxl = "^3.1.2"
-openai = { version = "^1.9.0", optional = true }
-langchain-openai = { version = "^0.0.3", optional = true }
+faiss-cpu = "^1.7.4"
+rerankers = { extras = ["all"], version = ">=0.1.2" }
+langchain-openai = { version = "^0.0.8", optional = true }
+langchain-fireworks = { version = ">=0.1.1", optional = true } 
 tiktoken = { version = "^0.5.2", optional = true }
 chromadb = { version = "0.4.14", optional = true }
-fireworks-ai = { version = "^0.11.2", optional = true }
 redis = { version = "^5.0.1", optional = true }
 redisvl = { version = "^0.0.7", optional = true }
 torch = {  version = "<=1.13.1", optional = true }
 huggingface = { version = "^0.0.1", optional = true }
 sentence-transformers = { version = "^2.2.2", optional = true }
-faiss-cpu = "^1.7.4"
+
 
 [tool.poetry.group.dev.dependencies]
 langchain-cli = "*"
@@ -38,8 +40,8 @@ pyyaml = "*"
 ruff = "*"
 
 [tool.poetry.extras]
-openai = ["openai", "langchain-openai", "tiktoken"]
-fireworks = ["fireworks-ai"]
+openai = ["langchain-openai", "tiktoken"]
+fireworks = ["langchain-fireworks"]
 chromadb = ["chromadb"]
 redis = ["redis", "redisvl"]
 huggingface = ["torch", "huggingface", "sentence-transformers"]

@@ -128,7 +128,7 @@
       "Month Name" TEXT,
       "Year" INTEGER
     )
-  sql_query: SELECT SUM("Gross Sales") FROM "Financial Data" WHERE Segment = "Midmarket" AND Country = "Mexico" AND Year = 2014;
+  sql_query: SELECT SUM("Gross Sales") FROM "Financial Data" WHERE LOWER("Segment") LIKE("%midmarket%") AND LOWER("Country") LIKE "%mexico%" AND Year = 2014;
   sql_result: "[(451890.0,)]"
   answer: The total midmarket gross sales for Mexico in 2014 were 451,890.
   query_explanation: "Sum the 'Gross Sales' for entries in the 'Midmarket' segment in Mexico for the year 2014."
@@ -153,7 +153,7 @@
       "Month Name" TEXT,
       "Year" INTEGER
     )
-  sql_query: SELECT * FROM "Financial Data" LIMIT 1
+  sql_query: SELECT * FROM "Financial Data" LIMIT 1;
   sql_result: "[('Government', 'Canada', 'Carretera', None, 1618.5, 3, 20, 32370.0, 0.0, 32370.0, 16185.0, 16185.0, '2014-01-01 00:00:00', 1, 'January', 2014)]"
   answer: You can ask various questions about the financial data related to these documents, for example questions related to the segment, country, country etc of various product sales.
   query_explanation: "Provide a sample entry from the 'Financial Data' report."
@@ -177,7 +177,7 @@
       PRIMARY KEY ("CustomerId"),
       FOREIGN KEY("SupportRepId") REFERENCES "Employee" ("EmployeeId")
     )
-  sql_query: SELECT COUNT(*) FROM "Customer" WHERE NOT "Country" = "Brazil";
+  sql_query: SELECT COUNT(*) FROM "Customer" WHERE NOT LOWER("Country") LIKE "%brazil%";
   sql_result: "[(54,)]"
   answer: 54 customers are not from Brazil.
   query_explanation: "Count the number of entries in the 'Customer' report where the 'Country' is not Brazil."

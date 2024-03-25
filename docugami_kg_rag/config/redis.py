@@ -1,10 +1,10 @@
 # Reference: https://python.langchain.com/docs/integrations/vectorstores/redis
 from typing import List, Optional
 
-from langchain.schema.document import Document
-from langchain.schema.embeddings import Embeddings
-
+from langchain_core.documents import Document
+from langchain_core.embeddings import Embeddings
 from langchain_core.vectorstores import VectorStore
+
 from langchain_community.vectorstores.redis.base import Redis, check_index_exists
 
 from docugami_langchain.retrievers.fused_summary import PARENT_DOC_ID_KEY, FULL_DOC_SUMMARY_ID_KEY, SOURCE_KEY

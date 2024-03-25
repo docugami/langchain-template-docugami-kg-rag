@@ -42,7 +42,5 @@ if __name__ == "__main__":
     if sys.gettrace():
         # This code will only run if a debugger is attached
         index_docset(docset_id="tjwrr2ekqkc3", name="SEC 10Q Reports")
-        # index_docset(docset_id="uh31voknl1p6", name="NTSB Accident Report")
-        # index_docset(docset_id="ue548ls3yjqu", name="City of Anacortes Contractor Agreement")
     else:
         app()

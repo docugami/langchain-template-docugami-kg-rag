@@ -6,6 +6,7 @@ from langchain_core.documents import Document
 from langchain_core.tools import BaseTool
 
 from langchain_core.pydantic_v1 import BaseModel, Field
+from docugami_langchain.tools.common import get_generic_tools
 from docugami_langchain.tools.reports import get_retrieval_tool_for_report
 from docugami_langchain.tools.retrieval import get_retrieval_tool_for_docset
 from docugami_langchain.agents import ReActAgent
@@ -13,16 +14,22 @@ from docugami_langchain.agents import ReActAgent
 from docugami_kg_rag.config import (
     EXAMPLES_PATH,
     LARGE_CONTEXT_INSTRUCT_LLM,
+    SMALL_CONTEXT_INSTRUCT_LLM,
     SQL_GEN_LLM,
     DEFAULT_USE_REPORTS,
+    DEFAULT_USE_CONVERSATIONAL_TOOLS,
     RETRIEVER_K,
+    RERANKER,
     EMBEDDINGS,
     get_vector_store_index,
 )
 from docugami_kg_rag.indexing import read_all_local_index_state
 
 
-def build_tools(use_reports=DEFAULT_USE_REPORTS) -> List[BaseTool]:
+def build_tools(
+    use_reports=DEFAULT_USE_REPORTS,
+    use_conversation_tools=DEFAULT_USE_CONVERSATIONAL_TOOLS,
+) -> List[BaseTool]:
     """
     Build retrieval tools.
     """
@@ -54,6 +61,9 @@ def build_tools(use_reports=DEFAULT_USE_REPORTS) -> List[BaseTool]:
                 chunk_vectorstore=chunk_vectorstore,
                 retrieval_tool_function_name=docset_state.retrieval_tool_function_name,
                 retrieval_tool_description=docset_state.retrieval_tool_description,
+                llm=LARGE_CONTEXT_INSTRUCT_LLM,
+                embeddings=EMBEDDINGS,
+                re_ranker=RERANKER,
                 fetch_parent_doc_callback=_fetch_parent_doc_callback,
                 fetch_full_doc_summary_callback=_fetch_full_doc_summary_callback,
                 retrieval_k=RETRIEVER_K,
@@ -77,6 +87,13 @@ def build_tools(use_reports=DEFAULT_USE_REPORTS) -> List[BaseTool]:
                 )
                 if report_retrieval_tool:
                     tools.append(report_retrieval_tool)
+
+        if use_conversation_tools:
+            tools += get_generic_tools(
+                llm=SMALL_CONTEXT_INSTRUCT_LLM,
+                embeddings=EMBEDDINGS,
+                answer_examples_file=EXAMPLES_PATH / "answer_examples.yaml",
+            )
 
     return tools
 
