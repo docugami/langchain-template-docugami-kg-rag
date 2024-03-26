@@ -11,8 +11,8 @@ readme = "README.md"
 python = ">=3.9,<4.0"
 langchain = ">=0.1.13"
 langchain-community = ">=0.0.29"
-# docugami-langchain = "^0.0.7rc18"
-docugami-langchain = {git = "https://github.com/docugami/docugami-langchain.git"}
+docugami-langchain = "^0.0.7rc19"
+# docugami-langchain = {git = "https://github.com/docugami/docugami-langchain.git"}
 typer = ">=0.9.0"
 docugami = ">=0.1.2"
 pyarrow = ">=15.0.2"
