@@ -1,52 +1,50 @@
 import os
-from pathlib import Path
 import pickle
 import random
+from pathlib import Path
 from typing import Dict, List, Optional
+
 import requests
-
 from docugami import Docugami
-
-from langchain_core.documents import Document
-from langchain.storage.in_memory import InMemoryStore
-
 from docugami_langchain.document_loaders.docugami import DocugamiLoader
 from docugami_langchain.retrievers.mappings import (
-    build_full_doc_summary_mappings,
     build_chunk_summary_mappings,
     build_doc_maps_from_chunks,
-)
-from docugami_langchain.tools.retrieval import (
-    summaries_to_direct_retriever_tool_description,
-    docset_name_to_direct_retriever_tool_function_name,
+    build_full_doc_summary_mappings,
 )
 from docugami_langchain.tools.reports import (
     connect_to_db,
     excel_to_sqlite_connection,
-    report_name_to_report_query_tool_function_name,
     report_details_to_report_query_tool_description,
+    report_name_to_report_query_tool_function_name,
 )
+from docugami_langchain.tools.retrieval import (
+    docset_name_to_direct_retriever_tool_function_name,
+    summaries_to_direct_retriever_tool_description,
+)
+from langchain.storage.in_memory import InMemoryStore
+from langchain_core.documents import Document
 
 from docugami_kg_rag.config import (
     DOCUGAMI_API_ENDPOINT,
+    DOCUGAMI_API_KEY,
+    EMBEDDINGS,
     EXAMPLES_PATH,
     INCLUDE_XML_TAGS,
+    INDEXING_LOCAL_REPORT_DBS_ROOT,
     INDEXING_LOCAL_STATE_PATH,
-    MAX_CHUNK_TEXT_LENGTH,
-    MIN_CHUNK_TEXT_LENGTH,
-    MAX_FULL_DOCUMENT_TEXT_LENGTH,
-    PARENT_HIERARCHY_LEVELS,
-    SUB_CHUNK_TABLES,
-    EMBEDDINGS,
     LARGE_CONTEXT_INSTRUCT_LLM,
+    MAX_CHUNK_TEXT_LENGTH,
+    MAX_FULL_DOCUMENT_TEXT_LENGTH,
+    MIN_CHUNK_TEXT_LENGTH,
+    PARENT_HIERARCHY_LEVELS,
     SMALL_CONTEXT_INSTRUCT_LLM,
+    SUB_CHUNK_TABLES,
+    del_vector_store_index,
     get_vector_store_index,
     init_vector_store_index,
-    del_vector_store_index,
 )
-from docugami_kg_rag.state_models import ReportDetails, LocalIndexState
-from docugami_kg_rag.config import DOCUGAMI_API_KEY, INDEXING_LOCAL_REPORT_DBS_ROOT
-
+from docugami_kg_rag.state_models import LocalIndexState, ReportDetails
 
 HEADERS = {"Authorization": f"Bearer {DOCUGAMI_API_KEY}"}
 
@@ -66,7 +64,7 @@ def update_local_index(
     direct_tool_function_name: str,
     direct_tool_description: str,
     report_details: List[ReportDetails],
-):
+) -> None:
     """
     Read and update local index
     """
@@ -95,7 +93,7 @@ def update_local_index(
         pickle.dump(state, file)
 
 
-def populate_vector_index(docset_id: str, chunks: List[Document]):
+def populate_vector_index(docset_id: str, chunks: List[Document]) -> None:
     """
     Create index if it does not exist, delete and recreate if already exists.
     """
@@ -112,7 +110,7 @@ def populate_vector_index(docset_id: str, chunks: List[Document]):
     print(f"Done embedding documents into vector store for {docset_id}")
 
 
-def index_docset(docset_id: str, name: str):
+def index_docset(docset_id: str, name: str) -> None:
     """
     Indexes the given docset
     """
@@ -213,6 +211,7 @@ def download_project_latest_xlsx(project_url: str, local_xlsx: Path) -> Optional
                 raise Exception(
                     f"Failed to download XLSX for {project_url}",
                 )
+        return None  # No artifacts found
     elif response.status_code == 404:
         # No artifacts found: this project has never been published
         return None

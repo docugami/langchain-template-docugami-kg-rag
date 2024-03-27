@@ -1,7 +1,5 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
-
-from dataclasses import field
 from typing import List
 
 from langchain.storage.in_memory import InMemoryStore

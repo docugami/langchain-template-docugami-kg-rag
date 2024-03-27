@@ -1,3 +1,5 @@
 __pycache__
+.mypy_cache
 .venv
-temp
+.env
+dist

@@ -1,4 +1,5 @@
 import sys
+
 import typer
 from docugami import Docugami
 
@@ -10,7 +11,7 @@ app = typer.Typer()
 
 
 @app.command()
-def main():
+def main() -> None:
     docsets_response = docugami_client.docsets.list()
 
     if not docsets_response or not docsets_response.docsets:

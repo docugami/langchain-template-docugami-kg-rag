@@ -1,8 +1,7 @@
 # Reference: https://huggingface.co/models
-from rerankers import Reranker
 import torch
-
 from langchain_community.embeddings.huggingface import HuggingFaceEmbeddings
+from rerankers import Reranker
 
 device = "cpu"
 if torch.cuda.is_available():

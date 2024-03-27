@@ -1,8 +1,8 @@
 # OpenAI models and Embeddings
 # Reference: https://platform.openai.com/docs/models
 import os
-from langchain_openai import ChatOpenAI
-from langchain_openai import OpenAIEmbeddings
+
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from rerankers import Reranker
 
 if "OPENAI_API_KEY" not in os.environ:

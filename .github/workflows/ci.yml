@@ -21,6 +21,9 @@ jobs:
     - name: Lint code
       run: make lint
 
+    - name: Check spellings
+      run: make spell_check
+
     - name: Check PR status
       run: |
         if [ -n "$(git diff --name-only ${{ github.base_ref }}..${{ github.head_ref }})" ]; then

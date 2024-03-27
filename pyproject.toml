@@ -11,8 +11,8 @@ readme = "README.md"
 python = ">=3.9,<4.0"
 langchain = ">=0.1.13"
 langchain-community = ">=0.0.29"
-docugami-langchain = "^0.0.7rc19"
-# docugami-langchain = {git = "https://github.com/docugami/docugami-langchain.git"}
+# docugami-langchain = "^0.0.7rc20"
+docugami-langchain = {git = "https://github.com/docugami/docugami-langchain.git"}
 typer = ">=0.9.0"
 docugami = ">=0.1.2"
 pyarrow = ">=15.0.2"
@@ -30,6 +30,7 @@ huggingface = { version = ">=0.0.1", optional = true }
 sentence-transformers = { version = ">=2.6.0", optional = true }
 
 [tool.poetry.group.dev.dependencies]
+codespell = "*"
 langchain-cli = "*"
 ipykernel = "*"
 black = "*"
@@ -48,7 +49,24 @@ huggingface = ["torch", "huggingface", "sentence-transformers"]
 line-length = 127
 
 [tool.ruff]
-ignore = ["E501", "E402", "F403"]
+lint.select = [
+  "E",  # pycodestyle
+  "F",  # pyflakes
+  "I",  # isort
+]
+line-length = 200
+lint.ignore = ["E501", "E402", "F403"]
+
+[tool.mypy]
+disallow_untyped_defs = "True"
+disable_error_code = "typeddict-item"
+exclude = "/temp/"
+
+[[tool.mypy.overrides]]
+module = [
+    "torch", "langchain_openai.*", "langchain_fireworks.*", "docugami_langchain.*", "rerankers.*",
+]
+ignore_missing_imports = true
 
 [tool.langserve]
 export_module = "docugami_kg_rag"
@@ -63,11 +81,6 @@ tags = ["vectordbs"]
 [tool.pytest.ini_options]
 addopts = "--doctest-modules"
 norecursedirs = ".venv temp"
-
-[tool.pyright]
-ignore = ["**/node_modules", "**/__pycache__", ".venv"]
-reportMissingImports = true
-reportMissingTypeStubs = false
 
 [build-system]
 requires = [
