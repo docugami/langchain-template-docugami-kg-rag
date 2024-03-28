@@ -107,13 +107,15 @@ class AgentInput(BaseModel):
     )
 
 
-def agent_output_to_string(streaming_state: AgentState) -> str:
-    if streaming_state:
-        react_output = streaming_state.get("generate_re_act")
-        if react_output:
-            cited_answer = react_output.get("cited_answer")
-            if cited_answer and cited_answer.is_final:
-                return cited_answer.answer
+def agent_output_to_string(state: AgentState) -> str:
+    if state:
+        streaming_output = state.get("generate_re_act")
+        if streaming_output:
+            state = streaming_output
+
+        cited_answer = state.get("cited_answer")
+        if cited_answer and cited_answer.is_final:
+            return cited_answer.answer
 
     return ""
 
