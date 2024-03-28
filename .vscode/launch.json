@@ -5,7 +5,8 @@
             "name": "Python Debugger: Attach using Process Id",
             "type": "debugpy",
             "request": "attach",
-            "processId": "${command:pickProcess}"
+            "processId": "${command:pickProcess}",
+            "justMyCode": false
         },
         {
             "name": "Python Debugger: Python File",

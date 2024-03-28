@@ -1,13 +1,16 @@
+import asyncio
 import sys
 from typing import List, Optional, Union
 
-from docugami_langchain.agents import ReActAgent
+from docugami_langchain.agents import AgentState, ReActAgent
+from docugami_langchain.history import get_chat_history_from_messages, get_question_from_messages
 from docugami_langchain.tools.common import get_generic_tools
 from docugami_langchain.tools.reports import get_retrieval_tool_for_report
 from docugami_langchain.tools.retrieval import get_retrieval_tool_for_docset
 from langchain_core.documents import Document
 from langchain_core.messages import AIMessage, HumanMessage
 from langchain_core.pydantic_v1 import BaseModel, Field
+from langchain_core.runnables import RunnableLambda
 from langchain_core.tools import BaseTool
 
 from docugami_kg_rag.config import (
@@ -104,22 +107,46 @@ class AgentInput(BaseModel):
     )
 
 
+def agent_output_to_string(streaming_state: AgentState) -> str:
+    if streaming_state:
+        react_output = streaming_state.get("generate_re_act")
+        if react_output:
+            cited_answer = react_output.get("cited_answer")
+            if cited_answer and cited_answer.is_final:
+                return cited_answer.answer
+
+    return ""
+
+
 agent = (
-    ReActAgent(llm=LARGE_CONTEXT_INSTRUCT_LLM, embeddings=EMBEDDINGS, tools=build_tools())
-    .runnable()
-    .with_types(
-        input_type=AgentInput,  # type: ignore
-    )
+    {
+        "question": lambda x: get_question_from_messages(x["messages"]),
+        "chat_history": lambda x: get_chat_history_from_messages(x["messages"]),
+    }
+    | ReActAgent(
+        llm=LARGE_CONTEXT_INSTRUCT_LLM,
+        embeddings=EMBEDDINGS,
+        tools=build_tools(),
+    ).runnable()
+    | RunnableLambda(agent_output_to_string)
+).with_types(
+    input_type=AgentInput,  # type: ignore
 )
+
 if __name__ == "__main__":
     if sys.gettrace():
         # This code will only run if a debugger is attached
 
-        output = agent.invoke(
-            {
-                "question": "What is the project number for the contract with snelson?",
-                "chat_history": [],
-            }
-        )
+        async def test_async_stream(msg: str):
+            output = ""
+            async for s in agent.astream_log(
+                {
+                    "messages": [HumanMessage(content=msg)],
+                }
+            ):
+                print(s)
 
+            return output
+
+        output = asyncio.run(test_async_stream("Hello!"))
         print(output)
