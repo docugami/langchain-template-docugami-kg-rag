@@ -3,6 +3,7 @@ import sys
 from typing import List, Optional, Union
 
 from docugami_langchain.agents import AgentState, ReActAgent
+from docugami_langchain.chains.rag.standalone_question_chain import StandaloneQuestionChain
 from docugami_langchain.history import get_chat_history_from_messages, get_question_from_messages
 from docugami_langchain.tools.common import get_generic_tools
 from docugami_langchain.tools.reports import get_retrieval_tool_for_report
@@ -120,6 +121,12 @@ def agent_output_to_string(state: AgentState) -> str:
     return ""
 
 
+standalone_questions_chain = StandaloneQuestionChain(
+    llm=LARGE_CONTEXT_INSTRUCT_LLM,
+    embeddings=EMBEDDINGS,
+)
+standalone_questions_chain.load_examples(TEST_DATA_DIR / "examples/test_standalone_question_examples.yaml")
+
 agent = (
     {
         "question": lambda x: get_question_from_messages(x["messages"]),
@@ -129,6 +136,7 @@ agent = (
         llm=LARGE_CONTEXT_INSTRUCT_LLM,
         embeddings=EMBEDDINGS,
         tools=build_tools(),
+        standalone_question_chain=standalone_questions_chain,
     ).runnable()
     | RunnableLambda(agent_output_to_string)
 ).with_types(

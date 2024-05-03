@@ -19,8 +19,8 @@ from docugami_langchain.tools.reports import (
     report_name_to_report_query_tool_function_name,
 )
 from docugami_langchain.tools.retrieval import (
-    docset_name_to_direct_retriever_tool_function_name,
-    summaries_to_direct_retriever_tool_description,
+    docset_name_to_direct_retrieval_tool_function_name,
+    summaries_to_direct_retrieval_tool_description,
 )
 from langchain.storage.in_memory import InMemoryStore
 from langchain_core.documents import Document
@@ -149,8 +149,8 @@ def index_docset(docset_id: str, name: str) -> None:
         summarize_chunk_examples_file=EXAMPLES_PATH / "summarize_chunk_examples.yaml",
     )
 
-    direct_tool_function_name = docset_name_to_direct_retriever_tool_function_name(name)
-    direct_tool_description = summaries_to_direct_retriever_tool_description(
+    direct_tool_function_name = docset_name_to_direct_retrieval_tool_function_name(name)
+    direct_tool_description = summaries_to_direct_retrieval_tool_description(
         name=name,
         summaries=random.sample(
             list(full_doc_summaries_by_id.values()), min(len(full_doc_summaries_by_id), 3)
