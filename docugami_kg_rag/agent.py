@@ -11,7 +11,7 @@ from docugami_langchain.tools.retrieval import get_retrieval_tool_for_docset
 from langchain_core.documents import Document
 from langchain_core.messages import AIMessage, HumanMessage
 from langchain_core.pydantic_v1 import BaseModel, Field
-from langchain_core.runnables import RunnableLambda
+from langchain_core.runnables import RunnableLambda, Runnable
 from langchain_core.tools import BaseTool
 
 from docugami_kg_rag.config import (
@@ -121,33 +121,36 @@ def agent_output_to_string(state: AgentState) -> str:
     return ""
 
 
-standalone_questions_chain = StandaloneQuestionChain(
-    llm=LARGE_CONTEXT_INSTRUCT_LLM,
-    embeddings=EMBEDDINGS,
-)
-standalone_questions_chain.load_examples(TEST_DATA_DIR / "examples/test_standalone_question_examples.yaml")
-
-agent = (
-    {
-        "question": lambda x: get_question_from_messages(x["messages"]),
-        "chat_history": lambda x: get_chat_history_from_messages(x["messages"]),
-    }
-    | ReActAgent(
+def build_agent_runnable() -> Runnable:
+    standalone_questions_chain = StandaloneQuestionChain(
         llm=LARGE_CONTEXT_INSTRUCT_LLM,
         embeddings=EMBEDDINGS,
-        tools=build_tools(),
-        standalone_question_chain=standalone_questions_chain,
-    ).runnable()
-    | RunnableLambda(agent_output_to_string)
-).with_types(
-    input_type=AgentInput,  # type: ignore
-)
+    )
+    standalone_questions_chain.load_examples(EXAMPLES_PATH / "standalone_question_examples.yaml")
+
+    return (
+        {
+            "question": lambda x: get_question_from_messages(x["messages"]),
+            "chat_history": lambda x: get_chat_history_from_messages(x["messages"]),
+        }
+        | ReActAgent(
+            llm=LARGE_CONTEXT_INSTRUCT_LLM,
+            embeddings=EMBEDDINGS,
+            tools=build_tools(),
+            standalone_question_chain=standalone_questions_chain,
+        ).runnable()
+        | RunnableLambda(agent_output_to_string)
+    ).with_types(
+        input_type=AgentInput,  # type: ignore
+    )
+
+agent = build_agent_runnable()
 
 if __name__ == "__main__":
     if sys.gettrace():
         # This code will only run if a debugger is attached
 
-        async def test_async_stream(msg: str):
+        async def test_async_stream(msg: str) -> str:
             output = ""
             async for s in agent.astream_log(
                 {

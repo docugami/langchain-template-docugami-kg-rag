@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "docugami-kg-rag"
-version = "0.5.0"
+version = "0.6.0"
 description = "This template contains a reference architecture for Retrieval Augmented Generation against a set of documents using Docugami's XML Knowledge Graph (KG-RAG)."
 authors = [
     "Docugami <contact@docugami.com>",
@@ -11,9 +11,9 @@ readme = "README.md"
 python = ">=3.9,<4.0"
 langchain = ">=0.1.17"
 langchain-community = ">=0.0.36"
-docugami-langchain = "^0.0.7rc32"
+docugami-langchain = "^0.0.8"
 # docugami-langchain = {git = "https://github.com/docugami/docugami-langchain.git"}
-# docugami-langchain = {git = "https://github.com/docugami/docugami-langchain.git", rev = "tjaffri/eval_fixes"}
+# docugami-langchain = {git = "https://github.com/docugami/docugami-langchain.git", rev = "tjaffri/rel"}
 typer = ">=0.9.0"
 docugami = ">=0.1.2"
 pyarrow = ">=16.0.0"
@@ -21,7 +21,7 @@ langsmith = ">=0.1.52"
 openpyxl = ">=3.1.2"
 faiss-cpu = ">=1.8.0"
 rerankers = { extras = ["all"], version = ">=0.2.0" }
-langchain-openai = { version = ">=0.1.4", optional = true }
+langchain-openai = { version = ">=0.1.6", optional = true }
 langchain-fireworks = { version = ">=0.1.2", optional = true } 
 chromadb = { version = ">=0.5.0", optional = true }
 redis = { version = ">=5.0.4", optional = true }
@@ -32,7 +32,7 @@ sentence-transformers = { version = ">=2.7.0", optional = true }
 
 [tool.poetry.group.dev.dependencies]
 codespell = "*"
-langchain-cli = "*"
+langchain-cli = ">=0.0.22rc1"
 ipykernel = "*"
 black = "*"
 pytest = "*"

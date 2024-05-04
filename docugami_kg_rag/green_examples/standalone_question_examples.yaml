@@ -1,0 +1,61 @@
+- chat_history:
+  human: What is the capital of france?
+  standalone_agent_input: What is the capital of france?
+- chat_history:
+  human: What star is closest to earth?
+  standalone_agent_input: What star is closest to earth?
+- chat_history: |
+    Human: Can you name a famous wizard from literature?
+    ----------------
+    AI: One of the most famous wizards from literature is Harry Potter.
+    ----------------
+    Human: And who is his main enemy?
+    ----------------
+    AI: Harry Potter's main enemy is Lord Voldemort.
+    ----------------
+  human: Who wrote the book that introduced these characters?
+  standalone_agent_input: Who is the author of the book that includes the characters Harry Potter and Lord Voldemort?
+- chat_history: |
+    Human: What is the tallest mountain in the world?
+    ----------------
+    AI: Mount Everest is the tallest mountain in the world.
+    ----------------
+    Human: What about the second tallest?
+    ----------------
+    AI: The second tallest is K2.
+    ----------------
+  human: What's the combined height of these mountains?
+  standalone_agent_input: What is the combined height of Mount Everest and K2?
+- chat_history: |
+    Human: What is the capital of Italy?
+    ----------------
+    AI: The capital of Italy is Rome.
+    ----------------
+    Human: Which city is famous for the Leaning Tower?
+    ----------------
+    AI: The city famous for the Leaning Tower is Pisa.
+    ----------------
+  human: What continent are these cities in?
+  standalone_agent_input: What continent are Rome and Pisa in?
+- chat_history: |
+    Human: Name a famous physicist.
+    ----------------
+    AI: Albert Einstein is a famous physicist known for the theory of relativity.
+    ----------------
+    Human: Who is a renowned biologist?
+    ----------------
+    AI: Charles Darwin is renowned for his work on the theory of evolution.
+    ----------------
+  human: Who's considered more influential in their field?
+  standalone_agent_input: Between Albert Einstein and Charles Darwin, who is considered more influential in their field?
+- chat_history: |
+    Human: What is the largest city in King County, WA?
+    ----------------
+    AI: Seattle is the largest city in King County, Washington.
+    ----------------
+    Human: Do you know who it was named after?
+    ----------------
+    AI: Seattle is named after Chief Si'ahl (1780-1866), a leader of the Suquamish and Duwamish people.
+    ----------------
+  human: List some major companies headquartered there
+  standalone_agent_input: Which major companies are headquartered in the Seattle area?
