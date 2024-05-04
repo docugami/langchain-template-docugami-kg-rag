@@ -130,3 +130,7 @@ One of the things you need to specify is the REDIS_URL. You may have an instance
 `docker run -d -p 6379:6379 -p 8001:8001 redis/redis-stack:latest`
 
 See documentation [here](https://python.langchain.com/docs/integrations/vectorstores/redis#redis-connection-url-examples) for how to configure the REDIS_URL.
+
+## Improving the template
+
+If working on the template, you can run `poetry run langchain template serve --chat-playground` to test improvements. Make sure you run the `/playground` route of the localhost endpoint created.
