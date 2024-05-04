@@ -11,7 +11,7 @@ from docugami_langchain.tools.retrieval import get_retrieval_tool_for_docset
 from langchain_core.documents import Document
 from langchain_core.messages import AIMessage, HumanMessage
 from langchain_core.pydantic_v1 import BaseModel, Field
-from langchain_core.runnables import RunnableLambda, Runnable
+from langchain_core.runnables import Runnable, RunnableLambda
 from langchain_core.tools import BaseTool
 
 from docugami_kg_rag.config import (
