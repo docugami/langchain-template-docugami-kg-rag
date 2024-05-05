@@ -18,6 +18,9 @@ jobs:
     - name: Install dependencies
       run: poetry install --all-extras
 
+    - name: Install mypy
+      run: poetry run pip install mypy
+
     - name: Lint code
       run: make lint
 
