@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "docugami-kg-rag"
-version = "0.2.0"
+version = "0.6.0"
 description = "This template contains a reference architecture for Retrieval Augmented Generation against a set of documents using Docugami's XML Knowledge Graph (KG-RAG)."
 authors = [
     "Docugami <contact@docugami.com>",
@@ -9,31 +9,30 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0"
-langchain = "^0.1.1"
-langchain-community = "^0.0.21"
-langchainhub = "^0.1.14"
-dgml-utils = "0.3.2"
-typer = "^0.9.0"
-docugami = "0.1.2"
-docugami-langchain = "^0.0.7rc4"
-pandas = ">=1.5.3,<2.0.0"
-pyarrow = "^15.0.0"
-langsmith = ">=0.1.0,<0.2.0"
-openpyxl = "^3.1.2"
-openai = { version = "^1.9.0", optional = true }
-langchain-openai = { version = "^0.0.3", optional = true }
-tiktoken = { version = "^0.5.2", optional = true }
-chromadb = { version = "0.4.14", optional = true }
-fireworks-ai = { version = "^0.11.2", optional = true }
-redis = { version = "^5.0.1", optional = true }
-redisvl = { version = "^0.0.7", optional = true }
-torch = {  version = "^2.1.2", optional = true }
-huggingface = { version = "^0.0.1", optional = true }
-sentence-transformers = { version = "^2.2.2", optional = true }
-
+langchain = ">=0.1.17"
+langchain-community = ">=0.0.36"
+docugami-langchain = "^0.0.8"
+# docugami-langchain = {git = "https://github.com/docugami/docugami-langchain.git"}
+# docugami-langchain = {git = "https://github.com/docugami/docugami-langchain.git", rev = "tjaffri/rel"}
+typer = ">=0.9.0"
+docugami = ">=0.1.2"
+pyarrow = ">=16.0.0"
+langsmith = ">=0.1.52"
+openpyxl = ">=3.1.2"
+faiss-cpu = ">=1.8.0"
+torch = "2.2.0"
+rerankers = { extras = ["all"], version = ">=0.2.0" }
+langchain-openai = { version = ">=0.1.6", optional = true }
+langchain-fireworks = { version = ">=0.1.2", optional = true } 
+chromadb = { version = ">=0.5.0", optional = true }
+redis = { version = ">=5.0.4", optional = true }
+redisvl = { version = ">=0.2.0", optional = true }
+huggingface = { version = ">=0.0.1", optional = true }
+sentence-transformers = { version = ">=2.7.0", optional = true }
 
 [tool.poetry.group.dev.dependencies]
-langchain-cli = "*"
+codespell = "*"
+langchain-cli = ">=0.0.22rc1"
 ipykernel = "*"
 black = "*"
 pytest = "*"
@@ -41,17 +40,34 @@ pyyaml = "*"
 ruff = "*"
 
 [tool.poetry.extras]
-openai = ["openai", "langchain-openai", "tiktoken"]
-fireworks = ["fireworks-ai"]
+openai = ["langchain-openai", "tiktoken"]
+fireworks = ["langchain-fireworks"]
 chromadb = ["chromadb"]
 redis = ["redis", "redisvl"]
-huggingface = ["torch", "huggingface", "sentence-transformers"]
+huggingface = ["huggingface", "sentence-transformers"]
 
 [tool.black]
 line-length = 127
 
 [tool.ruff]
-ignore = ["E501", "E402", "F403"]
+lint.select = [
+  "E",  # pycodestyle
+  "F",  # pyflakes
+  "I",  # isort
+]
+line-length = 200
+lint.ignore = ["E501", "E402", "F403"]
+
+[tool.mypy]
+disallow_untyped_defs = true
+disable_error_code = ["typeddict-item"]
+exclude = "/temp/"
+
+[[tool.mypy.overrides]]
+module = [
+    "torch", "langchain_openai.*", "langchain_fireworks.*", "docugami_langchain.*", "rerankers.*",
+]
+ignore_missing_imports = true
 
 [tool.langserve]
 export_module = "docugami_kg_rag"
@@ -66,11 +82,6 @@ tags = ["vectordbs"]
 [tool.pytest.ini_options]
 addopts = "--doctest-modules"
 norecursedirs = ".venv temp"
-
-[tool.pyright]
-ignore = ["**/node_modules", "**/__pycache__", ".venv"]
-reportMissingImports = true
-reportMissingTypeStubs = false
 
 [build-system]
 requires = [

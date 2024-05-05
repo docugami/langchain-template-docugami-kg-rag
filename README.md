@@ -45,7 +45,7 @@ Before you can run your app, you need to build your vector index. See [index.py]
 
 Indexing in this template uses the Docugami Loader for LangChain to create semantic chunks out of your documents. Refer to this [documentation](https://python.langchain.com/docs/integrations/document_loaders/docugami) for details.
 
-Note that if you previously ran indexing for the same docset, the index will not be recreated. If you want to force recreate the index (e.g. if you have new docs in the docset or changed your chunking config parameters) please specify `poetry run index.py --overwrite`
+Note that if you previously ran indexing for the same docset, the index will not be recreated. If you want to force recreate the index (e.g. if you have new docs in the docset or changed your chunking config parameters) please specify `poetry run index.py`
 
 ### Creating app
 To use this package, you should first have the LangChain CLI installed:
@@ -130,3 +130,7 @@ One of the things you need to specify is the REDIS_URL. You may have an instance
 `docker run -d -p 6379:6379 -p 8001:8001 redis/redis-stack:latest`
 
 See documentation [here](https://python.langchain.com/docs/integrations/vectorstores/redis#redis-connection-url-examples) for how to configure the REDIS_URL.
+
+## Improving the template
+
+If working on the template, you can run `poetry run langchain template serve --chat-playground` to test improvements. Make sure you run the `/playground` route of the localhost endpoint created.

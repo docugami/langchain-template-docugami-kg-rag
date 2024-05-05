@@ -1,0 +1,145 @@
+- table_info: |
+    CREATE TABLE "Service Agreements Summary" (
+      "File" TEXT, 
+      "Link to Document" TEXT, 
+      "Workers Compensation Insurance" TEXT, 
+      "Limit" TEXT, 
+      "Commercial General Liability Insurance" TEXT, 
+      "Technology Professional Liability Errors Omissions Policy" TEXT, 
+      "Excess Liability Umbrella Coverage" TEXT, 
+      "Services Agreement Date" TEXT, 
+      "Completion of the Services by Company Date" TEXT, 
+      "Charge" TEXT, 
+      "Initial Payment" TEXT, 
+      "Continue in Force And Effect Date" TEXT, 
+      "Non-refundable" TEXT, 
+      "Company" TEXT, 
+      "Client" TEXT, 
+      "Client Address" TEXT, 
+      "Magicsoft" TEXT, 
+      "Except" TEXT, 
+      "A Party" TEXT, 
+      "A Daily Basis" TEXT, 
+      "The Initial Understanding" TEXT, 
+      "Signature Page" TEXT
+    )
+  sql_query: SELECT "File", "Link to Document", "Workers Compensation Insurance", "Limit", "Commercial General Liability Insurance", "Technology Professional Liability Errors Omissions Policy", "Excess Liability Umbrella Coverage", "Services Agreement Date", "Completion of the Services by Company Date", "Charge", "Initial Payment", "Continue in Force And Effect Date", "Non-refundable", "Company", "Client", "Client Address", "Magicsoft", "Except", "A Party", "
+  exception: |-
+    (pysqlite3.dbapi2.OperationalError) unrecognized token: """
+    [SQL: SELECT "File", "Link to Document", "Workers Compensation Insurance", "Limit", "Commercial General Liability Insurance", "Technology Professional Liability Errors Omissions Policy", "Excess Liability Umbrella Coverage", "Services Agreement Date", "Completion of the Services by Company Date", "Charge", "Initial Payment", "Continue in Force And Effect Date", "Non-refundable", "Company", "Client", "Client Address", "Magicsoft", "Except", "A Party", "]
+    (Background on this error at: https://sqlalche.me/e/20/e3q8)
+  fixed_sql_query: SELECT "File", "Link to Document", "Workers Compensation Insurance", "Limit", "Commercial General Liability Insurance", "Technology Professional Liability Errors Omissions Policy", "Excess Liability Umbrella Coverage", "Services Agreement Date", "Completion of the Services by Company Date", "Charge" FROM "Service Agreements Summary"
+
+- table_info: |
+    CREATE TABLE Users (
+      "UserID" INTEGER PRIMARY KEY, 
+      "Username" TEXT, 
+      "Email" TEXT, 
+      "Password" TEXT, 
+      "DateJoined" TEXT
+    )
+  sql_query: SELECT "UserID", "Username", "Email", "Password" FROM User
+  exception: |
+    (pysqlite3.dbapi2.OperationalError) no such table: User
+  fixed_sql_query: SELECT "UserID", "Username", "Email", "Password" FROM Users
+
+- table_info: |
+    CREATE TABLE Orders (
+      "OrderID" INTEGER PRIMARY KEY, 
+      "Product" TEXT, 
+      "Quantity" INTEGER, 
+      "Price" REAL
+    )
+  sql_query: SELECT "OrderID", "Product", "Quantity", "Price" FROM Orders WHERE "Quantity" > 5 AND "Price" >
+  exception: |
+    (pysqlite3.dbapi2.OperationalError) incomplete input
+  fixed_sql_query: SELECT "OrderID", "Product", "Quantity", "Price" FROM Orders WHERE "Quantity" > 5 AND "Price" > 100
+
+- table_info: |
+    CREATE TABLE Employees (
+      "EmployeeID" INTEGER PRIMARY KEY, 
+      "FirstName" TEXT, 
+      "LastName" TEXT, 
+      "Position" TEXT
+    )
+  sql_query: SELECT "EmployeeID", "FirstName", "LastName", "Position" FROM Employees WHERE "Position" = 'Manager
+  exception: |
+    (pysqlite3.dbapi2.OperationalError) near "Manager": syntax error
+  fixed_sql_query: SELECT "EmployeeID", "FirstName", "LastName", "Position" FROM Employees WHERE "Position" = 'Manager'
+
+- table_info: |
+    CREATE TABLE Transactions (
+      "TransactionID" INTEGER PRIMARY KEY, 
+      "Amount" REAL, 
+      "Date" TEXT
+    )
+  sql_query: SELECT "TransactionID", "Amount", "Date" FROM Transactions ORDERY BY "Amount" DESC
+  exception: |
+    (pysqlite3.dbapi2.OperationalError) near "ORDERY": syntax error
+  fixed_sql_query: SELECT "TransactionID", "Amount", "Date" FROM Transactions ORDER BY "Amount" DESC
+
+- table_info: |
+    CREATE TABLE Products (
+      "ProductID" INTEGER PRIMARY KEY, 
+      "ProductName" TEXT, 
+      "Category" TEXT
+    )
+  sql_query: SELECT "ProductID", "ProductName", "Category" FROM Products WHERE "Category" IN ('Electronics', 'Clothing
+  exception: |
+    (pysqlite3.dbapi2.OperationalError) near "Clothing": syntax error
+  fixed_sql_query: SELECT "ProductID", "ProductName", "Category" FROM Products WHERE "Category" IN ('Electronics', 'Clothing')
+
+- table_info: |
+    CREATE TABLE Customers (
+      "CustomerID" INTEGER PRIMARY KEY, 
+      "Name" TEXT, 
+      "Country" TEXT
+    )
+  sql_query: SELECT "CustomerID", "Name", "Country" FROM Customers WHERE "Country" = 'USA' AND "Name" LIKE %  John%'
+  exception: |
+    (pysqlite3.dbapi2.OperationalError) near "%  John%": syntax error
+  fixed_sql_query: SELECT "CustomerID", "Name", "Country" FROM Customers WHERE "Country" = 'USA' AND "Name" LIKE '%John%'
+
+- table_info: |
+    CREATE TABLE Addresses (
+      "AddressID" INTEGER PRIMARY KEY, 
+      "Street" TEXT, 
+      "City" TEXT, 
+      "ZipCode" TEXT
+    )
+  sql_query: SELECT "AddressID", "Street", "City", "ZipCode" FROM Addresses WHERE "ZipCode" = 12345
+  exception: |
+    (pysqlite3.dbapi2.OperationalError) datatype mismatch
+  fixed_sql_query: SELECT "AddressID", "Street", "City", "ZipCode" FROM Addresses WHERE "ZipCode" = '12345'
+
+- table_info: |
+    CREATE TABLE "Service Agreements Summary" (
+      "File" TEXT, 
+      "Link to Document" TEXT, 
+      "Workers Compensation Insurance" TEXT, 
+      "Limit" TEXT, 
+      "Commercial General Liability Insurance" TEXT, 
+      "Technology Professional Liability Errors Omissions Policy" TEXT, 
+      "Excess Liability Umbrella Coverage" TEXT, 
+      "Services Agreement Date" TEXT, 
+      "Completion of the Services by Company Date" TEXT, 
+      "Charge" TEXT, 
+      "Initial Payment" TEXT, 
+      "Continue in Force And Effect Date" TEXT, 
+      "Non-refundable" TEXT, 
+      "Company" TEXT, 
+      "Client" TEXT, 
+      "Client Address" TEXT, 
+      "Magicsoft" TEXT, 
+      "Except" TEXT, 
+      "A Party" TEXT, 
+      "A Daily Basis" TEXT, 
+      "The Initial Understanding" TEXT, 
+      "Signature Page" TEXT
+    )
+  sql_query: SELECT Client, ExcessLiabilityUmbrellaCoverage FROM "Service Agreements Summary" ORDER BY ExcessLiabilityUmbrellaCoverage DESC LIMIT 1
+  exception: |-
+    (pysqlite3.dbapi2.OperationalError) no such column: ExcessLiabilityUmbrellaCoverage
+    [SQL: SELECT Client, ExcessLiabilityUmbrellaCoverage FROM "Service Agreements Summary" ORDER BY ExcessLiabilityUmbrellaCoverage DESC LIMIT 1]
+    (Background on this error at: https://sqlalche.me/e/20/e3q8)
+  fixed_sql_query: SELECT "Client", "Excess Liability Umbrella Coverage" FROM "Service Agreements Summary" ORDER BY "Excess Liability Umbrella Coverage" DESC LIMIT 1

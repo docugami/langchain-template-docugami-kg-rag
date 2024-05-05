@@ -3,14 +3,11 @@
 from pathlib import Path
 from typing import List, Optional
 
-from langchain.schema.document import Document
-from langchain.schema.embeddings import Embeddings
-
-from langchain_core.vectorstores import VectorStore
-
-from langchain_community.vectorstores.chroma import Chroma
-
 import chromadb
+from langchain_community.vectorstores.chroma import Chroma
+from langchain_core.documents import Document
+from langchain_core.embeddings import Embeddings
+from langchain_core.vectorstores import VectorStore
 
 CHROMA_DIRECTORY = Path("/tmp/docugami/chroma_db")
 CHROMA_DIRECTORY.mkdir(parents=True, exist_ok=True)
@@ -37,7 +34,7 @@ def get_vector_store_index(docset_id: str, embeddings: Embeddings) -> Optional[V
     return None
 
 
-def init_vector_store_index(docset_id: str, docs: List[Document], embeddings: Embeddings, force=True) -> VectorStore:
+def init_vector_store_index(docset_id: str, docs: List[Document], embeddings: Embeddings, force: bool = True) -> VectorStore:
     if force and vector_store_index_exists(docset_id, embeddings):
         del_vector_store_index(docset_id)
 
@@ -49,6 +46,6 @@ def init_vector_store_index(docset_id: str, docs: List[Document], embeddings: Em
     )
 
 
-def del_vector_store_index(docset_id: str):
+def del_vector_store_index(docset_id: str) -> None:
     persistent_client = chromadb.PersistentClient(path=str(CHROMA_DIRECTORY.absolute()))
     persistent_client.delete_collection(docset_id)

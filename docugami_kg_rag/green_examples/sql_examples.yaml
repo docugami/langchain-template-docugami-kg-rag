@@ -1,0 +1,381 @@
+- question: When was the cardiva medical charter filed?
+  table_info: |
+    CREATE TABLE "Corporate Charters" (
+      "File" TEXT,
+      "Link to Document" TEXT,
+      "FILED Date" TEXT,
+      "FILED Time" TEXT,
+      "SR" REAL,
+      "FileNumber" REAL,
+      "Corporation Name" TEXT,
+      "Registered Address" TEXT,
+      "Shares of Common Stock" INTEGER,
+      "Shares of Preferred Stock" INTEGER
+    )
+  sql_query: SELECT "Corporation Name", "FILED Date" FROM "Corporate Charters" WHERE LOWER("Corporation Name") LIKE "%cardiva medical%";
+  sql_result: "[('Cardiva Medical, Inc.', '12/19/2017')]"
+  answer: The cardiva medical charter was filed on 12/19/2017.
+  query_explanation: "Retrieve the 'FILED Date' for the corporation with a name similar to 'cardiva medical'."
+
+- question: How many shares of common stock for Aisera, Inc?
+  table_info: |
+    CREATE TABLE "Corporate Charters" (
+      "File" TEXT,
+      "Link to Document" TEXT,
+      "FILED Date" TEXT,
+      "FILED Time" TEXT,
+      "SR" REAL,
+      "FileNumber" REAL,
+      "Corporation Name" TEXT,
+      "Registered Address" TEXT,
+      "Shares of Common Stock" INTEGER,
+      "Shares of Preferred Stock" INTEGER
+    )
+  sql_query: SELECT "Shares of Common Stock" FROM "Corporate Charters" WHERE LOWER("Corporation Name") LIKE "%aisera%";
+  sql_result: "[(90000000,)]"
+  answer: Aisera, Inc. issued 90 million shares of common stock.
+  query_explanation: "Retrieve the number of 'Shares of Common Stock' for the corporation with a name similar to 'Aisera, Inc'."
+
+- question: What is the average number of shares of common stock issued?
+  table_info: |
+    CREATE TABLE "Corporate Charters" (
+      "File" TEXT,
+      "Link to Document" TEXT,
+      "FILED Date" TEXT,
+      "FILED Time" TEXT,
+      "SR" REAL,
+      "FileNumber" REAL,
+      "Corporation Name" TEXT,
+      "Registered Address" TEXT,
+      "Shares of Common Stock" INTEGER,
+      "Shares of Preferred Stock" INTEGER
+    )
+  sql_query: SELECT AVG("Shares of Common Stock") FROM "Corporate Charters"
+  sql_result: "[(44,970,044,)]"
+  answer: 44,970,044 shares of common stock were issued on average.
+  query_explanation: "Calculate the average of the 'Shares of Common Stock' column for all corporations."
+
+- question: Which company issued the most common stock?
+  table_info: |
+    CREATE TABLE "Corporate Charters" (
+      "File" TEXT,
+      "Link to Document" TEXT,
+      "FILED Date" TEXT,
+      "FILED Time" TEXT,
+      "SR" REAL,
+      "FileNumber" REAL,
+      "Corporation Name" TEXT,
+      "Registered Address" TEXT,
+      "Shares of Common Stock" INTEGER,
+      "Shares of Preferred Stock" INTEGER
+    )
+  sql_query: SELECT "Corporation Name", "Shares of Common Stock" FROM "Corporate Charters" ORDER BY "Shares of Common Stock" DESC LIMIT 1;
+  sql_result: "[('Clearstory Data Inc.', 150000000)]"
+  answer: Clearstory Data Inc. issued the most common stock with 150,000,000 shares.
+  query_explanation: "Identify the corporation with the highest value in the 'Shares of Common Stock' column."
+
+- question: What are the top 7 companies that issued the most common stock?
+  table_info: |
+    CREATE TABLE "Corporate Charters" (
+      "File" TEXT,
+      "Link to Document" TEXT,
+      "FILED Date" TEXT,
+      "FILED Time" TEXT,
+      "SR" REAL,
+      "FileNumber" REAL,
+      "Corporation Name" TEXT,
+      "Registered Address" TEXT,
+      "Shares of Common Stock" INTEGER,
+      "Shares of Preferred Stock" INTEGER
+    )
+  sql_query: SELECT "Corporation Name", "Shares of Common Stock" FROM "Corporate Charters" ORDER BY "Shares of Common Stock" DESC LIMIT 7;
+  sql_result: "[('Clearstory Data Inc.', 150000000), ('Cardiva Medical, Inc.', 112000000), ('Avi Networks, Inc.', 110000000), ('Bugcrowd Inc.', 108787009), ('Aisera, Inc.', 90000000), ('AVEGANT CORP', 80000000), ('CHECKR, INC.', 68000000)]"
+  answer: The top 7 companies that issued the most common stock are Clearstory Data Inc., Cardiva Medical, Inc., Avi Networks, Inc., Bugcrowd Inc., Aisera, Inc., AVEGANT CORP, and CHECKR, INC.
+  query_explanation: "List the top 7 corporations based on the values in the 'Shares of Common Stock' column."
+
+- question: When does the Medcore contract expire?
+  table_info: |
+    CREATE TABLE "SaaS Contracts" (
+      "File Name" TEXT,
+      "Customer Number" TEXT,
+      "Client Name" TEXT,
+      "Effective Date" TEXT,
+      "Term Expiry" TEXT,
+      "Payment Terms" TEXT
+    )
+  sql_query: SELECT "Term Expiry" FROM "SaaS contracts" WHERE LOWER("Client Name") LIKE "%medcore%";
+  sql_result: "[('2021-01-01 00:00:00',)]"
+  answer: The Medcore contract expires on January 1, 2021
+  query_explanation: "Retrieve the 'Term Expiry' date for the client with a name similar to 'Medcore'."
+
+- question: What were the total midmarket gross sales for Mexico in 2014?
+  table_info: |
+    CREATE TABLE "Financial Data" (
+      "Segment" TEXT,
+      "Country" TEXT,
+      "Product" TEXT,
+      "Discount Band" TEXT,
+      "Units Sold" REAL,
+      "Manufacturing Price" INTEGER,
+      "Sale Price" INTEGER,
+      "Gross Sales" REAL,
+      "Discounts" REAL,
+      " Sales" REAL,
+      "COGS" REAL,
+      "Profit" REAL,
+      "Date" TIMESTAMP,
+      "Month Number" INTEGER,
+      "Month Name" TEXT,
+      "Year" INTEGER
+    )
+  sql_query: SELECT SUM("Gross Sales") FROM "Financial Data" WHERE LOWER("Segment") LIKE("%midmarket%") AND LOWER("Country") LIKE "%mexico%" AND Year = 2014;
+  sql_result: "[(451890.0,)]"
+  answer: The total midmarket gross sales for Mexico in 2014 were 451,890.
+  query_explanation: "Sum the 'Gross Sales' for entries in the 'Midmarket' segment in Mexico for the year 2014."
+
+- question: What can I ask about these documents?
+  table_info: |
+    CREATE TABLE "Financial Data" (
+      "Segment" TEXT,
+      "Country" TEXT,
+      "Product" TEXT,
+      "Discount Band" TEXT,
+      "Units Sold" REAL,
+      "Manufacturing Price" INTEGER,
+      "Sale Price" INTEGER,
+      "Gross Sales" REAL,
+      "Discounts" REAL,
+      "Sales" REAL,
+      "COGS" REAL,
+      "Profit" REAL,
+      "Date" TIMESTAMP,
+      "Month Number" INTEGER,
+      "Month Name" TEXT,
+      "Year" INTEGER
+    )
+  sql_query: SELECT * FROM "Financial Data" LIMIT 1;
+  sql_result: "[('Government', 'Canada', 'Carretera', None, 1618.5, 3, 20, 32370.0, 0.0, 32370.0, 16185.0, 16185.0, '2014-01-01 00:00:00', 1, 'January', 2014)]"
+  answer: You can ask various questions about the financial data related to these documents, for example questions related to the segment, country, country etc of various product sales.
+  query_explanation: "Provide a sample entry from the 'Financial Data' report."
+
+- question: How many customers are not from Brazil?
+  table_info: |
+    CREATE TABLE "Customer" (
+      "CustomerId" INTEGER NOT NULL,
+      "FirstName" NVARCHAR(40) NOT NULL,
+      "LastName" NVARCHAR(20) NOT NULL,
+      "Company" NVARCHAR(80),
+      "Address" NVARCHAR(70),
+      "City" NVARCHAR(40),
+      "State" NVARCHAR(40),
+      "Country" NVARCHAR(40),
+      "PostalCode" NVARCHAR(10),
+      "Phone" NVARCHAR(24),
+      "Fax" NVARCHAR(24),
+      "Email" NVARCHAR(60) NOT NULL,
+      "SupportRepId" INTEGER,
+      PRIMARY KEY ("CustomerId"),
+      FOREIGN KEY("SupportRepId") REFERENCES "Employee" ("EmployeeId")
+    )
+  sql_query: SELECT COUNT(*) FROM "Customer" WHERE NOT LOWER("Country") LIKE "%brazil%";
+  sql_result: "[(54,)]"
+  answer: 54 customers are not from Brazil.
+  query_explanation: "Count the number of entries in the 'Customer' report where the 'Country' is not Brazil."
+
+- question: list all the genres that start with 'r'
+  table_info: |
+    CREATE TABLE "Genre" (
+      "GenreId" INTEGER NOT NULL,
+      "Name" NVARCHAR(120),
+      PRIMARY KEY ("GenreId")
+    )
+  sql_query: SELECT "Name" FROM "Genre" WHERE LOWER("Name") LIKE 'r%';
+  sql_result: "[('Rock',), ('Rock and Roll',), ('Reggae',), ('R&B/Soul',)]"
+  answer: The genres that start with 'r' are Rock, Rock and Roll, Reggae and R&B/Soul.
+  query_explanation: "List all entries from the 'Genre' report where the 'Name' starts with the letter 'r'."
+
+- question: Which client has the highest liability cap?
+  table_info: |
+    CREATE TABLE "Report_Services_preview.xlsx" (
+      "File" TEXT, 
+      "Link to Document" TEXT, 
+      "Workers Compensation Insurance" TEXT, 
+      "Limit" TEXT, 
+      "Commercial General Liability Insurance" TEXT, 
+      "Technology Professional Liability Errors Omissions Policy" TEXT, 
+      "Excess Liability Umbrella Coverage" TEXT, 
+      "Services Agreement Date" TEXT, 
+      "Completion of the Services by Company Date" TEXT, 
+      "Charge" TEXT, 
+      "Initial Payment" TEXT, 
+      "Continue in Force And Effect Date" TEXT, 
+      "Non-refundable" TEXT, 
+      "Company" TEXT, 
+      "Client" TEXT, 
+      "Client Address" TEXT, 
+      "Magicsoft" TEXT, 
+      "Except" TEXT, 
+      "A Party" TEXT, 
+      "A Daily Basis" TEXT, 
+      "The Initial Understanding" TEXT, 
+      "Signature Page" TEXT
+    )
+  sql_query: SELECT "Client", "Excess Liability Umbrella Coverage" FROM "Report_Services_preview.xlsx" ORDER BY "Excess Liability Umbrella Coverage" DESC LIMIT 1
+  sql_result: "[('Inity, Inc.', 'Excess Liability/Umbrella coverage with a limit of no less than $9,000,000 per occurrence and in the aggregate (such limit may be achieved through increase of limits in underlying policies to reach the level of coverage shown here). This policy shall name Client as an additional insured with...')]"
+  answer: The client with the highest liability cap is Inity, Inc., with an excess liability/umbrella coverage limit of no less than $9,000,000 per occurrence and in the aggregate.
+  query_explanation: "Identify the client with the highest value in the 'Excess Liability Umbrella Coverage' column."
+
+- question: Which client has the lowest initial payment?
+  table_info: |
+    CREATE TABLE "Report_Services_preview.xlsx" (
+      "File" TEXT, 
+      "Link to Document" TEXT, 
+      "Workers Compensation Insurance" TEXT, 
+      "Limit" TEXT, 
+      "Commercial General Liability Insurance" TEXT, 
+      "Technology Professional Liability Errors Omissions Policy" TEXT, 
+      "Excess Liability Umbrella Coverage" TEXT, 
+      "Services Agreement Date" TEXT, 
+      "Completion of the Services by Company Date" TEXT, 
+      "Charge" TEXT, 
+      "Initial Payment" TEXT, 
+      "Continue in Force And Effect Date" TEXT, 
+      "Non-refundable" TEXT, 
+      "Company" TEXT, 
+      "Client" TEXT, 
+      "Client Address" TEXT, 
+      "Magicsoft" TEXT, 
+      "Except" TEXT, 
+      "A Party" TEXT, 
+      "A Daily Basis" TEXT, 
+      "The Initial Understanding" TEXT, 
+      "Signature Page" TEXT
+    )
+  sql_query: SELECT "Client", "Initial Payment" FROM "Report_Services_preview.xlsx" ORDER BY "Initial Payment" ASC LIMIT 1
+  sql_result: "[('Kazuya, Inc.', 'Eighty Five Thousand Dollars ($85,000)')]"
+  answer: The client with the lowest initial payment is Kazuya, Inc. with an initial payment of Eighty Five Thousand Dollars ($85,000).
+  query_explanation: "Identify the client with the lowest value in the 'Initial Payment' column."
+
+- question: Which client's contract expires the earliest?
+  table_info: |
+    CREATE TABLE "Report_Services_preview.xlsx" (
+      "File" TEXT, 
+      "Link to Document" TEXT, 
+      "Workers Compensation Insurance" TEXT, 
+      "Limit" TEXT, 
+      "Commercial General Liability Insurance" TEXT, 
+      "Technology Professional Liability Errors Omissions Policy" TEXT, 
+      "Excess Liability Umbrella Coverage" TEXT, 
+      "Services Agreement Date" TEXT, 
+      "Completion of the Services by Company Date" TEXT, 
+      "Charge" TEXT, 
+      "Initial Payment" TEXT, 
+      "Continue in Force And Effect Date" TEXT, 
+      "Non-refundable" TEXT, 
+      "Company" TEXT, 
+      "Client" TEXT, 
+      "Client Address" TEXT, 
+      "Magicsoft" TEXT, 
+      "Except" TEXT, 
+      "A Party" TEXT, 
+      "A Daily Basis" TEXT, 
+      "The Initial Understanding" TEXT, 
+      "Signature Page" TEXT
+    )
+  sql_query: SELECT "Client", "Completion of the Services by Company Date" FROM "Report_Services_preview.xlsx" ORDER BY "Completion of the Services by Company Date" LIMIT 1
+  sql_result: "[('Bioplex, Inc.', 'February 15, 2022')]"
+  answer: The contract for Bioplex, Inc. expires the earliest, on February 15, 2022.
+  query_explanation: "Identify the client with the earliest date in the 'Completion of the Services by Company Date' column."
+
+- question: What is the highest Workers Comp Insurance?
+  table_info: |
+    CREATE TABLE "Service Agreements Summary" (
+      "File" TEXT, 
+      "Link to Document" TEXT, 
+      "Workers Compensation Insurance" TEXT, 
+      "Limit" TEXT, 
+      "Commercial General Liability Insurance" TEXT, 
+      "Technology Professional Liability Errors Omissions Policy" TEXT, 
+      "Excess Liability Umbrella Coverage" TEXT, 
+      "Services Agreement Date" TEXT, 
+      "Completion of the Services by Company Date" TEXT, 
+      "Charge" TEXT, 
+      "Initial Payment" TEXT, 
+      "Continue in Force And Effect Date" TEXT, 
+      "Non-refundable" TEXT, 
+      "Company" TEXT, 
+      "Client" TEXT, 
+      "Client Address" TEXT, 
+      "Magicsoft" TEXT, 
+      "Except" TEXT, 
+      "A Party" TEXT, 
+      "A Daily Basis" TEXT, 
+      "The Initial Understanding" TEXT, 
+      "Signature Page" TEXT
+    )
+  sql_query: SELECT "Workers Compensation Insurance" FROM "Service Agreements Summary" ORDER BY "Workers Compensation Insurance" DESC LIMIT 1
+  sql_result: "[('$5,500,000',)]"
+  answer: The highest Workers Comp Insurance limit is $5,500,000.
+  query_explanation: "Identify the highest value in the 'Workers Compensation Insurance' column."
+
+- question: What are typical working hours?
+  table_info: |
+    CREATE TABLE "Service Agreements Summary" (
+      "File" TEXT, 
+      "Link to Document" TEXT, 
+      "Workers Compensation Insurance" TEXT, 
+      "Limit" TEXT, 
+      "Commercial General Liability Insurance" TEXT, 
+      "Technology Professional Liability Errors Omissions Policy" TEXT, 
+      "Excess Liability Umbrella Coverage" TEXT, 
+      "Services Agreement Date" TEXT, 
+      "Completion of the Services by Company Date" TEXT, 
+      "Charge" TEXT, 
+      "Initial Payment" TEXT, 
+      "Continue in Force And Effect Date" TEXT, 
+      "Non-refundable" TEXT, 
+      "Company" TEXT, 
+      "Client" TEXT, 
+      "Client Address" TEXT, 
+      "Magicsoft" TEXT, 
+      "Except" TEXT, 
+      "A Party" TEXT, 
+      "A Daily Basis" TEXT, 
+      "The Initial Understanding" TEXT, 
+      "Signature Page" TEXT
+    )
+  sql_query: SELECT "A Daily Basis" FROM "Service Agreements Summary" LIMIT 5
+  sql_result: "[('Onsite Services. 2.1 Onsite visits will be charged on a daily basis (minimum 8 hours). 2.2 Time and expenses will be charged based on actuals unless otherwise described in an Order Form or accompanying SOW. 2.3 All work will be executed during regular working hours Monday-Friday 0800-1900. For...',), ('Onsite Services. 2.1 Onsite visits will be charged on a daily basis (minimum 8 hours). 2.2 Time and expenses will be charged based on actuals unless otherwise described in an Order Form or accompanying SOW. 2.3 All work will be executed during regular working hours Monday-Friday 0800-1900. For...',), ('Onsite Services. 2.1 Onsite visits will be charged on a daily basis (minimum 8 hours). 2.2 Time and expenses will be charged based on actuals unless otherwise described in an Order Form or accompanying SOW. 2.3 All work will be executed during regular working hours Monday-Friday 0800-1900. For...',), ('Onsite Services. 2.1 Onsite visits will be charged on a daily basis (minimum 8 hours). 2.2 Time and expenses will be charged based on actuals unless otherwise described in an Order Form or accompanying SOW. 2.3 All work will be executed during regular working hours Monday-Friday 0800-1900. For...',), ('Onsite Services. 2.1 Onsite visits will be charged on a daily basis (minimum 8 hours). 2.2 Time and expenses will be charged based on actuals unless otherwise described in an Order Form or accompanying SOW. 2.3 All work will be executed during regular working hours Monday-Friday 0800-1900. For...',)]"
+  answer: "Regular working hours are Monday-Friday 0800-1900"
+  query_explanation: "Extract the typical working hours mentioned in the 'A Daily Basis' column."
+
+- question: What is the total number of clients with excess liability coverage?
+  table_info: |
+    CREATE TABLE "Report_Services_preview.xlsx" (
+      "File" TEXT, 
+      "Link to Document" TEXT, 
+      "Workers Compensation Insurance" TEXT, 
+      "Limit" TEXT, 
+      "Commercial General Liability Insurance" TEXT, 
+      "Technology Professional Liability Errors Omissions Policy" TEXT, 
+      "Excess Liability Umbrella Coverage" TEXT, 
+      "Services Agreement Date" TEXT, 
+      "Completion of the Services by Company Date" TEXT, 
+      "Charge" TEXT, 
+      "Initial Payment" TEXT, 
+      "Continue in Force And Effect Date" TEXT, 
+      "Non-refundable" TEXT, 
+      "Company" TEXT, 
+      "Client" TEXT, 
+      "Client Address" TEXT, 
+      "Magicsoft" TEXT, 
+      "Except" TEXT, 
+      "A Party" TEXT, 
+      "A Daily Basis" TEXT, 
+      "The Initial Understanding" TEXT, 
+      "Signature Page" TEXT
+    )
+  sql_query: SELECT COUNT("Client") FROM "Report_Services_preview.xlsx" WHERE "Excess Liability Umbrella Coverage" IS NOT NULL AND TRIM("Excess Liability Umbrella Coverage") <> '';
+  sql_result: "[(25,)]"
+  answer: "25 clients have Excess Liability Umbrella Coverage"
+  query_explanation: "Count the number of clients that have excess liability umbrella coverage"
