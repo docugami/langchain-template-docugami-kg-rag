@@ -5,14 +5,13 @@ from typing import List, Optional, Union
 from docugami_langchain.agents import AgentState, ReActAgent
 from docugami_langchain.chains.rag.standalone_question_chain import StandaloneQuestionChain
 from docugami_langchain.history import get_chat_history_from_messages, get_question_from_messages
-from docugami_langchain.tools.common import get_generic_tools
+from docugami_langchain.tools.common import BaseDocugamiTool, get_generic_tools
 from docugami_langchain.tools.reports import get_retrieval_tool_for_report
 from docugami_langchain.tools.retrieval import get_retrieval_tool_for_docset
 from langchain_core.documents import Document
 from langchain_core.messages import AIMessage, HumanMessage
 from langchain_core.pydantic_v1 import BaseModel, Field
 from langchain_core.runnables import Runnable, RunnableLambda
-from langchain_core.tools import BaseTool
 
 from docugami_kg_rag.config import (
     DEFAULT_USE_CONVERSATIONAL_TOOLS,
@@ -32,14 +31,14 @@ from docugami_kg_rag.indexing import read_all_local_index_state
 def build_tools(
     use_reports: bool = DEFAULT_USE_REPORTS,
     use_conversation_tools: bool = DEFAULT_USE_CONVERSATIONAL_TOOLS,
-) -> List[BaseTool]:
+) -> List[BaseDocugamiTool]:
     """
     Build retrieval tools.
     """
 
     local_state = read_all_local_index_state()
 
-    tools: List[BaseTool] = []
+    tools: List[BaseDocugamiTool] = []
     for docset_id in local_state:
         docset_state = local_state[docset_id]
         chunk_vectorstore = get_vector_store_index(docset_id, EMBEDDINGS)
@@ -112,7 +111,7 @@ def agent_output_to_string(state: AgentState) -> str:
     if state:
         streaming_output = state.get("generate_re_act")
         if streaming_output:
-            state = streaming_output
+            state = streaming_output  # type: ignore
 
         cited_answer = state.get("cited_answer")
         if cited_answer and cited_answer.is_final:
@@ -143,6 +142,7 @@ def build_agent_runnable() -> Runnable:
     ).with_types(
         input_type=AgentInput,  # type: ignore
     )
+
 
 agent = build_agent_runnable()
 
