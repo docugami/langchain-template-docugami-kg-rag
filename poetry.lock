@@ -813,13 +813,13 @@ typing-extensions = ">=4.5,<5"
 
 [[package]]
 name = "docugami-langchain"
-version = "0.0.9rc1"
+version = "0.0.9rc2"
 description = "An integration package connecting Docugami and LangChain"
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "docugami_langchain-0.0.9rc1-py3-none-any.whl", hash = "sha256:0403cb802dcd973a16ea8132389cb5995299174e47832638fbd36fb85a4cd77b"},
-    {file = "docugami_langchain-0.0.9rc1.tar.gz", hash = "sha256:b5ebd524078e40e1787db6bd896d4cea1835c270954e10a40a11a919e7aafa8c"},
+    {file = "docugami_langchain-0.0.9rc2-py3-none-any.whl", hash = "sha256:565e17c5a81381a51dcb9101899d2baef754b0a9fc3308184e01a71720438c6e"},
+    {file = "docugami_langchain-0.0.9rc2.tar.gz", hash = "sha256:3ac30ec8c813706ad36b4a3e42cfac2e5e9c6e892cc5239ff83f10bd26918132"},
 ]
 
 [package.dependencies]
@@ -1848,13 +1848,13 @@ extended-testing = ["aiosqlite (>=0.19.0,<0.20.0)", "aleph-alpha-client (>=2.15.
 
 [[package]]
 name = "langchain-core"
-version = "0.1.51"
+version = "0.1.52"
 description = "Building applications with LLMs through composability"
 optional = false
 python-versions = "<4.0,>=3.8.1"
 files = [
-    {file = "langchain_core-0.1.51-py3-none-any.whl", hash = "sha256:3058bdb04d43a8eaae2e249365fe2e8d0356a09c7b2c1afa1a8100f8888da4fa"},
-    {file = "langchain_core-0.1.51.tar.gz", hash = "sha256:f7ea116f939be9e74c385baf95d6c84cd7a402b59c2c1893fc054bf98abbefc2"},
+    {file = "langchain_core-0.1.52-py3-none-any.whl", hash = "sha256:62566749c92e8a1181c255c788548dc16dbc319d896cd6b9c95dc17af9b2a6db"},
+    {file = "langchain_core-0.1.52.tar.gz", hash = "sha256:084c3fc452f5a6966c28ab3ec5dbc8b8d26fc3f63378073928f4e29d90b6393f"},
 ]
 
 [package.dependencies]
@@ -5718,4 +5718,4 @@ redis = ["redis", "redisvl"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<4.0"
-content-hash = "f5dd5caf9e0442421906c37159afb75e4c42b6b3c9ba4a79cccca00cdeadb7fe"
+content-hash = "e80bc40bb0f9b7aabbb5cdf477fdfbe93a8e7677ccf5bd90a7323a7ddaad69f5"

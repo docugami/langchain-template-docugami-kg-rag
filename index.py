@@ -42,6 +42,6 @@ def main() -> None:
 if __name__ == "__main__":
     if sys.gettrace():
         # This code will only run if a debugger is attached
-        index_docset(docset_id="tjwrr2ekqkc3", name="SEC 10Q Reports")
+        index_docset(docset_id="s85dxu9aie2h", name="SEC 10Q Reports")
     else:
         app()

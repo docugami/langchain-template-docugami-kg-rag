@@ -35,6 +35,7 @@ from docugami_kg_rag.config import (
     INDEXING_LOCAL_STATE_PATH,
     LARGE_CONTEXT_INSTRUCT_LLM,
     MAX_CHUNK_TEXT_LENGTH,
+    MIN_LENGTH_TO_SUMMARIZE,
     MAX_FULL_DOCUMENT_TEXT_LENGTH,
     MIN_CHUNK_TEXT_LENGTH,
     PARENT_HIERARCHY_LEVELS,
@@ -138,6 +139,8 @@ def index_docset(docset_id: str, name: str) -> None:
         docs_by_id=full_docs_by_id,
         llm=LARGE_CONTEXT_INSTRUCT_LLM,
         embeddings=EMBEDDINGS,
+        min_length_to_summarize=MIN_LENGTH_TO_SUMMARIZE,
+        max_length_cutoff=MAX_FULL_DOCUMENT_TEXT_LENGTH,
         include_xml_tags=INCLUDE_XML_TAGS,
         summarize_document_examples_file=EXAMPLES_PATH / "summarize_document_examples.yaml",
     )
@@ -145,6 +148,8 @@ def index_docset(docset_id: str, name: str) -> None:
         docs_by_id=parent_chunks_by_id,
         llm=SMALL_CONTEXT_INSTRUCT_LLM,
         embeddings=EMBEDDINGS,
+        min_length_to_summarize=MIN_LENGTH_TO_SUMMARIZE,
+        max_length_cutoff=MAX_FULL_DOCUMENT_TEXT_LENGTH,
         include_xml_tags=INCLUDE_XML_TAGS,
         summarize_chunk_examples_file=EXAMPLES_PATH / "summarize_chunk_examples.yaml",
     )
