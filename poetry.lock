@@ -345,7 +345,7 @@ virtualenv = ["virtualenv (>=20.0.35)"]
 name = "cachetools"
 version = "5.3.3"
 description = "Extensible memoizing collections and decorators"
-optional = true
+optional = false
 python-versions = ">=3.7"
 files = [
     {file = "cachetools-5.3.3-py3-none-any.whl", hash = "sha256:0abad1021d3f8325b2fc1d2e9c8b9c9d57b04c3932657a72465447332c24d945"},
@@ -813,13 +813,13 @@ typing-extensions = ">=4.5,<5"
 
 [[package]]
 name = "docugami-langchain"
-version = "0.0.9rc2"
+version = "0.0.9rc4"
 description = "An integration package connecting Docugami and LangChain"
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "docugami_langchain-0.0.9rc2-py3-none-any.whl", hash = "sha256:565e17c5a81381a51dcb9101899d2baef754b0a9fc3308184e01a71720438c6e"},
-    {file = "docugami_langchain-0.0.9rc2.tar.gz", hash = "sha256:3ac30ec8c813706ad36b4a3e42cfac2e5e9c6e892cc5239ff83f10bd26918132"},
+    {file = "docugami_langchain-0.0.9rc4-py3-none-any.whl", hash = "sha256:4ee4814437e1628b7555195b52c5a045ba8ca38a63177f69777afe18922817b2"},
+    {file = "docugami_langchain-0.0.9rc4.tar.gz", hash = "sha256:ba4d12118a0dc2c37cbb1f0b8dd3cbf4c6e50aeae570b46d4dfc249bf08d68f9"},
 ]
 
 [package.dependencies]
@@ -1187,6 +1187,22 @@ protobuf = ">=3.19.5,<3.20.0 || >3.20.0,<3.20.1 || >3.20.1,<4.21.1 || >4.21.1,<4
 
 [package.extras]
 grpc = ["grpcio (>=1.44.0,<2.0.0.dev0)"]
+
+[[package]]
+name = "gptcache"
+version = "0.1.43"
+description = "GPTCache, a powerful caching library that can be used to speed up and lower the cost of chat applications that rely on the LLM service. GPTCache works as a memcache for AIGC applications, similar to how Redis works for traditional applications."
+optional = false
+python-versions = ">=3.8.1"
+files = [
+    {file = "gptcache-0.1.43-py3-none-any.whl", hash = "sha256:9c557ec9cc14428942a0ebf1c838520dc6d2be801d67bb6964807043fc2feaf5"},
+    {file = "gptcache-0.1.43.tar.gz", hash = "sha256:cebe7ec5e32a3347bf839e933a34e67c7fcae620deaa7cb8c6d7d276c8686f1a"},
+]
+
+[package.dependencies]
+cachetools = "*"
+numpy = "*"
+requests = "*"
 
 [[package]]
 name = "greenlet"
@@ -1921,13 +1937,13 @@ extended-testing = ["lxml (>=5.1.0,<6.0.0)"]
 
 [[package]]
 name = "langgraph"
-version = "0.0.45"
+version = "0.0.46"
 description = "langgraph"
 optional = false
 python-versions = "<4.0,>=3.9.0"
 files = [
-    {file = "langgraph-0.0.45-py3-none-any.whl", hash = "sha256:382df948be7c4de449cd00ff5e4ba7ee4e1523ca5107ba79cae7153ba9635ac9"},
-    {file = "langgraph-0.0.45.tar.gz", hash = "sha256:596c380ea0d0f6a8fa889aa59739f76aa5ff80f49e7be35f10dd50bd44a06934"},
+    {file = "langgraph-0.0.46-py3-none-any.whl", hash = "sha256:69ff85bbc18594e4607eb68f593c3f4dfc4a7b010390424437267e7c0604d8c7"},
+    {file = "langgraph-0.0.46.tar.gz", hash = "sha256:5092c549bc996387ae284de2a5dbe8dee38a6be9bb551fa762c650e378777895"},
 ]
 
 [package.dependencies]
@@ -4628,13 +4644,13 @@ sqlcipher = ["sqlcipher3_binary"]
 
 [[package]]
 name = "sqlglot"
-version = "23.13.7"
+version = "23.14.0"
 description = "An easily customizable SQL parser and transpiler"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "sqlglot-23.13.7-py3-none-any.whl", hash = "sha256:58c39dd236e243eedd512c7e84f3d6e9da559e2559f33c425633f813b93dcbd7"},
-    {file = "sqlglot-23.13.7.tar.gz", hash = "sha256:e78b2fe345fd5187b7e895d01f51965a561d234804a0769a5a9ba6745015694b"},
+    {file = "sqlglot-23.14.0-py3-none-any.whl", hash = "sha256:e413e761a74760918ff04548189aaf05224ba4699f16b17b3b8f86f3dca6f063"},
+    {file = "sqlglot-23.14.0.tar.gz", hash = "sha256:d5e92fd7f45a5783e7fed0075e3c4d13d59338a69c11ffe0f4e99729352b3973"},
 ]
 
 [package.extras]
@@ -4725,17 +4741,18 @@ widechars = ["wcwidth"]
 
 [[package]]
 name = "tenacity"
-version = "8.2.3"
+version = "8.3.0"
 description = "Retry code until it succeeds"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 files = [
-    {file = "tenacity-8.2.3-py3-none-any.whl", hash = "sha256:ce510e327a630c9e1beaf17d42e6ffacc88185044ad85cf74c0a8887c6a0f88c"},
-    {file = "tenacity-8.2.3.tar.gz", hash = "sha256:5398ef0d78e63f40007c1fb4c0bff96e1911394d2fa8d194f77619c05ff6cc8a"},
+    {file = "tenacity-8.3.0-py3-none-any.whl", hash = "sha256:3649f6443dbc0d9b01b9d8020a9c4ec7a1ff5f6f3c6c8a036ef371f573fe9185"},
+    {file = "tenacity-8.3.0.tar.gz", hash = "sha256:953d4e6ad24357bceffbc9707bc74349aca9d245f68eb65419cf0c249a1949a2"},
 ]
 
 [package.extras]
-doc = ["reno", "sphinx", "tornado (>=4.5)"]
+doc = ["reno", "sphinx"]
+test = ["pytest", "tornado (>=4.5)", "typeguard"]
 
 [[package]]
 name = "threadpoolctl"
@@ -5718,4 +5735,4 @@ redis = ["redis", "redisvl"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<4.0"
-content-hash = "e80bc40bb0f9b7aabbb5cdf477fdfbe93a8e7677ccf5bd90a7323a7ddaad69f5"
+content-hash = "38c472ba2c491f690e7fa9937b90a22d49480bba8829729787d11ea241054fdf"

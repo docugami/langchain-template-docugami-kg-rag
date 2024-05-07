@@ -11,7 +11,7 @@ readme = "README.md"
 python = ">=3.9,<4.0"
 langchain = ">=0.1.17"
 langchain-community = ">=0.0.36"
-docugami-langchain = "^0.0.9rc2"
+docugami-langchain = "^0.0.9rc4"
 # docugami-langchain = {git = "https://github.com/docugami/docugami-langchain.git"}
 # docugami-langchain = {git = "https://github.com/docugami/docugami-langchain.git", rev = "tjaffri/rel"}
 typer = ">=0.9.0"
@@ -21,6 +21,7 @@ langsmith = ">=0.1.52"
 openpyxl = ">=3.1.2"
 faiss-cpu = ">=1.8.0"
 torch = "2.2.0"
+gptcache = "^0.1.43"
 rerankers = { extras = ["all"], version = ">=0.2.0" }
 langchain-openai = { version = ">=0.1.6", optional = true }
 langchain-fireworks = { version = ">=0.1.2", optional = true } 
@@ -65,7 +66,7 @@ exclude = "/temp/"
 
 [[tool.mypy.overrides]]
 module = [
-    "torch", "langchain_openai.*", "langchain_fireworks.*", "docugami_langchain.*", "rerankers.*",
+    "torch", "langchain_openai.*", "langchain_fireworks.*", "docugami_langchain.*", "rerankers.*", "gptcache.*"
 ]
 ignore_missing_imports = true
 

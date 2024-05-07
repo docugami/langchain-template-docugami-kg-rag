@@ -34,6 +34,7 @@ from docugami_kg_rag.config import (
     INDEXING_LOCAL_REPORT_DBS_ROOT,
     INDEXING_LOCAL_STATE_PATH,
     LARGE_CONTEXT_INSTRUCT_LLM,
+    LLM_BATCH_SIZE,
     MAX_CHUNK_TEXT_LENGTH,
     MAX_FULL_DOCUMENT_TEXT_LENGTH,
     MIN_CHUNK_TEXT_LENGTH,
@@ -143,6 +144,7 @@ def index_docset(docset_id: str, name: str) -> None:
         max_length_cutoff=MAX_FULL_DOCUMENT_TEXT_LENGTH,
         include_xml_tags=INCLUDE_XML_TAGS,
         summarize_document_examples_file=EXAMPLES_PATH / "summarize_document_examples.yaml",
+        batch_size=LLM_BATCH_SIZE,
     )
     chunk_summaries_by_id = build_chunk_summary_mappings(
         docs_by_id=parent_chunks_by_id,
@@ -152,6 +154,7 @@ def index_docset(docset_id: str, name: str) -> None:
         max_length_cutoff=MAX_FULL_DOCUMENT_TEXT_LENGTH,
         include_xml_tags=INCLUDE_XML_TAGS,
         summarize_chunk_examples_file=EXAMPLES_PATH / "summarize_chunk_examples.yaml",
+        batch_size=LLM_BATCH_SIZE,
     )
 
     direct_tool_function_name = docset_name_to_direct_retrieval_tool_function_name(name)

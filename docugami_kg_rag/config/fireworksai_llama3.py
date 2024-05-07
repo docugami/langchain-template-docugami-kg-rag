@@ -16,13 +16,14 @@ LARGE_CONTEXT_INSTRUCT_LLM = ChatFireworks(
 )
 SMALL_CONTEXT_INSTRUCT_LLM = LARGE_CONTEXT_INSTRUCT_LLM  # Use the same model for large and small context tasks
 SQL_GEN_LLM = LARGE_CONTEXT_INSTRUCT_LLM  # Use the same model for sql gen
+LLM_BATCH_SIZE = 2
 
 # Lengths for the Docugami loader are in terms of characters, 1 token ~= 4 chars in English
 # Reference: https://help.openai.com/en/articles/4936856-what-are-tokens-and-how-to-count-them
 MIN_LENGTH_TO_SUMMARIZE = 2048  # chunks and docs below this length are embedded as-is
 MAX_FULL_DOCUMENT_TEXT_LENGTH = int(1024 * 4 * 4.5)  # ~4.5k tokens
-MAX_CHUNK_TEXT_LENGTH = int(1024 * 4 * 4.5)  # ~4.5k tokens
-MIN_CHUNK_TEXT_LENGTH = int(1024 * 4 * 1.5)  # ~1.5k tokens
+MAX_CHUNK_TEXT_LENGTH = int(1024 * 4 * 1)  # ~1k tokens
+MIN_CHUNK_TEXT_LENGTH = int(1024 * 4 * 0.5)  # ~0.5k tokens
 SUB_CHUNK_TABLES = False
 INCLUDE_XML_TAGS = False
 PARENT_HIERARCHY_LEVELS = 2

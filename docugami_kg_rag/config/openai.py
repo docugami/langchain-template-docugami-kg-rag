@@ -21,6 +21,7 @@ SMALL_CONTEXT_INSTRUCT_LLM = ChatOpenAI(
     max_tokens=2 * 1024,  # only output tokens
 )
 SQL_GEN_LLM = SMALL_CONTEXT_INSTRUCT_LLM  # Use the same model for sql gen
+LLM_BATCH_SIZE = 256
 
 EMBEDDINGS = OpenAIEmbeddings(model="text-embedding-ada-002")
 
@@ -36,3 +37,4 @@ SUB_CHUNK_TABLES = True
 INCLUDE_XML_TAGS = True
 PARENT_HIERARCHY_LEVELS = 2
 RETRIEVER_K = 8
+
