@@ -1921,17 +1921,17 @@ extended-testing = ["lxml (>=5.1.0,<6.0.0)"]
 
 [[package]]
 name = "langgraph"
-version = "0.0.44"
+version = "0.0.45"
 description = "langgraph"
 optional = false
 python-versions = "<4.0,>=3.9.0"
 files = [
-    {file = "langgraph-0.0.44-py3-none-any.whl", hash = "sha256:ba763a82d97a01f770496c7976728acacf5c3d8569d221340aa44d5b2b9fc321"},
-    {file = "langgraph-0.0.44.tar.gz", hash = "sha256:b40b7a829da1fcb965bc3cf845c42c19ee5dcb27342e26c2ec9aff9c88bbf62a"},
+    {file = "langgraph-0.0.45-py3-none-any.whl", hash = "sha256:382df948be7c4de449cd00ff5e4ba7ee4e1523ca5107ba79cae7153ba9635ac9"},
+    {file = "langgraph-0.0.45.tar.gz", hash = "sha256:596c380ea0d0f6a8fa889aa59739f76aa5ff80f49e7be35f10dd50bd44a06934"},
 ]
 
 [package.dependencies]
-langchain-core = ">=0.1.46,<0.2.0"
+langchain-core = ">=0.1.52,<0.2.0"
 
 [[package]]
 name = "langserve"
