@@ -4,11 +4,11 @@ from pathlib import Path
 from langchain_community.cache import SQLiteCache
 from langchain_core.globals import set_llm_cache
 
+# from docugami_kg_rag.config.fireworksai_llama3 import *
+# from docugami_kg_rag.config.huggingface import *
 from docugami_kg_rag.config.chromadb import *
 from docugami_kg_rag.config.openai import *
 
-# from docugami_kg_rag.config.fireworksai import *
-# from docugami_kg_rag.config.huggingface import *
 # from docugami_kg_rag.config.redis import *
 
 DOCUGAMI_API_ENDPOINT = "https://api.docugami.com/v1preview1"
@@ -29,5 +29,5 @@ set_llm_cache(SQLiteCache(database_path=LOCAL_LLM_CACHE_DB_FILE))
 
 EXAMPLES_PATH = Path(__file__).parent.parent / "green_examples"
 
-DEFAULT_USE_REPORTS = False
+DEFAULT_USE_REPORTS = True
 DEFAULT_USE_CONVERSATIONAL_TOOLS = False

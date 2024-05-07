@@ -83,6 +83,7 @@ def build_tools(
                     retrieval_tool_function_name=report.retrieval_tool_function_name,
                     retrieval_tool_description=report.retrieval_tool_description,
                     sql_llm=SQL_GEN_LLM,
+                    explainer_llm=LARGE_CONTEXT_INSTRUCT_LLM,
                     embeddings=EMBEDDINGS,
                     sql_fixup_examples_file=EXAMPLES_PATH / "sql_fixup_examples.yaml",
                     sql_examples_file=EXAMPLES_PATH / "sql_examples.yaml",
