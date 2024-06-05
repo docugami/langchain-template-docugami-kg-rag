@@ -16,7 +16,7 @@ LARGE_CONTEXT_INSTRUCT_LLM = ChatFireworks(
 )
 SMALL_CONTEXT_INSTRUCT_LLM = LARGE_CONTEXT_INSTRUCT_LLM  # Use the same model for large and small context tasks
 SQL_GEN_LLM = LARGE_CONTEXT_INSTRUCT_LLM  # Use the same model for sql gen
-LLM_BATCH_SIZE = 2
+LLM_BATCH_SIZE = 1
 
 # Lengths for the Docugami loader are in terms of characters, 1 token ~= 4 chars in English
 # Reference: https://help.openai.com/en/articles/4936856-what-are-tokens-and-how-to-count-them

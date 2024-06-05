@@ -3,7 +3,6 @@
 import os
 
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
-from rerankers import Reranker
 
 if "OPENAI_API_KEY" not in os.environ:
     raise Exception("OPENAI_API_KEY environment variable not set")
@@ -24,8 +23,6 @@ SQL_GEN_LLM = SMALL_CONTEXT_INSTRUCT_LLM  # Use the same model for sql gen
 LLM_BATCH_SIZE = 256
 
 EMBEDDINGS = OpenAIEmbeddings(model="text-embedding-ada-002")
-
-RERANKER = Reranker("rankgpt3", api_key=os.environ.get("OPENAI_API_KEY"), verbose=0)
 
 # Lengths for the Docugami loader are in terms of characters, 1 token ~= 4 chars in English
 # Reference: https://help.openai.com/en/articles/4936856-what-are-tokens-and-how-to-count-them

@@ -45,7 +45,7 @@ Before you can run your app, you need to build your vector index. See [index.py]
 
 Indexing in this template uses the Docugami Loader for LangChain to create semantic chunks out of your documents. Refer to this [documentation](https://python.langchain.com/docs/integrations/document_loaders/docugami) for details.
 
-Note that if you previously ran indexing for the same docset, the index will not be recreated. If you want to force recreate the index (e.g. if you have new docs in the docset or changed your chunking config parameters) please specify `poetry run index.py`
+Note that if you previously ran indexing for the same docset, the index will not be recreated. If you want to force recreate the index (e.g. if you have new docs in the docset or changed your chunking config parameters) please specify `poetry run python index.py`
 
 ### Creating app
 To use this package, you should first have the LangChain CLI installed:
@@ -75,12 +75,9 @@ add_routes(app, docugami_kg_rag, path="/docugami-kg-rag")
 
 (Optional) Let's now configure LangSmith. 
 LangSmith will help us trace, monitor and debug LangChain applications. 
-LangSmith is currently in private beta, you can sign up [here](https://smith.langchain.com/). 
-If you don't have access, you can skip this section
-
+You can sign up [here](https://smith.langchain.com/). 
 
 ```shell
-export LANGCHAIN_TRACING_V2=true
 export LANGCHAIN_API_KEY=<your-api-key>
 export LANGCHAIN_PROJECT=<your-project>  # if not specified, defaults to "default"
 ```

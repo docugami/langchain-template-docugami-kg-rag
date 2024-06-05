@@ -2,8 +2,8 @@
 from typing import List, Optional
 
 from docugami_langchain.retrievers.fused_summary import (
-    FULL_DOC_SUMMARY_ID_KEY,
-    PARENT_DOC_ID_KEY,
+    FILE_ID_KEY,
+    PARENT_CHUNK_ID_KEY,
     SOURCE_KEY,
 )
 from langchain_community.vectorstores.redis.base import Redis, check_index_exists
@@ -15,8 +15,8 @@ REDIS_URL = "redis://localhost:6379"
 REDIS_INDEX_SCHEMA = {
     "text": [
         {"name": "id"},
-        {"name": PARENT_DOC_ID_KEY},
-        {"name": FULL_DOC_SUMMARY_ID_KEY},
+        {"name": PARENT_CHUNK_ID_KEY},
+        {"name": FILE_ID_KEY},
         {"name": SOURCE_KEY},
     ],
 }
