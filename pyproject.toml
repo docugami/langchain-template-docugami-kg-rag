@@ -9,9 +9,9 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0"
-langchain = ">=0.1.17"
-langchain-community = ">=0.0.36"
-docugami-langchain = "^0.0.9rc4"
+langchain = ">=0.1.19"
+langchain-community = ">=0.2.3"
+docugami-langchain = "^0.0.16"
 # docugami-langchain = {git = "https://github.com/docugami/docugami-langchain.git"}
 # docugami-langchain = {git = "https://github.com/docugami/docugami-langchain.git", rev = "tjaffri/rel"}
 typer = ">=0.9.0"
@@ -22,14 +22,12 @@ openpyxl = ">=3.1.2"
 faiss-cpu = ">=1.8.0"
 torch = "2.2.0"
 gptcache = "^0.1.43"
-rerankers = { extras = ["all"], version = ">=0.2.0" }
-langchain-openai = { version = ">=0.1.6", optional = true }
-langchain-fireworks = { version = ">=0.1.2", optional = true } 
+langchain-openai = { version = "*", optional = true }
+langchain-fireworks = { version = "*", optional = true } 
 chromadb = { version = ">=0.5.0", optional = true }
 redis = { version = ">=5.0.4", optional = true }
 redisvl = { version = ">=0.2.0", optional = true }
-huggingface = { version = ">=0.0.1", optional = true }
-sentence-transformers = { version = ">=2.7.0", optional = true }
+sentence-transformers = { version = "*", optional = true }
 
 [tool.poetry.group.dev.dependencies]
 codespell = "*"
@@ -45,7 +43,7 @@ openai = ["langchain-openai", "tiktoken"]
 fireworks = ["langchain-fireworks"]
 chromadb = ["chromadb"]
 redis = ["redis", "redisvl"]
-huggingface = ["huggingface", "sentence-transformers"]
+huggingface = ["langchain-huggingface", "sentence-transformers"]
 
 [tool.black]
 line-length = 127
@@ -66,7 +64,7 @@ exclude = "/temp/"
 
 [[tool.mypy.overrides]]
 module = [
-    "torch", "langchain_openai.*", "langchain_fireworks.*", "docugami_langchain.*", "rerankers.*", "gptcache.*"
+    "torch", "langchain_openai.*", "langchain_fireworks.*", "docugami_langchain.*", "gptcache.*", "llama_cpp.*"
 ]
 ignore_missing_imports = true
 

@@ -5,15 +5,15 @@ from pathlib import Path
 from gptcache import Cache
 from gptcache.manager.factory import manager_factory
 from gptcache.processor.pre import get_prompt
-from langchain.cache import GPTCache
+from langchain_community.cache import GPTCache
 from langchain_core.globals import set_llm_cache
 
 from docugami_kg_rag.config.chromadb import *
-from docugami_kg_rag.config.fireworksai_llama3 import *
 
+# from docugami_kg_rag.config.fireworksai_llama3 import *
 # from docugami_kg_rag.config.fireworksai_mixtral import *
-# from docugami_kg_rag.config.openai import *
-from docugami_kg_rag.config.huggingface import *
+# from docugami_kg_rag.config.huggingface import *
+from docugami_kg_rag.config.openai import *
 
 # from docugami_kg_rag.config.redis import *
 
